@@ -53,17 +53,17 @@ def plot_step(step_num,settings):
     plt.figure(figsize=(12, 6))
     ax = plt.axes(projection=data_crs)
     ax.set_global()
-    ax.set_extent([-125, -65, 25, 50], crs=ccrs.PlateCarree())
-    #ax.set_xlim([-150,-30])
-    #ax.set_ylim([20,70])
+    #ax.set_extent([-125, -65, 25, 50], crs=ccrs.PlateCarree())
+    ax.set_xlim([-150,-30])
+    ax.set_ylim([20,70])
     x0c, x1c, y0c, y1c = ax.properties()['extent']
     ax.coastlines()
     ax.add_feature(cfeature.STATES.with_scale('10m'), edgecolor='gray')
     
-    fname = './grwl_files/GRWL_summaryStats.shp'
-    shape_feature = ShapelyFeature(Reader(fname).geometries(),
-                                    ccrs.PlateCarree(), edgecolor='lightskyblue', facecolor='None', linewidth=0.5)
-    ax.add_feature(shape_feature, edgecolor='lightskyblue', facecolor='None', linewidth=0.5)
+    # fname = './grwl_files/GRWL_summaryStats.shp'
+    # shape_feature = ShapelyFeature(Reader(fname).geometries(),
+    #                                 ccrs.PlateCarree(), edgecolor='lightskyblue', facecolor='None', linewidth=0.5)
+    # ax.add_feature(shape_feature, edgecolor='lightskyblue', facecolor='None', linewidth=0.5)
 
     # ax.yaxis.tick_right()
     # ax.set_xticks([-80,-70,-60,-50,-40], crs=ccrs.PlateCarree())
@@ -133,11 +133,12 @@ def plot_step(step_num,settings):
             grid_lats.append(float(row[0]))
             grid_lons.append(float(row[1]))
 
-    event_rows = []
-    with open(settings["directory"]+'events_processed/step'+str(step_num)+'.csv','r') as csvfile:
-        csvreader = csv.reader(csvfile, delimiter=',', quotechar='|')
-        for row in csvreader:
-            event_rows.append(row)
+    if len(os.listdir(settings["directory"]+'events_processed/')) != 0:
+        event_rows = []
+        with open(settings["directory"]+'events_processed/step'+str(step_num)+'.csv','r') as csvfile:
+            csvreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+            for row in csvreader:
+                event_rows.append(row)
     
     if os.path.isdir(settings["directory"]+'coobs/'):
         coobs_rows = []
@@ -266,7 +267,7 @@ def plot_step(step_num,settings):
     # if os.path.isdir(settings["directory"]+'reward_grids/'):
     #     reward_grid_rows = np.asfarray(reward_grid_rows)
     #     ax.scatter(reward_grid_rows[:,1],reward_grid_rows[:,0],(reward_grid_rows[:,2])**1.5,color='purple',transform=data_crs, marker=',')
-    
+
     if len(os.listdir(settings["directory"]+'events_processed/')) != 0:
         for row in event_rows:
             plt.scatter(float(row[1]),float(row[0]),2,marker='^',color='cyan',transform=data_crs)
@@ -371,7 +372,7 @@ def plot_step(step_num,settings):
         #x, y = m(float(specific_sat[0][2]),float(specific_sat[0][1]))
         xs.append(float(specific_sat[0][2]))
         ys.append(float(specific_sat[0][1]))
-        plt.plot(xs,ys,linewidth=0.5,color='purple',transform=ccrs.Geodetic())
+        plt.plot(xs,ys,linewidth=0.5,color='purple',transform=data_crs)
 
     
 
@@ -422,7 +423,7 @@ def plot_mission_het(settings):
     steps = np.arange(int(np.floor(settings["time"]["duration"]*start_frac*86400/settings["time"]["step_size"])),int(np.floor(settings["time"]["duration"]*end_frac*86400/settings["time"]["step_size"])),num_skip)
     print(steps)
     pool = multiprocessing.Pool()
-    #pool.map(partial(plot_step, b=settings), steps)
+    pool.map(partial(plot_step, settings=settings), steps)
     plot_missing(settings)
     filenames = []
     for step in steps:
@@ -473,16 +474,16 @@ def plot_missing(settings):
     pool.map(partial(plot_step, settings=settings), missing_steps)
 
 if __name__ == "__main__":
-    name = "flood_grid_search_het_1"
+    name = "full_mission_test_het"
     settings = {
         "name": name,
         "instrument": {
-            "ffor": 60,
-            "ffov": 5
+            "ffor": 30,
+            "ffov": 0
         },
         "agility": {
             "slew_constraint": "rate",
-            "max_slew_rate": 1,
+            "max_slew_rate": 0.1,
             "inertia": 2.66,
             "max_torque": 4e-3
         },
@@ -493,45 +494,41 @@ if __name__ == "__main__":
             "argper": 0, # deg
         },
         "constellation": {
-            "num_sats_per_plane": 8,
+            "num_sats_per_plane": 3,
             "num_planes": 3,
             "phasing_parameter": 1
         },
         "events": {
-            "event_duration": 5000,
-            "num_events": 100,
-            "event_clustering": "clustered"
+            "event_duration": 3600*6,
+            "event_frequency": 0.01/3600,
+            "event_density": 2,
+            "event_clustering": 4
         },
         "time": {
             "step_size": 10, # seconds
-            "duration": 1, # days
+            "duration": 0.1, # days
             "initial_datetime": datetime.datetime(2020,1,1,0,0,0)
         },
         "rewards": {
             "reward": 10,
-            "reward_increment": 1,
-            "reobserve_conops": "no_change",
-            "event_duration_decay": "step",
-            "no_event_reward": 5,
-            "oracle_reobs": "true",
-            "initial_reward": 5
+            "reward_increment": 0.1,
+            "reobserve_reward": 2
         },
         "plotting":{
             "plot_clouds": False,
             "plot_rain": False,
-            "plot_duration": 1,
+            "plot_duration": 0.1,
             "plot_interval": 10,
             "plot_obs": True
         },
         "planner": "dp",
-        "num_meas_types": 2,
-        "sharing_horizon": 100,
-        "planning_horizon": 5000,
+        "event_csvs": [],
+        "num_meas_types": 3,
+        "sharing_horizon": 1000,
+        "planning_horizon": 1000,
         "directory": "./missions/"+name+"/",
-        "grid_type": "custom", # can be "uniform" or "custom"
-        "point_grid": "./missions/"+name+"/coverage_grids/event_locations.csv",
+        "grid_type": "uniform", # can be "uniform" or "custom"
         "preplanned_observations": None,
-        "event_csvs": ["./missions/"+name+"/events/events.csv"],
         "process_obs_only": False,
         "conops": "onboard_processing"
     }
