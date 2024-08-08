@@ -6,7 +6,7 @@ sys.path.append(".")
 from src.create_mission import create_mission
 from src.execute_mission import execute_mission
 from src.process_mission import process_mission
-from src.plan_mission import plan_mission, plan_mission_replan_interval, plan_mission_replan_interval_het
+from src.plan_mission_fov import plan_mission, plan_mission_replan_interval, plan_mission_replan_interval_het
 from src.plot_mission import plot_mission
 from src.plot_mission_heterogeneous import plot_mission_het
 from src.utils.compute_experiment_statistics import compute_experiment_statistics
@@ -50,14 +50,18 @@ def main(homhet_flag):
             "initial_datetime": datetime.datetime(2020,1,1,0,0,0)
         },
         "rewards": {
-            "reward": 10,
-            "reward_increment": 0.1,
-            "reobserve_reward": 2
+                "reward": 10,
+                "reward_increment": 1,
+                "reobserve_conops": "linear_increase",
+                "event_duration_decay": "step",
+                "no_event_reward": 5,
+                "oracle_reobs": "true",
+                "initial_reward": 5
         },
         "plotting":{
             "plot_clouds": False,
             "plot_rain": False,
-            "plot_duration": 0.1,
+            "plot_duration": 1,
             "plot_interval": 10,
             "plot_obs": True
         },
@@ -80,12 +84,12 @@ def main(homhet_flag):
     execute_mission(settings)
     if homhet_flag == "homogeneous":
         if settings["preplanned_observations"] is None:
-            plan_mission(settings) # must come before process as process expects a plan.csv in the orbit_data directory
+            plan_mission_replan_interval(settings) # must come before process as process expects a plan.csv in the orbit_data directory
         process_mission(settings)
         plot_mission(settings)
     elif homhet_flag == "heterogeneous":
         if settings["preplanned_observations"] is None:
-            plan_mission(settings) # must come before process as process expects a plan.csv in the orbit_data directory
+            plan_mission_replan_interval_het(settings) # must come before process as process expects a plan.csv in the orbit_data directory
         process_mission(settings)
         plot_mission_het(settings)
     else:

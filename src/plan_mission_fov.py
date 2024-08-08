@@ -81,6 +81,8 @@ def load_events(settings):
 
 def load_rewards(settings):
     rewards = []
+    if not "point_grid" in settings:
+        settings["point_grid"] = settings["directory"]+"orbit_data/grid0.csv"
     reward_filename = settings["point_grid"]
     with open(reward_filename,newline='') as csv_file:
         csvreader = csv.reader(csv_file, delimiter=',', quotechar='|')
@@ -1123,6 +1125,8 @@ def plan_mission_replan_interval_het(settings):
             continue
         if ".json" in subdir:
             continue
+        if ".csv" in subdir:
+            continue
         satellite = {}
         satellite_name_dict = {}
         for i in range(settings["constellation"]["num_sats_per_plane"]*settings["constellation"]["num_planes"]):
@@ -1154,6 +1158,8 @@ def plan_mission_replan_interval_het(settings):
     elapsed_plan_time = 0
     reward_dict = {}
     grid_locations = []
+    if not "point_grid" in settings:
+        settings["point_grid"] = settings["directory"]+"orbit_data/grid0.csv"
     with open(settings["point_grid"],'r') as csvfile:
         csvreader = csv.reader(csvfile,delimiter=',')
         next(csvfile)

@@ -366,7 +366,7 @@ def process_mission(settings):
                         visibilities.append(row)
                 satellite["visibilities"] = visibilities
 
-            if "plan" in f and not "het" in f:
+            if "plan" in f:
                 with open(directory+subdir+"/"+f,newline='') as csv_file:
                     spamreader = csv.reader(csv_file, delimiter=',', quotechar='|')
                     observations = []
