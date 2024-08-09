@@ -10,3 +10,16 @@
  4. (optional) If desired, you can run the visualizer in steps (create, execute, process, plan, plot) by calling them individually with the desired settings.
  5. Studies for the paper "Decentralized Reactive Satellite Planning for Event Observation" are available in the studies folder. Code for the multi-agent reinforcement learning experiments are avilable in src/multiagent_rl.
 ![Exciting gif](https://github.com/bgorr/satplan/blob/main/example.gif?raw=true)
+
+Detailed install instructions:
+git submodule init
+git submodule update
+conda create --name satplan_test python=3.8
+conda activate satplan_test
+cd instrupy
+make
+cd ..
+cd orbitpy
+make
+cd ..
+pip install tqdm pyscipopt opencv-python Basemap imageio h5py cartopy
