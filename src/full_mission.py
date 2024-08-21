@@ -2,8 +2,8 @@ import datetime
 import os
 import sys
 sys.path.append(".")
-# sys.path.append("/home/AERO_402/satellite_plan/orbitpy")
-# sys.path.append("/home/AERO_402/satellite_plan/instrupy")
+sys.path.append("/home/AERO_402/satellite_plan/orbitpy")
+sys.path.append("/home/AERO_402/satellite_plan/instrupy")
 
 from src.create_mission import create_mission
 from src.execute_mission import execute_mission
