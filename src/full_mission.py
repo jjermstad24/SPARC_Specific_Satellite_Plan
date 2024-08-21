@@ -2,6 +2,8 @@ import datetime
 import os
 import sys
 sys.path.append(".")
+# sys.path.append("/home/AERO_402/satellite_plan/orbitpy")
+# sys.path.append("/home/AERO_402/satellite_plan/instrupy")
 
 from src.create_mission import create_mission
 from src.execute_mission import execute_mission
@@ -14,7 +16,7 @@ from src.utils.compute_experiment_statistics_het import compute_experiment_stati
 from src.utils.process_coobs import process_coobs
 
 def main(homhet_flag):
-    name = "full_mission_test_het"
+    name = "full_mission_test_10"
     settings = {
         "name": name,
         "instrument": {
@@ -71,7 +73,8 @@ def main(homhet_flag):
         "sharing_horizon": 1000,
         "planning_horizon": 1000,
         "directory": "./missions/"+name+"/",
-        "grid_type": "uniform", # can be "uniform" or "custom"
+        "grid_type": "custom", # can be "uniform" or "custom"
+        "point_grid": "./coverage_grids/targets.csv",
         "preplanned_observations": None,
         "process_obs_only": False,
         "conops": "onboard_processing"

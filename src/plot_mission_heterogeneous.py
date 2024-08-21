@@ -54,11 +54,13 @@ def plot_step(step_num,settings):
     ax = plt.axes(projection=data_crs)
     ax.set_global()
     #ax.set_extent([-125, -65, 25, 50], crs=ccrs.PlateCarree())
-    ax.set_xlim([-150,-30])
-    ax.set_ylim([20,70])
+    # ax.set_xlim([-150,-30])
+    # ax.set_ylim([20,70])
+    ax.set_xlim([-13,180])
+    ax.set_ylim([10,90])
     x0c, x1c, y0c, y1c = ax.properties()['extent']
     ax.coastlines()
-    ax.add_feature(cfeature.STATES.with_scale('10m'), edgecolor='gray')
+    # ax.add_feature(cfeature.STATES.with_scale('10m'), edgecolor='gray')
     
     # fname = './grwl_files/GRWL_summaryStats.shp'
     # shape_feature = ShapelyFeature(Reader(fname).geometries(),
@@ -447,7 +449,7 @@ def plot_mission_het(settings):
     images = sorted(images)
     frame = cv2.imread(os.path.join(image_folder, images[0]))
     height, width, layers = frame.shape
-    fourcc = cv2.VideoWriter_fourcc(*'MP4V')
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     video = cv2.VideoWriter(video_name, fourcc, 5, (width,height))
 
     for filename in filenames:

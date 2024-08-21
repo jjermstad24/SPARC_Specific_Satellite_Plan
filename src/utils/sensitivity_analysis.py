@@ -215,6 +215,7 @@ metric_dict = { # new update, normalized
 for metric in metric_dict.keys():
     rows = []
     ys = []
+    print("HERE")
     with open("./results/updated_experiment.csv",newline='') as csv_file:
         spamreader = csv.reader(csv_file, delimiter=',', quotechar='|')
         i = 0
