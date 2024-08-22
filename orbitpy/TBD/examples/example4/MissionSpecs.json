@@ -1,0 +1,70 @@
+{
+    "epoch": "2018, 1, 15, 12, 0, 0",
+    "duration": 0.1,
+    "constellation":{
+        "@type": "Walkerdelta",
+        "numberSatellites": 8,
+        "numberPlanes": 1,
+        "relativeSpacing":1,
+        "inc":56,
+        "alt": 700,
+        "ecc": 0.0001,
+        "aop": 0
+    },
+    "instrument":    [
+    {
+        "@type": "Passive Optical Scanner",
+        "name": "PlanetScope-PS2",
+        "@id": "sen1",
+        "mass": 4, 
+        "volume": 1.5, 
+        "power": 5, 
+        "fieldOfView": {
+            "sensorGeometry": "RECTANGULAR",
+            "alongTrackFieldOfView": 1.9773,
+            "crossTrackFieldOfView": 2.9662
+        },
+        "scanTechnique": "MATRIX_IMAGER",
+        "orientation": {
+            "convention": "NADIR"
+        },
+        "dataRate": 1,
+        "numberDetectorRowsAT": 4452,
+        "numberDetectorColsCT":  6644,
+        "detectorWidth": 5.5e-6,
+        "focalLength": 0.7095,
+        "operatingWavelength": 475e-9,
+        "bandwidth": 110e-9,
+        "quantumEff": 0.37,
+        "targetBlackBodyTemp": 290,
+        "bitsPerPixel": 12,
+        "opticsSysEff": 0.75,
+        "numOfReadOutE": 10,
+        "apertureDia": 89e-3,
+        "Fnum": 8,
+        "snrThreshold": 30,
+        "maneuverability":{
+            "@type": "CONE",
+            "fullConeAngle": 55
+        },
+        "_comments": ["mass, power, volume are of another commerical (ISIS) 3U cubesat payload capacity advertisement.",
+                          "Telescope and detector specs are guessed.",
+                          "datarate is wrong."
+                         ]
+    }],    
+    "groundStations":{
+        "gndStnFileName":"groundStations"
+    },
+    "grid":{
+        "@type": "autoGrid",
+        "regions":[{
+            "@id":1,
+            "latUpper":5,
+            "latLower":-5,
+            "lonUpper":180,
+            "lonLower":-180                
+        }
+        ]        
+    }
+
+}

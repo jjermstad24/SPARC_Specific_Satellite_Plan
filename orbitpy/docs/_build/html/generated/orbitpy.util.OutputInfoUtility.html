@@ -1,0 +1,370 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>OutputInfoUtility &mdash; OrbitPy 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="OrbitState" href="orbitpy.util.OrbitState.html" />
+    <link rel="prev" title="DateType" href="orbitpy.util.DateType.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> OrbitPy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../module_constellation.html"><code class="docutils literal notranslate"><span class="pre">orbit.constellation</span></code> — Constellation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_propagator.html"><code class="docutils literal notranslate"><span class="pre">orbit.propagator</span></code> — Propagator Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_grid.html"><code class="docutils literal notranslate"><span class="pre">orbit.grid</span></code> — Grid Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_coveragecalculator.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.coveragecalculator</span></code> — Coverage Calculator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_contactfinder.html"><code class="docutils literal notranslate"><span class="pre">orbit.contactfinder</span></code> — Contact Finder Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_eclipsefinder.html"><code class="docutils literal notranslate"><span class="pre">orbit.eclipsefinder</span></code> — Eclipse Finder Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_datametricscalculator.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.datametricscalculator</span></code> — Data Metrics Calculator Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_mission.html"><code class="docutils literal notranslate"><span class="pre">orbit.mission</span></code> — Mission Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_sensorpixelprojection.html"><code class="docutils literal notranslate"><span class="pre">orbit.sensorpixelprojection</span></code> — Sensor Pixel Projection</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../module_util.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.util</span></code> — Util Module</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../module_util.html#description">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../module_util.html#statetype"><code class="docutils literal notranslate"><span class="pre">StateType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../module_util.html#datetype"><code class="docutils literal notranslate"><span class="pre">DateType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../module_util.html#orbitstate"><code class="docutils literal notranslate"><span class="pre">OrbitState</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../module_util.html#orientation"><code class="docutils literal notranslate"><span class="pre">Orientation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../module_util.html#spacecraftbus"><code class="docutils literal notranslate"><span class="pre">SpacecraftBus</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../module_util.html#spacecraft"><code class="docutils literal notranslate"><span class="pre">Spacecraft</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../module_util.html#groundstation"><code class="docutils literal notranslate"><span class="pre">GroundStation</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../module_util.html#api">API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.StateType.html">StateType</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.DateType.html">DateType</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">OutputInfoUtility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.OrbitState.html">OrbitState</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.SpacecraftBus.html">SpacecraftBus</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.Spacecraft.html">Spacecraft</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.GroundStation.html">GroundStation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.helper_extract_spacecraft_params.html">helper_extract_spacecraft_params</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.extract_auxillary_info_from_state_file.html">extract_auxillary_info_from_state_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.dictionary_list_to_object_list.html">dictionary_list_to_object_list</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.object_list_to_dictionary_list.html">object_list_to_dictionary_list</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.initialize_object_list.html">initialize_object_list</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.add_to_list.html">add_to_list</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../miscellaneous.html">Miscellaneous</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OrbitPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api_reference.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="../module_util.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.util</span></code> — Util Module</a> &raquo;</li>
+        
+      <li>OutputInfoUtility</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/generated/orbitpy.util.OutputInfoUtility.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="outputinfoutility">
+<h1>OutputInfoUtility<a class="headerlink" href="#outputinfoutility" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="orbitpy.util.OutputInfoUtility">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">orbitpy.util.</span></span><span class="sig-name descname"><span class="pre">OutputInfoUtility</span></span><a class="reference internal" href="../_modules/orbitpy/util.html#OutputInfoUtility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.util.OutputInfoUtility" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class with utility classes, functions to handle the output-info objects, i.e. objects of the classes:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="orbitpy.propagator.PropagatorOutputInfo.html#orbitpy.propagator.PropagatorOutputInfo" title="orbitpy.propagator.PropagatorOutputInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.propagator.PropagatorOutputInfo</span></code></a></p></li>
+<li><p><a class="reference internal" href="orbitpy.contactfinder.ContactFinderOutputInfo.html#orbitpy.contactfinder.ContactFinderOutputInfo" title="orbitpy.contactfinder.ContactFinderOutputInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.contactfinder.ContactFinderOutputInfo</span></code></a></p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.coveragecalculator.CoverageOutputInfo</span></code></p></li>
+<li><p><a class="reference internal" href="orbitpy.datametricscalculator.DataMetricsOutputInfo.html#orbitpy.datametricscalculator.DataMetricsOutputInfo" title="orbitpy.datametricscalculator.DataMetricsOutputInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.datametricscalculator.DataMetricsOutputInfo</span></code></a></p></li>
+<li><p><a class="reference internal" href="orbitpy.eclipsefinder.EclipseFinderOutputInfo.html#orbitpy.eclipsefinder.EclipseFinderOutputInfo" title="orbitpy.eclipsefinder.EclipseFinderOutputInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.eclipsefinder.EclipseFinderOutputInfo</span></code></a></p></li>
+<li><p><a class="reference internal" href="orbitpy.grid.GridOutputInfo.html#orbitpy.grid.GridOutputInfo" title="orbitpy.grid.GridOutputInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.grid.GridOutputInfo</span></code></a></p></li>
+</ul>
+<p class="rubric">Methods Summary</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#orbitpy.util.OutputInfoUtility.__init__" title="orbitpy.util.OutputInfoUtility.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#orbitpy.util.OutputInfoUtility.delete_output_info_object_in_list" title="orbitpy.util.OutputInfoUtility.delete_output_info_object_in_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_output_info_object_in_list</span></code></a>(...)</p></td>
+<td><p>Remove an output-info object from list of output-info objects which has &quot;loose&quot;-equality with the other output-info object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#orbitpy.util.OutputInfoUtility.locate_output_info_object_in_list" title="orbitpy.util.OutputInfoUtility.locate_output_info_object_in_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">locate_output_info_object_in_list</span></code></a>(...)</p></td>
+<td><p>Locate an output-info object from list of output-info objects with parameters as that given by the input arguments.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.util.OutputInfoUtility.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#orbitpy.util.OutputInfoUtility.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.util.OutputInfoUtility.delete_output_info_object_in_list">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_output_info_object_in_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_info_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_out_info_object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/orbitpy/util.html#OutputInfoUtility.delete_output_info_object_in_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.util.OutputInfoUtility.delete_output_info_object_in_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an output-info object from list of output-info objects which has “loose”-equality with the other
+output-info object. Loose equality requires only some of the instance variables of the two objects to match. 
+Please see the <code class="docutils literal notranslate"><span class="pre">check_loose_equality</span></code> function of the respective output-info class to know which instance variables care compared.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>out_info_list</strong> – List of output-info objects.</p></li>
+<li><p><strong>other_out_info_object</strong> (<em>output-info object</em><em> or </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><em>output-info object</em>) – Output-info object(s) with which comparison for loose-equality shall be made. Can be a list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Paramtype</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>, output-info objects</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(Potentially) reduced list of output-info objects with an deleted object.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>, output-info objects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.util.OutputInfoUtility.locate_output_info_object_in_list">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">locate_output_info_object_in_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_info_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_info_type</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/orbitpy/util.html#OutputInfoUtility.locate_output_info_object_in_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.util.OutputInfoUtility.locate_output_info_object_in_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Locate an output-info object from list of output-info objects with parameters
+as that given by the input arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>out_info_list</strong> – List of output-info objects.</p></li>
+<li><p><strong>out_info_type</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.util.OutputInfoUtility.OutputInfoType</span></code>) – The <em>type</em> of the output-info object.</p></li>
+<li><p><strong>**kwargs</strong> – <p>Keyword arguments. Depending on the output-info type of interest, there are different keywords expected.</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Output-info type</p></th>
+<th class="head"><p>Keyword(s)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">PropagatorOutputInfo</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spacecraft_id</span></code></p></td>
+<td><p>Spacecraft-identifier of the propagated spacecraft.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CoverageOutputInfo</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">inp_cov_type</span></code>, <code class="docutils literal notranslate"><span class="pre">spacecraft_id</span></code>, <code class="docutils literal notranslate"><span class="pre">inp_instru_id</span></code>, <code class="docutils literal notranslate"><span class="pre">inp_mode_id</span></code>, <code class="docutils literal notranslate"><span class="pre">inp_grid_id</span></code></p></td>
+<td><p>Coverage-type and identifiers of spacecraft, instrument, mode, grid.</p></td>
+</tr>
+</tbody>
+</table>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Paramtype</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>, output-info objects</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The output-info object with parameters matched to the input arguments.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>output-info object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<div style='clear:both'></div></div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="orbitpy.util.OrbitState.html" class="btn btn-neutral float-right" title="OrbitState" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="orbitpy.util.DateType.html" class="btn btn-neutral float-left" title="DateType" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, BAERI.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

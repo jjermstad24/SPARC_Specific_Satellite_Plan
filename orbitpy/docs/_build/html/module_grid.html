@@ -1,0 +1,413 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>orbit.grid — Grid Module &mdash; OrbitPy 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Grid" href="generated/orbitpy.grid.Grid.html" />
+    <link rel="prev" title="compute_time_step" href="generated/orbitpy.propagator.compute_time_step.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> OrbitPy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="module_constellation.html"><code class="docutils literal notranslate"><span class="pre">orbit.constellation</span></code> — Constellation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_propagator.html"><code class="docutils literal notranslate"><span class="pre">orbit.propagator</span></code> — Propagator Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">orbit.grid</span></code> — Grid Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#description">Description</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#input-grid-file-format">Input grid file format</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api">API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/orbitpy.grid.Grid.html">Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/orbitpy.grid.GridOutputInfo.html">GridOutputInfo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/orbitpy.grid.GridPoint.html">GridPoint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/orbitpy.grid.compute_grid_res.html">compute_grid_res</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="module_coveragecalculator.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.coveragecalculator</span></code> — Coverage Calculator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_contactfinder.html"><code class="docutils literal notranslate"><span class="pre">orbit.contactfinder</span></code> — Contact Finder Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_eclipsefinder.html"><code class="docutils literal notranslate"><span class="pre">orbit.eclipsefinder</span></code> — Eclipse Finder Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_datametricscalculator.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.datametricscalculator</span></code> — Data Metrics Calculator Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_mission.html"><code class="docutils literal notranslate"><span class="pre">orbit.mission</span></code> — Mission Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_sensorpixelprojection.html"><code class="docutils literal notranslate"><span class="pre">orbit.sensorpixelprojection</span></code> — Sensor Pixel Projection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_util.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.util</span></code> — Util Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="miscellaneous.html">Miscellaneous</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">OrbitPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="api_reference.html">API Reference</a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">orbit.grid</span></code> — Grid Module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/module_grid.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="orbit-grid-grid-module">
+<span id="module-grid"></span><h1><code class="docutils literal notranslate"><span class="pre">orbit.grid</span></code> — Grid Module<a class="headerlink" href="#orbit-grid-grid-module" title="Permalink to this heading">¶</a></h1>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
+<p>Module to handle grid (array of geo-coordinates) related operations. The <code class="docutils literal notranslate"><span class="pre">Grid</span></code> class of this module can be used to either generate set of
+grid points given latitude/ longitude bounds or load a custom set of grid points.</p>
+<p>The module also offers computation of an appropriate grid-resolution for a list of satellites and an user-set <em>grid-resolution factor</em>
+by using the <code class="docutils literal notranslate"><span class="pre">compute_grid_res(.)</span></code> function. The grid resolution is to be set such that at any given arbitrary time, the sensor footprint
+from its (scene) field-of-<strong>view</strong> captures atleast one grid-point when the satellite is somewhere well within the interior of a region.
+This can be achieved by setting the grid resolution (spacing between the grid points) to be less than the minimum footprint dimension.
+A grid resolution factor <code class="code docutils literal notranslate"><span class="pre">grid_res_fac</span></code> is defined (with default value 0.9) and the grid resolution is computed as
+(<code class="code docutils literal notranslate"><span class="pre">grid_res_fac</span></code> . minimum footprint angular dimension).
+For example, in case of rectangular sensor with FOV: 5 deg x 15 deg at an altitude of 500km, the minimum footprint angular dimension
+is the Earth centric angle subtended by the 5 deg side = 0.3922 deg. This gives the grid resolution as 0.3530 deg.</p>
+<div class="figure align-center" id="id3">
+<a class="reference internal image-reference" href="_images/grid_res_illus.png"><img alt="_images/grid_res_illus.png" src="_images/grid_res_illus.png" style="width: 420.0px; height: 324.0px;" /></a>
+<p class="caption"><span class="caption-text">Illustration of relationship between grid resolution and sensor footprint.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The field-of-<strong>view</strong> is used here, and not the field-of-<strong>regard</strong>. The scene-field-of-view is used if different from the field-of-view.
+The scene-field-of-view is typically larger than the instrument field-of-view to allow for coarser grid-resolution (and hence faster coverage computation).</p>
+</div>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Describe the grid pattern of the auto generated grid points.</p>
+</div>
+<div class="section" id="input-grid-file-format">
+<span id="id2"></span><h3>Input grid file format<a class="headerlink" href="#input-grid-file-format" title="Permalink to this heading">¶</a></h3>
+<p>In the case of loading grid-data from external files, the data file needs to be of csv format as indicated in the example below.
+The column headers are <em>lat [deg]</em> (which indicates latitude in degrees), and <em>lon [deg]</em> (which indicates longitude in degrees).
+The grid-points are referred by indices starting from 0.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lat</span> <span class="p">[</span><span class="n">deg</span><span class="p">],</span><span class="n">lon</span> <span class="p">[</span><span class="n">deg</span><span class="p">]</span>
+  <span class="mf">9.9</span><span class="p">,</span><span class="mi">20</span>
+  <span class="mf">9.9</span><span class="p">,</span><span class="mf">20.10</span>
+  <span class="mf">9.9</span><span class="p">,</span><span class="mf">20.20</span>
+<span class="o">-</span><span class="mf">49.1</span><span class="p">,</span><span class="o">-</span><span class="mi">75</span>
+<span class="o">-</span><span class="mf">49.1</span><span class="p">,</span><span class="o">-</span><span class="mf">75.46</span>
+<span class="o">-</span><span class="mf">49.1</span><span class="p">,</span><span class="o">-</span><span class="mf">75.43</span>
+ <span class="mf">79.1</span><span class="p">,</span><span class="mf">80.32</span>
+ <span class="mf">79.1</span><span class="p">,</span><span class="mf">80.56</span>
+ <span class="mf">79.1</span><span class="p">,</span><span class="mf">80.88</span>
+ <span class="mf">79.1</span><span class="p">,</span><span class="mf">81.02</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Please specify latitudes in the range of -90 deg to +90 deg and longitudes in the range of -180 deg to +180 deg while loading points
+from a data file. Do <em>NOT</em> specify the longitudes in range of 0 deg to 360 deg.</p>
+</div>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic">
+<li><p>Generating a autogrid of a region with the latitude bounds of 15 deg to 20 deg and longitude bounds of 45 deg to 80 deg and grid-resolution
+(i.e. spacing between the grid-points) of 1 deg.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">orbitpy.grid</span> <span class="kn">import</span> <span class="n">Grid</span>
+<span class="n">regionA</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;autogrid&quot;</span><span class="p">,</span> <span class="s2">&quot;@id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;latUpper&quot;</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span> <span class="s2">&quot;latLower&quot;</span><span class="p">:</span><span class="mi">15</span><span class="p">,</span> <span class="s2">&quot;lonUpper&quot;</span><span class="p">:</span><span class="mi">80</span><span class="p">,</span> <span class="s2">&quot;lonLower&quot;</span><span class="p">:</span><span class="mi">45</span><span class="p">,</span> <span class="s2">&quot;gridRes&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">regionA</span><span class="o">.</span><span class="n">num_points</span><span class="p">)</span> <span class="c1"># access total number of generated points</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">regionA</span><span class="o">.</span><span class="n">get_lat_lon_from_index</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">10</span><span class="p">]))</span> <span class="c1"># access the lat, lon coordinates of grid-points 0, 2, 10. Note that the indx starts from 0.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">regionA</span><span class="o">.</span><span class="n">get_lat_lon</span><span class="p">)</span> <span class="c1"># get all the generated grid-points</span>
+
+<span class="o">&gt;&gt;</span> <span class="mi">169</span>
+<span class="o">&gt;&gt;</span> <span class="n">GridPoint</span><span class="p">(</span><span class="n">latitude</span><span class="o">=</span><span class="p">[</span><span class="mf">20.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">],</span> <span class="n">longitude</span><span class="o">=</span><span class="p">[</span><span class="mf">45.0</span><span class="p">,</span> <span class="mf">47.13</span><span class="p">,</span> <span class="mf">55.651</span><span class="p">])</span>
+<span class="o">&gt;&gt;</span> <span class="n">GridPoint</span><span class="p">(</span><span class="n">latitude</span><span class="o">=</span><span class="p">[</span><span class="mf">20.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span><span class="o">...</span> <span class="mf">16.0</span><span class="p">,</span> <span class="mf">16.0</span><span class="p">],</span> <span class="n">longitude</span><span class="o">=</span><span class="p">[</span><span class="mf">45.0</span><span class="p">,</span> <span class="mf">46.065</span><span class="p">,</span> <span class="mf">47.13</span><span class="p">,</span> <span class="mf">48.195</span><span class="p">,</span><span class="o">..</span><span class="mf">.77.254</span><span class="p">,</span> <span class="mf">78.295</span><span class="p">,</span> <span class="mf">79.335</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+<li><p>Load points from a data-file (customgrid). Note that the latitudes have to be in the range of -90 deg to +90 deg and longitudes
+have to be in the range of -180 deg to +180 deg.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gridDataIn</span><span class="o">.</span><span class="n">csv</span>
+<span class="o">---------------</span>
+<span class="n">lat</span> <span class="p">[</span><span class="n">deg</span><span class="p">],</span><span class="n">lon</span> <span class="p">[</span><span class="n">deg</span><span class="p">]</span>
+<span class="mi">50</span><span class="p">,</span><span class="o">-</span><span class="mi">110</span>
+<span class="mi">50</span><span class="p">,</span><span class="o">-</span><span class="mf">106.044</span>
+<span class="mi">50</span><span class="p">,</span><span class="o">-</span><span class="mf">102.088</span>
+<span class="mi">50</span><span class="p">,</span><span class="o">-</span><span class="mf">98.1319</span>
+
+<span class="kn">from</span> <span class="nn">orbitpy.grid</span> <span class="kn">import</span> <span class="n">Grid</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">covGridFilePath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;/gridDataIn.csv&#39;</span> <span class="c1"># path to the file containing the grid-data</span>
+<span class="n">regionB</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;customGRID&quot;</span><span class="p">,</span> <span class="s2">&quot;covGridFilePath&quot;</span><span class="p">:</span> <span class="n">covGridFilePath</span><span class="p">,</span> <span class="s2">&quot;@id&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">regionB</span><span class="o">.</span><span class="n">num_points</span><span class="p">)</span> <span class="c1"># access total number of generated points</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">regionB</span><span class="o">.</span><span class="n">get_lat_lon_from_index</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">10</span><span class="p">]))</span> <span class="c1"># access the lat, lon coordinates of grid-points 0, 2, 10</span>
+
+<span class="o">&gt;&gt;</span> <span class="mi">4</span>
+<span class="o">&gt;&gt;</span> <span class="n">GridPoint</span><span class="p">(</span><span class="n">latitude</span><span class="o">=</span><span class="p">[</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">],</span> <span class="n">longitude</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">110</span><span class="p">,</span> <span class="o">-</span><span class="mf">102.088</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+<li><p>Writing data to a file. The <code class="docutils literal notranslate"><span class="pre">Grid</span></code> object <code class="docutils literal notranslate"><span class="pre">filepath</span></code> instance variable is updated to respective file-location.
+Note the <code class="docutils literal notranslate"><span class="pre">GridOutputInfo</span></code> object which is returned. This object stores metadata about the grid data
+(such as location of output file, grid-id, etc).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">orbitpy.grid</span> <span class="kn">import</span> <span class="n">Grid</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;/gridDataOut.csv&#39;</span> <span class="c1"># path to the output file containing the grid points</span>
+<span class="n">o</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;autogrid&quot;</span><span class="p">,</span> <span class="s2">&quot;@id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;latUpper&quot;</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span> <span class="s2">&quot;latLower&quot;</span><span class="p">:</span><span class="mi">15</span><span class="p">,</span> <span class="s2">&quot;lonUpper&quot;</span><span class="p">:</span><span class="mi">80</span><span class="p">,</span> <span class="s2">&quot;lonLower&quot;</span><span class="p">:</span><span class="mi">45</span><span class="p">,</span> <span class="s2">&quot;gridRes&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="n">out_info</span> <span class="o">=</span> <span class="n">o</span><span class="o">.</span><span class="n">write_to_file</span><span class="p">(</span><span class="n">out_file</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">out_info</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;</span> <span class="n">GridOutputInfo</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s1">&#39;@type&#39;</span><span class="p">:</span> <span class="s1">&#39;GRID OUTPUT INFO&#39;</span><span class="p">,</span> <span class="s1">&#39;gridId&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;gridFile&#39;</span><span class="p">:</span> <span class="s1">&#39;/mnt/hgfs/Workspace/orbits/gridDataOut.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;@id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
+
+<span class="n">gridDataOut</span><span class="o">.</span><span class="n">csv</span>
+<span class="o">----------------</span>
+<span class="n">lat</span> <span class="p">[</span><span class="n">deg</span><span class="p">],</span><span class="n">lon</span> <span class="p">[</span><span class="n">deg</span><span class="p">]</span>
+<span class="mf">20.0</span><span class="p">,</span><span class="mf">45.0</span>
+<span class="mf">20.0</span><span class="p">,</span><span class="mf">46.065</span>
+<span class="mf">20.0</span><span class="p">,</span><span class="mf">47.13</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+</li>
+<li><p>Computing grid resolution for a set of 2 satellites with 1 and 2 instruments respectively. Output is in degrees.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">orbitpy.grid</span>
+<span class="kn">from</span> <span class="nn">orbitpy.util</span> <span class="kn">import</span> <span class="n">OrbitState</span><span class="p">,</span> <span class="n">Spacecraft</span>
+<span class="kn">from</span> <span class="nn">instrupy</span> <span class="kn">import</span> <span class="n">Instrument</span>
+
+<span class="n">RE</span> <span class="o">=</span> <span class="mf">6378.137</span> <span class="c1"># radius of Earth in kilometers</span>
+<span class="n">instru1</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s1">&#39;{&quot;@type&quot;: &quot;Basic Sensor&quot;,&quot;fieldOfViewGeometry&quot;: {&quot;shape&quot;: &quot;Rectangular&quot;, &quot;angleHeight&quot;: 10, &quot;angleWidth&quot;: 20}}&#39;</span><span class="p">)</span>
+<span class="n">instru2</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s1">&#39;{&quot;@type&quot;: &quot;Basic Sensor&quot;,&quot;fieldOfViewGeometry&quot;: {&quot;shape&quot;: &quot;Rectangular&quot;, &quot;angleHeight&quot;: 10, &quot;angleWidth&quot;: 5}, &quot;maneuver&quot;:{&quot;maneuverType&quot;: &quot;Double_Roll_Only&quot;, &quot;A_rollMin&quot;:10, &quot;A_rollMax&quot;:15, &quot;B_rollMin&quot;:-15, &quot;B_rollMax&quot;:-10}}&#39;</span><span class="p">)</span>
+<span class="n">instru3</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s1">&#39;{&quot;@type&quot;: &quot;Basic Sensor&quot;,&quot;fieldOfViewGeometry&quot;: {&quot;shape&quot;: &quot;Rectangular&quot;, &quot;angleHeight&quot;: 10, &quot;angleWidth&quot;: 15}}&#39;</span><span class="p">)</span>
+
+<span class="n">orbit1</span> <span class="o">=</span> <span class="n">OrbitState</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s2">&quot;date&quot;</span><span class="p">:{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span><span class="s2">&quot;JULIAN_DATE_UT1&quot;</span><span class="p">,</span> <span class="s2">&quot;jd&quot;</span><span class="p">:</span><span class="mf">2459270.75</span><span class="p">},</span><span class="s2">&quot;state&quot;</span><span class="p">:{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;KEPLERIAN_EARTH_CENTERED_INERTIAL&quot;</span><span class="p">,</span> <span class="s2">&quot;sma&quot;</span><span class="p">:</span> <span class="n">RE</span><span class="o">+</span><span class="mi">700</span><span class="p">,</span> <span class="s2">&quot;ecc&quot;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span> <span class="s2">&quot;inc&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;raan&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;aop&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;ta&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}})</span>
+<span class="n">orbit2</span> <span class="o">=</span> <span class="n">OrbitState</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s2">&quot;date&quot;</span><span class="p">:{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span><span class="s2">&quot;JULIAN_DATE_UT1&quot;</span><span class="p">,</span> <span class="s2">&quot;jd&quot;</span><span class="p">:</span><span class="mf">2459270.75</span><span class="p">},</span><span class="s2">&quot;state&quot;</span><span class="p">:{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;KEPLERIAN_EARTH_CENTERED_INERTIAL&quot;</span><span class="p">,</span> <span class="s2">&quot;sma&quot;</span><span class="p">:</span> <span class="n">RE</span><span class="o">+</span><span class="mi">510</span><span class="p">,</span> <span class="s2">&quot;ecc&quot;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span> <span class="s2">&quot;inc&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="s2">&quot;raan&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;aop&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;ta&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}})</span>
+
+<span class="n">sats</span> <span class="o">=</span> <span class="p">[</span><span class="n">Spacecraft</span><span class="p">(</span><span class="n">orbitState</span><span class="o">=</span><span class="n">orbit1</span><span class="p">,</span> <span class="n">instrument</span><span class="o">=</span><span class="p">[</span><span class="n">instru1</span><span class="p">]),</span> <span class="c1"># list of 2 satellites with 1 and 2 instruments respectively</span>
+      <span class="n">Spacecraft</span><span class="p">(</span><span class="n">orbitState</span><span class="o">=</span><span class="n">orbit2</span><span class="p">,</span> <span class="n">instrument</span><span class="o">=</span><span class="p">[</span><span class="n">instru2</span><span class="p">,</span> <span class="n">instru3</span><span class="p">])]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">orbitpy</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">compute_grid_res</span><span class="p">(</span><span class="n">sats</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">)</span> <span class="c1"># custom grid resolution factor is chosen as 0.9</span>
+
+<span class="o">&gt;&gt;</span> <span class="mf">0.36007964028136996</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this heading">¶</a></h2>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/orbitpy.grid.Grid.html#orbitpy.grid.Grid" title="orbitpy.grid.Grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orbitpy.grid.Grid</span></code></a></p></td>
+<td><p>Class to handle grid related operations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/orbitpy.grid.GridOutputInfo.html#orbitpy.grid.GridOutputInfo" title="orbitpy.grid.GridOutputInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orbitpy.grid.GridOutputInfo</span></code></a></p></td>
+<td><p>Class to hold information about the grid-data (geo-coordinates).</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/orbitpy.grid.GridPoint.html#orbitpy.grid.GridPoint" title="orbitpy.grid.GridPoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orbitpy.grid.GridPoint</span></code></a></p></td>
+<td><p>Function returns a namedtuple class to store grid-points as (in general this shall be a list) latitudes and longitudes in degrees.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/orbitpy.grid.compute_grid_res.html#orbitpy.grid.compute_grid_res" title="orbitpy.grid.compute_grid_res"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orbitpy.grid.compute_grid_res</span></code></a></p></td>
+<td><p>Compute grid resolution to be used for coverage grid generation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="generated/orbitpy.grid.Grid.html" class="btn btn-neutral float-right" title="Grid" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="generated/orbitpy.propagator.compute_time_step.html" class="btn btn-neutral float-left" title="compute_time_step" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, BAERI.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

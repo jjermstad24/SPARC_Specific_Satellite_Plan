@@ -1,0 +1,949 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>test_passive_optical_scanner_model &mdash; InstruPy 0.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> InstruPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../instrument_models.html">Instrument Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../miscellaneous.html">Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use_cases.html">Use Cases</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">InstruPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>test_passive_optical_scanner_model</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for test_passive_optical_scanner_model</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Unit tests for instrupy.passive_optical_sensor_model</span>
+
+<span class="sd">Tests:</span>
+
+<span class="sd">* test_from_json_basic</span>
+<span class="sd">* test_calculate_integration_time</span>
+<span class="sd">* test_calculate_number_of_signal_electrons</span>
+<span class="sd">* test_radianceWithEarthAsReflector</span>
+<span class="sd">* test_radianceWithEarthAsBlackBodyRadiator</span>
+<span class="sd">* test_planck_photon_integral</span>
+<span class="sd">* test_calc_data_metrics_smad_truth: Test with SMAD 3rd ed truth data (firesat example).</span>
+
+<span class="sd">For the below tests refer to the following article more context:</span>
+<span class="sd">V. Ravindra and S. Nag, &quot;Instrument Data Metrics Evaluator for Tradespace Analysis of Earth Observing Constellations,&quot; 2020 IEEE Aerospace Conference, Big Sky, MT, USA, 2020.</span>
+
+<span class="sd">* test_calc_data_metrics_TIRSBand1_precomputed: Model instrument with TIRS Band 1 specs (IR, pushbroom), Landsat-8 orbit and test with the results as computed on 4 April 2021.</span>
+<span class="sd">* test_calc_data_metrics_OLIBlueBand_precomputed: Model instrument with OLI Blue band specs (Optical, pushbroom), Landsat-8 orbit and test with the results as computed on 4 April 2021.</span>
+<span class="sd">* test_calc_data_metrics_MODISBand10_precomputed: Model instrument with MODIS Band 10 specs (Optical, whiskbroom), Aqua orbit and test with the results as computed on 4 April 2021.</span>
+<span class="sd">* test_calc_data_metrics_MODISBand1_precomputed: Model instrument with MODIS Band 1 specs (Optical, whiskbroom), Aqua orbit and test with the results as computed on 4 April 2021.</span>
+<span class="sd">* test_calc_data_metrics_CCAMBlueBand_precomputed: Model instrument with CCAM Blue Band specs (Matrix, optical), Aqua orbit and test with the results as computed on 4 April 2021.</span>
+
+<span class="sd">.. note:: The results using the LOWTRAN7 model are computed at resolution wav_step_percm = 5.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="kn">from</span> <span class="nn">instrupy.passive_optical_scanner_model</span> <span class="kn">import</span> <span class="n">ScanTech</span><span class="p">,</span> <span class="n">PassiveOpticalScannerModel</span><span class="p">,</span> <span class="n">AtmosphericLossModel</span>
+<span class="kn">from</span> <span class="nn">instrupy.util</span> <span class="kn">import</span> <span class="n">Orientation</span><span class="p">,</span> <span class="n">SphericalGeometry</span><span class="p">,</span> <span class="n">ViewGeometry</span><span class="p">,</span> <span class="n">Maneuver</span>
+
+<span class="n">firesat_json</span> <span class="o">=</span>  <span class="s1">&#39;{&quot;@type&quot;: &quot;Passive Optical Scanner&quot;,&#39;</span> \
+                <span class="s1">&#39;&quot;name&quot;: &quot;FireSat&quot;,&#39;</span> \
+                <span class="s1">&#39;&quot;mass&quot;: 28,&#39;</span> \
+                <span class="s1">&#39;&quot;volume&quot;: 0.12,&#39;</span> \
+                <span class="s1">&#39;&quot;power&quot;: 32,&#39;</span> \
+                <span class="s1">&#39;&quot;fieldOfViewGeometry&quot;: {&#39;</span> \
+                <span class="s1">&#39;   &quot;shape&quot;: &quot;RECTanGULAR&quot;,&#39;</span> \
+                <span class="s1">&#39;   &quot;angleHeight&quot;: 0.628,&#39;</span> \
+                <span class="s1">&#39;   &quot;angleWidth&quot;: 115.8&#39;</span> \
+                <span class="s1">&#39; },&#39;</span> \
+                <span class="s1">&#39;&quot;scanTechnique&quot;: &quot;WhiskBROOM&quot;,&#39;</span> \
+                <span class="s1">&#39;&quot;orientation&quot;: {&#39;</span> \
+                <span class="s1">&#39;   &quot;referenceFrame&quot;: &quot;SC_BODY_FIXED&quot;,&#39;</span> \
+                <span class="s1">&#39;   &quot;convention&quot;: &quot;SIDE_loOK&quot;,&#39;</span> \
+                <span class="s1">&#39;   &quot;sideLookAngle&quot;: 0&#39;</span> \
+                <span class="s1">&#39; },&#39;</span> \
+                <span class="s1">&#39;&quot;dataRate&quot;: 85,&#39;</span> \
+                <span class="s1">&#39;&quot;numberDetectorRows&quot;: 256,&#39;</span> \
+                <span class="s1">&#39;&quot;numberDetectorCols&quot;: 1,&#39;</span> \
+                <span class="s1">&#39;&quot;detectorWidth&quot;: 30e-6,&#39;</span> \
+                <span class="s1">&#39;&quot;focalLength&quot;: 0.7,&#39;</span> \
+                <span class="s1">&#39;&quot;operatingWavelength&quot;: 4.2e-6,&#39;</span> \
+                <span class="s1">&#39;&quot;bandwidth&quot;: 1.9e-6,&#39;</span> \
+                <span class="s1">&#39;&quot;quantumEff&quot;: 0.5,&#39;</span> \
+                <span class="s1">&#39;&quot;targetBlackBodyTemp&quot;: 290,&#39;</span> \
+                <span class="s1">&#39;&quot;bitsPerPixel&quot;: 8,&#39;</span> \
+                <span class="s1">&#39;&quot;opticsSysEff&quot;: 0.75,&#39;</span> \
+                <span class="s1">&#39;&quot;numOfReadOutE&quot;: 25,&#39;</span> \
+                <span class="s1">&#39;&quot;apertureDia&quot;: 0.26,&#39;</span> \
+                <span class="s1">&#39;&quot;Fnum&quot;: 2.7,&#39;</span> \
+                <span class="s1">&#39;&quot;atmosLossModel&quot;: &quot;LOWTRAN7&quot;}&#39;</span>
+<div class="viewcode-block" id="TestPassiveOpticalScannerModel"><a class="viewcode-back" href="../tests.html#test_passive_optical_scanner_model.TestPassiveOpticalScannerModel">[docs]</a><span class="k">class</span> <span class="nc">TestPassiveOpticalScannerModel</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>   
+
+    <span class="k">def</span> <span class="nf">assertNearlyZeroErrorFraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">fraction</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span><span class="n">msg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fraction</span><span class="o">*</span><span class="n">a</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">msg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="s2">&quot;The given numbers </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2"> are not near each other.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fail</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_from_json_basic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
+        <span class="c1"># Test: Typical case      </span>
+        <span class="n">firesat</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">firesat_json</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">_type</span><span class="p">,</span> <span class="s2">&quot;Passive Optical Scanner&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">_id</span><span class="p">)</span> <span class="c1"># default random-id assigned</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;FireSat&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">volume</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">volume</span><span class="p">,</span> <span class="mf">0.12</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">power</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">power</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">dataRate</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">dataRate</span><span class="p">,</span> <span class="mi">85</span><span class="p">)</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">orientation</span><span class="p">,</span> <span class="n">Orientation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">orientation</span><span class="p">,</span> <span class="n">Orientation</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s1">&#39;referenceFrame&#39;</span><span class="p">:</span> <span class="s1">&#39;SC_BODY_FIXED&#39;</span><span class="p">,</span> <span class="s1">&#39;convention&#39;</span><span class="p">:</span> <span class="s1">&#39;EULER&#39;</span><span class="p">,</span> <span class="s1">&#39;eulerSeq1&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;eulerSeq2&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;eulerSeq3&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;eulerAngle1&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;eulerAngle2&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;eulerAngle3&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">}))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">fieldOfView</span><span class="p">,</span> <span class="n">ViewGeometry</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">fieldOfView</span><span class="p">,</span> <span class="n">ViewGeometry</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s1">&#39;orientation&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;referenceFrame&#39;</span><span class="p">:</span> <span class="s1">&#39;SC_BODY_FIXED&#39;</span><span class="p">,</span> <span class="s1">&#39;convention&#39;</span><span class="p">:</span> <span class="s1">&#39;EULER&#39;</span><span class="p">,</span> <span class="s1">&#39;eulerSeq1&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;eulerSeq2&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;eulerSeq3&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;eulerAngle1&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;eulerAngle2&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;eulerAngle3&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">},</span> 
+                                                                           <span class="s1">&#39;sphericalGeometry&#39;</span><span class="p">:{</span><span class="s1">&#39;shape&#39;</span><span class="p">:</span><span class="s1">&#39;rectangular&#39;</span><span class="p">,</span> <span class="s1">&#39;angleHeight&#39;</span><span class="p">:</span><span class="mf">0.628</span><span class="p">,</span> <span class="s1">&#39;angleWidth&#39;</span><span class="p">:</span><span class="mf">115.8</span><span class="p">}}))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">sceneFieldOfView</span><span class="p">,</span> <span class="n">ViewGeometry</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">sceneFieldOfView</span><span class="p">,</span> <span class="n">firesat</span><span class="o">.</span><span class="n">fieldOfView</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">maneuver</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">fieldOfRegard</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">pointingOption</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">scanTechnique</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">scanTechnique</span><span class="p">,</span> <span class="s2">&quot;WHISKBROOM&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">detectorWidth</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">detectorWidth</span><span class="p">,</span> <span class="mf">30e-6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">focalLength</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">focalLength</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">operatingWavelength</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">operatingWavelength</span><span class="p">,</span> <span class="mf">4.2e-6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">,</span> <span class="mf">1.9e-6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">quantumEff</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">quantumEff</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">targetBlackBodyTemp</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">targetBlackBodyTemp</span><span class="p">,</span> <span class="mi">290</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">bitsPerPixel</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">bitsPerPixel</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">opticsSysEff</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">opticsSysEff</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">numOfReadOutE</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">numOfReadOutE</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">apertureDia</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">apertureDia</span><span class="p">,</span> <span class="mf">0.26</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">Fnum</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">Fnum</span><span class="p">,</span>  <span class="mf">2.7</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">atmosLossModel</span><span class="p">,</span> <span class="n">AtmosphericLossModel</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">atmosLossModel</span><span class="p">,</span> <span class="n">AtmosphericLossModel</span><span class="o">.</span><span class="n">LOWTRAN7</span><span class="p">)</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">firesat</span><span class="p">,</span> <span class="n">PassiveOpticalScannerModel</span><span class="p">)</span>
+
+        <span class="c1"># Test the setting of default parameters</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s1">&#39;{&quot;@type&quot;: &quot;Passive Optical Scanner&quot;,&#39;</span>
+                                                    <span class="s1">&#39;&quot;fieldOfViewGeometry&quot;: {&#39;</span>
+                                                    <span class="s1">&#39;   &quot;shape&quot;: &quot;RECTanGULAR&quot;,&#39;</span>
+                                                    <span class="s1">&#39;   &quot;angleHeight&quot;: 0.628,&#39;</span>
+                                                    <span class="s1">&#39;   &quot;angleWidth&quot;: 115.8&#39;</span>
+                                                    <span class="s1">&#39; },&#39;</span>
+                                                    <span class="s1">&#39;&quot;scanTechnique&quot;: &quot;WhiskBROOM&quot;,&#39;</span>
+                                                    <span class="s1">&#39;&quot;numberDetectorRows&quot;: 256,&#39;</span>
+                                                    <span class="s1">&#39;&quot;numberDetectorCols&quot;: 1,&#39;</span>
+                                                    <span class="s1">&#39;&quot;detectorWidth&quot;: 30e-6,&#39;</span>
+                                                    <span class="s1">&#39;&quot;focalLength&quot;: 0.7,&#39;</span>
+                                                    <span class="s1">&#39;&quot;operatingWavelength&quot;: 4.2e-6,&#39;</span>
+                                                    <span class="s1">&#39;&quot;bandwidth&quot;: 1.9e-6,&#39;</span>
+                                                    <span class="s1">&#39;&quot;quantumEff&quot;: 0.5,&#39;</span>
+                                                    <span class="s1">&#39;&quot;opticsSysEff&quot;: 0.75,&#39;</span>
+                                                    <span class="s1">&#39;&quot;numOfReadOutE&quot;: 25,&#39;</span>
+                                                    <span class="s1">&#39;&quot;apertureDia&quot;: 0.26,&#39;</span>
+                                                    <span class="s1">&#39;&quot;Fnum&quot;: 2.7}&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">orientation</span><span class="p">,</span> <span class="n">Orientation</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s1">&#39;referenceFrame&#39;</span><span class="p">:</span> <span class="s1">&#39;SC_BODY_FIXED&#39;</span><span class="p">,</span> <span class="s1">&#39;convention&#39;</span><span class="p">:</span> <span class="s1">&#39;EULER&#39;</span><span class="p">,</span> <span class="s1">&#39;eulerSeq1&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;eulerSeq2&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;eulerSeq3&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;eulerAngle1&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;eulerAngle2&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;eulerAngle3&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">}))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">fieldOfView</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">sceneFieldOfView</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">firesat</span><span class="o">.</span><span class="n">targetBlackBodyTemp</span><span class="p">,</span> <span class="mi">290</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNone</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">atmosLossModel</span><span class="p">)</span>
+
+        <span class="c1"># Test of an un-supported field-of-view specification. </span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s1">&#39;{&quot;@type&quot;: &quot;Passive Optical Scanner&quot;,&#39;</span>
+                                                       <span class="s1">&#39;&quot;name&quot;: &quot;FireSat&quot;,&#39;</span>
+                                                        <span class="s1">&#39;&quot;mass&quot;: 28,&#39;</span>
+                                                        <span class="s1">&#39;&quot;volume&quot;: 0.12,&#39;</span>
+                                                        <span class="s1">&#39;&quot;power&quot;: 32,&#39;</span>
+                                                        <span class="s1">&#39;&quot;fieldOfViewGeometry&quot;: {&#39;</span>
+                                                        <span class="s1">&#39;   &quot;shape&quot;: &quot;CIRCULAR&quot;,&#39;</span>
+                                                        <span class="s1">&#39;   &quot;diameter&quot;: 60,&#39;</span>
+                                                        <span class="s1">&#39; },&#39;</span>
+                                                        <span class="s1">&#39;&quot;scanTechnique&quot;: &quot;WhiskBROOM&quot;,&#39;</span>
+                                                        <span class="s1">&#39;&quot;orientation&quot;: {&#39;</span>
+                                                        <span class="s1">&#39;   &quot;referenceFrame&quot;: &quot;SC_BODY_FIXED&quot;,&#39;</span>
+                                                        <span class="s1">&#39;   &quot;convention&quot;: &quot;SIDE_loOK&quot;,&#39;</span>
+                                                        <span class="s1">&#39;   &quot;sideLookAngle&quot;: 0&#39;</span>
+                                                        <span class="s1">&#39; },&#39;</span>
+                                                        <span class="s1">&#39;&quot;dataRate&quot;: 85,&#39;</span>
+                                                        <span class="s1">&#39;&quot;numberDetectorRows&quot;: 256,&#39;</span>
+                                                        <span class="s1">&#39;&quot;numberDetectorCols&quot;: 1,&#39;</span>
+                                                        <span class="s1">&#39;&quot;detectorWidth&quot;: 30e-6,&#39;</span>
+                                                        <span class="s1">&#39;&quot;focalLength&quot;: 0.7,&#39;</span>
+                                                        <span class="s1">&#39;&quot;operatingWavelength&quot;: 4.2e-6,&#39;</span>
+                                                        <span class="s1">&#39;&quot;bandwidth&quot;: 1.9e-6,&#39;</span>
+                                                        <span class="s1">&#39;&quot;quantumEff&quot;: 0.5,&#39;</span>
+                                                        <span class="s1">&#39;&quot;targetBlackBodyTemp&quot;: 290,&#39;</span>
+                                                        <span class="s1">&#39;&quot;bitsPerPixel&quot;: 8,&#39;</span>
+                                                        <span class="s1">&#39;&quot;opticsSysEff&quot;: 0.75,&#39;</span>
+                                                        <span class="s1">&#39;&quot;numOfReadOutE&quot;: 25,&#39;</span>
+                                                        <span class="s1">&#39;&quot;apertureDia&quot;: 0.26,&#39;</span>
+                                                        <span class="s1">&#39;&quot;Fnum&quot;: 2.7,&#39;</span>
+                                                        <span class="s1">&#39;&quot;atmosLossModel&quot;: &quot;LOWTRAN7&quot;}&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Test of an improper scanning technique specification</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s1">&#39;{&quot;@type&quot;: &quot;Passive Optical Scanner&quot;,&#39;</span>
+                                                       <span class="s1">&#39;&quot;name&quot;: &quot;FireSat&quot;,&#39;</span>
+                                                        <span class="s1">&#39;&quot;mass&quot;: 28,&#39;</span>
+                                                        <span class="s1">&#39;&quot;volume&quot;: 0.12,&#39;</span>
+                                                        <span class="s1">&#39;&quot;power&quot;: 32,&#39;</span>
+                                                        <span class="s1">&#39;&quot;fieldOfViewGeometry&quot;: {&#39;</span>
+                                                        <span class="s1">&#39;   &quot;shape&quot;: &quot;RECTanGULAR&quot;,&#39;</span>
+                                                        <span class="s1">&#39;   &quot;angleHeight&quot;: 0.628,&#39;</span>
+                                                        <span class="s1">&#39;   &quot;angleWidth&quot;: 115.8&#39;</span>
+                                                        <span class="s1">&#39; },&#39;</span>
+                                                        <span class="s1">&#39;&quot;scanTechnique&quot;: &quot;Broombroom&quot;,&#39;</span>
+                                                        <span class="s1">&#39;&quot;orientation&quot;: {&#39;</span>
+                                                        <span class="s1">&#39;   &quot;referenceFrame&quot;: &quot;SC_BODY_FIXED&quot;,&#39;</span>
+                                                        <span class="s1">&#39;   &quot;convention&quot;: &quot;SIDE_loOK&quot;,&#39;</span>
+                                                        <span class="s1">&#39;   &quot;sideLookAngle&quot;: 0&#39;</span>
+                                                        <span class="s1">&#39; },&#39;</span>
+                                                        <span class="s1">&#39;&quot;dataRate&quot;: 85,&#39;</span>
+                                                        <span class="s1">&#39;&quot;numberDetectorRows&quot;: 256,&#39;</span>
+                                                        <span class="s1">&#39;&quot;numberDetectorCols&quot;: 1,&#39;</span>
+                                                        <span class="s1">&#39;&quot;detectorWidth&quot;: 30e-6,&#39;</span>
+                                                        <span class="s1">&#39;&quot;focalLength&quot;: 0.7,&#39;</span>
+                                                        <span class="s1">&#39;&quot;operatingWavelength&quot;: 4.2e-6,&#39;</span>
+                                                        <span class="s1">&#39;&quot;bandwidth&quot;: 1.9e-6,&#39;</span>
+                                                        <span class="s1">&#39;&quot;quantumEff&quot;: 0.5,&#39;</span>
+                                                        <span class="s1">&#39;&quot;targetBlackBodyTemp&quot;: 290,&#39;</span>
+                                                        <span class="s1">&#39;&quot;bitsPerPixel&quot;: 8,&#39;</span>
+                                                        <span class="s1">&#39;&quot;opticsSysEff&quot;: 0.75,&#39;</span>
+                                                        <span class="s1">&#39;&quot;numOfReadOutE&quot;: 25,&#39;</span>
+                                                        <span class="s1">&#39;&quot;apertureDia&quot;: 0.26,&#39;</span>
+                                                        <span class="s1">&#39;&quot;Fnum&quot;: 2.7,&#39;</span>
+                                                        <span class="s1">&#39;&quot;atmosLossModel&quot;: &quot;LOWTRAN7&quot;}&#39;</span><span class="p">)</span>
+
+
+        <span class="c1"># Test of an PUSHBROOM scanning technique specification and more than one :code:`numberDetectorRows` specification.</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s1">&#39;{&quot;@type&quot;: &quot;Passive Optical Scanner&quot;,&#39;</span>
+                                                       <span class="s1">&#39;&quot;name&quot;: &quot;FireSat&quot;,&#39;</span>
+                                                        <span class="s1">&#39;&quot;mass&quot;: 28,&#39;</span>
+                                                        <span class="s1">&#39;&quot;volume&quot;: 0.12,&#39;</span>
+                                                        <span class="s1">&#39;&quot;power&quot;: 32,&#39;</span>
+                                                        <span class="s1">&#39;&quot;fieldOfViewGeometry&quot;: {&#39;</span>
+                                                        <span class="s1">&#39;   &quot;shape&quot;: &quot;RECTanGULAR&quot;,&#39;</span>
+                                                        <span class="s1">&#39;   &quot;angleHeight&quot;: 0.628,&#39;</span>
+                                                        <span class="s1">&#39;   &quot;angleWidth&quot;: 115.8&#39;</span>
+                                                        <span class="s1">&#39; },&#39;</span>
+                                                        <span class="s1">&#39;&quot;scanTechnique&quot;: &quot;Pushbroom&quot;,&#39;</span>
+                                                        <span class="s1">&#39;&quot;orientation&quot;: {&#39;</span>
+                                                        <span class="s1">&#39;   &quot;referenceFrame&quot;: &quot;SC_BODY_FIXED&quot;,&#39;</span>
+                                                        <span class="s1">&#39;   &quot;convention&quot;: &quot;SIDE_loOK&quot;,&#39;</span>
+                                                        <span class="s1">&#39;   &quot;sideLookAngle&quot;: 0&#39;</span>
+                                                        <span class="s1">&#39; },&#39;</span>
+                                                        <span class="s1">&#39;&quot;dataRate&quot;: 85,&#39;</span>
+                                                        <span class="s1">&#39;&quot;numberDetectorRows&quot;: 10,&#39;</span>
+                                                        <span class="s1">&#39;&quot;numberDetectorCols&quot;: 10,&#39;</span>
+                                                        <span class="s1">&#39;&quot;detectorWidth&quot;: 30e-6,&#39;</span>
+                                                        <span class="s1">&#39;&quot;focalLength&quot;: 0.7,&#39;</span>
+                                                        <span class="s1">&#39;&quot;operatingWavelength&quot;: 4.2e-6,&#39;</span>
+                                                        <span class="s1">&#39;&quot;bandwidth&quot;: 1.9e-6,&#39;</span>
+                                                        <span class="s1">&#39;&quot;quantumEff&quot;: 0.5,&#39;</span>
+                                                        <span class="s1">&#39;&quot;targetBlackBodyTemp&quot;: 290,&#39;</span>
+                                                        <span class="s1">&#39;&quot;bitsPerPixel&quot;: 8,&#39;</span>
+                                                        <span class="s1">&#39;&quot;opticsSysEff&quot;: 0.75,&#39;</span>
+                                                        <span class="s1">&#39;&quot;numOfReadOutE&quot;: 25,&#39;</span>
+                                                        <span class="s1">&#39;&quot;apertureDia&quot;: 0.26,&#39;</span>
+                                                        <span class="s1">&#39;&quot;Fnum&quot;: 2.7,&#39;</span>
+                                                        <span class="s1">&#39;&quot;atmosLossModel&quot;: &quot;LOWTRAN7&quot;}&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Test of an WHISKBROOM scanning technique specification and more than one :code:`numberDetectorCols` specification.</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s1">&#39;{&quot;@type&quot;: &quot;Passive Optical Scanner&quot;,&#39;</span>
+                                                       <span class="s1">&#39;&quot;name&quot;: &quot;FireSat&quot;,&#39;</span>
+                                                        <span class="s1">&#39;&quot;mass&quot;: 28,&#39;</span>
+                                                        <span class="s1">&#39;&quot;volume&quot;: 0.12,&#39;</span>
+                                                        <span class="s1">&#39;&quot;power&quot;: 32,&#39;</span>
+                                                        <span class="s1">&#39;&quot;fieldOfViewGeometry&quot;: {&#39;</span>
+                                                        <span class="s1">&#39;   &quot;shape&quot;: &quot;RECTanGULAR&quot;,&#39;</span>
+                                                        <span class="s1">&#39;   &quot;angleHeight&quot;: 0.628,&#39;</span>
+                                                        <span class="s1">&#39;   &quot;angleWidth&quot;: 115.8&#39;</span>
+                                                        <span class="s1">&#39; },&#39;</span>
+                                                        <span class="s1">&#39;&quot;scanTechnique&quot;: &quot;WhiskBROOM&quot;,&#39;</span>
+                                                        <span class="s1">&#39;&quot;orientation&quot;: {&#39;</span>
+                                                        <span class="s1">&#39;   &quot;referenceFrame&quot;: &quot;SC_BODY_FIXED&quot;,&#39;</span>
+                                                        <span class="s1">&#39;   &quot;convention&quot;: &quot;SIDE_loOK&quot;,&#39;</span>
+                                                        <span class="s1">&#39;   &quot;sideLookAngle&quot;: 0&#39;</span>
+                                                        <span class="s1">&#39; },&#39;</span>
+                                                        <span class="s1">&#39;&quot;dataRate&quot;: 85,&#39;</span>
+                                                        <span class="s1">&#39;&quot;numberDetectorRows&quot;: 10,&#39;</span>
+                                                        <span class="s1">&#39;&quot;numberDetectorCols&quot;: 10,&#39;</span>
+                                                        <span class="s1">&#39;&quot;detectorWidth&quot;: 30e-6,&#39;</span>
+                                                        <span class="s1">&#39;&quot;focalLength&quot;: 0.7,&#39;</span>
+                                                        <span class="s1">&#39;&quot;operatingWavelength&quot;: 4.2e-6,&#39;</span>
+                                                        <span class="s1">&#39;&quot;bandwidth&quot;: 1.9e-6,&#39;</span>
+                                                        <span class="s1">&#39;&quot;quantumEff&quot;: 0.5,&#39;</span>
+                                                        <span class="s1">&#39;&quot;targetBlackBodyTemp&quot;: 290,&#39;</span>
+                                                        <span class="s1">&#39;&quot;bitsPerPixel&quot;: 8,&#39;</span>
+                                                        <span class="s1">&#39;&quot;opticsSysEff&quot;: 0.75,&#39;</span>
+                                                        <span class="s1">&#39;&quot;numOfReadOutE&quot;: 25,&#39;</span>
+                                                        <span class="s1">&#39;&quot;apertureDia&quot;: 0.26,&#39;</span>
+                                                        <span class="s1">&#39;&quot;Fnum&quot;: 2.7,&#39;</span>
+                                                        <span class="s1">&#39;&quot;atmosLossModel&quot;: &quot;LOWTRAN7&quot;}&#39;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">test_planck_photon_integral</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Test trivial case with 0 wavelength</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">planck_photon_integral</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">290</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests using online calculator from &lt;https://www.opticsthewebsite.com/OpticsCalculators.aspx&gt; as truth data.</span>
+<span class="sd">            Note that the online calculator requires minimum wavelength to be set as 1e-9 um which is nearly 0 wavelength.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNearlyZeroErrorFraction</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">planck_photon_integral</span><span class="p">(</span><span class="mf">12e-6</span><span class="p">,</span><span class="mi">1500</span><span class="p">),</span> <span class="mf">1.46801e+20</span> <span class="o">*</span> <span class="mf">1e4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNearlyZeroErrorFraction</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">planck_photon_integral</span><span class="p">(</span><span class="mf">2e-6</span><span class="p">,</span><span class="mi">500</span><span class="p">),</span> <span class="mf">3.36875e+14</span> <span class="o">*</span> <span class="mf">1e4</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNearlyZeroErrorFraction</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">planck_photon_integral</span><span class="p">(</span><span class="mf">500e-6</span><span class="p">,</span><span class="mi">45</span><span class="p">),</span> <span class="mf">4.10754e+15</span> <span class="o">*</span> <span class="mf">1e4</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNearlyZeroErrorFraction</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">planck_photon_integral</span><span class="p">(</span><span class="mf">1e9</span><span class="p">,</span><span class="mi">45</span><span class="p">),</span> <span class="mf">4.40891e+15</span> <span class="o">*</span> <span class="mf">1e4</span><span class="p">)</span>  <span class="c1"># specifying 1e9 m as wavelength is to get approximately the radiance over entire spectrum</span>
+    
+<div class="viewcode-block" id="TestPassiveOpticalScannerModel.test_radianceWithEarthAsBlackBodyRadiator"><a class="viewcode-back" href="../tests.html#test_passive_optical_scanner_model.TestPassiveOpticalScannerModel.test_radianceWithEarthAsBlackBodyRadiator">[docs]</a>    <span class="k">def</span> <span class="nf">test_radianceWithEarthAsBlackBodyRadiator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tests using online calculator from &lt;https://www.opticsthewebsite.com/OpticsCalculators.aspx&gt; as truth data for in-band radiance calculation.</span>
+<span class="sd">            Note that the online calculator requires minimum wavelength to be set as 1e-9 um which is nearly 0 wavelength.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNearlyZeroErrorFraction</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_bb_radiator</span><span class="p">(</span><span class="mf">16.25e-6</span><span class="p">,</span> <span class="mf">12.5e-6</span><span class="p">,</span> <span class="mi">290</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>  <span class="mf">5.08113e+17</span> <span class="o">*</span> <span class="mf">1e4</span><span class="p">)</span> <span class="c1"># 10 um to 22.5 um at 290 K, 0 deg incidence angle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNearlyZeroErrorFraction</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_bb_radiator</span><span class="p">(</span><span class="mf">6e-6</span><span class="p">,</span> <span class="mf">4e-6</span><span class="p">,</span> <span class="mf">180.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>  <span class="mf">6.74299e+14</span> <span class="o">*</span> <span class="mf">1e4</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNearlyZeroErrorFraction</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_bb_radiator</span><span class="p">(</span><span class="mf">0.5e-6</span><span class="p">,</span> <span class="mf">0.8e-6</span><span class="p">,</span> <span class="mi">270</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>  <span class="mf">2.74990e-5</span> <span class="o">*</span> <span class="mf">1e4</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNearlyZeroErrorFraction</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_bb_radiator</span><span class="p">(</span><span class="mf">140e-6</span><span class="p">,</span> <span class="mf">40e-6</span><span class="p">,</span> <span class="mi">330</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>  <span class="mf">1.77269e+16</span> <span class="o">*</span> <span class="mf">1e4</span><span class="p">)</span>
+
+        <span class="c1"># Tests with 10 um to 22.5 um at 290 K at different incidence angles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNearlyZeroErrorFraction</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_bb_radiator</span><span class="p">(</span><span class="mf">16.25e-6</span><span class="p">,</span> <span class="mf">12.5e-6</span><span class="p">,</span> <span class="mi">290</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>  <span class="mf">5.08113e+17</span> <span class="o">*</span> <span class="mf">1e4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">0.1</span><span class="p">))</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNearlyZeroErrorFraction</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_bb_radiator</span><span class="p">(</span><span class="mf">16.25e-6</span><span class="p">,</span> <span class="mf">12.5e-6</span><span class="p">,</span> <span class="mi">290</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>  <span class="mf">5.08113e+17</span> <span class="o">*</span> <span class="mf">1e4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">0.1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNearlyZeroErrorFraction</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_bb_radiator</span><span class="p">(</span><span class="mf">16.25e-6</span><span class="p">,</span> <span class="mf">12.5e-6</span><span class="p">,</span> <span class="mi">290</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="mf">3.141</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>  <span class="mf">5.08113e+17</span> <span class="o">*</span> <span class="mf">1e4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">0.5</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNearlyZeroErrorFraction</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_bb_radiator</span><span class="p">(</span><span class="mf">16.25e-6</span><span class="p">,</span> <span class="mf">12.5e-6</span><span class="p">,</span> <span class="mi">290</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">-</span> <span class="mi">8</span><span class="o">*</span><span class="mf">3.141</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="kc">None</span><span class="p">),</span>  <span class="mf">5.08113e+17</span> <span class="o">*</span> <span class="mf">1e4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">0.5</span><span class="p">))</span>
+
+        <span class="c1"># Tests with unrealistic observation incidence angles</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+            <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_bb_radiator</span><span class="p">(</span><span class="mf">16.25e-6</span><span class="p">,</span> <span class="mf">12.5e-6</span><span class="p">,</span> <span class="mi">290</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">91</span><span class="p">),</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+            <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_bb_radiator</span><span class="p">(</span><span class="mf">16.25e-6</span><span class="p">,</span> <span class="mf">12.5e-6</span><span class="p">,</span> <span class="mi">290</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">91</span><span class="p">),</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+            <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_bb_radiator</span><span class="p">(</span><span class="mf">16.25e-6</span><span class="p">,</span> <span class="mf">12.5e-6</span><span class="p">,</span> <span class="mi">290</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="o">-</span><span class="mi">91</span> <span class="o">+</span> <span class="mi">360</span><span class="o">*</span><span class="mi">8</span><span class="p">),</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="TestPassiveOpticalScannerModel.test_radianceWithEarthAsReflector"><a class="viewcode-back" href="../tests.html#test_passive_optical_scanner_model.TestPassiveOpticalScannerModel.test_radianceWithEarthAsReflector">[docs]</a>    <span class="k">def</span> <span class="nf">test_radianceWithEarthAsReflector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initialize parameters which ensure that the target (ground-pixel) and observer (satelltie) and the Sun have a LOS geometry. </span>
+<span class="sd">            This is verified using GMAT (Orbit View animation).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tObs_JDUT1</span> <span class="o">=</span> <span class="mf">2451623.999630</span> <span class="c1"># spring equinox day</span>
+        <span class="n">obs_pos_km</span> <span class="o">=</span> <span class="p">[</span><span class="mf">6577.848345501363</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.521529479781905e-013</span><span class="p">,</span> <span class="mf">2394.141003279681</span><span class="p">]</span> <span class="c1"># satelltie is in the XZ plane</span>
+        <span class="n">tar_pos_km</span> <span class="o">=</span> <span class="p">[</span><span class="mf">6577.848345501363</span> <span class="o">-</span> <span class="mi">622</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.521529479781905e-013</span><span class="p">,</span> <span class="mf">2394.141003279681</span><span class="p">]</span> <span class="c1"># satellite altitude is 622 km and target is in the XZ plane</span>
+        <span class="n">obs_area_m2</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Test: Reflected energy far-outside visible wavelengths must be near 0. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_reflector</span><span class="p">(</span><span class="mf">0.5e-9</span><span class="p">,</span> <span class="mf">0.2e-9</span><span class="p">,</span> <span class="n">tObs_JDUT1</span><span class="p">,</span> <span class="n">obs_pos_km</span><span class="p">,</span> <span class="n">tar_pos_km</span><span class="p">,</span> <span class="n">obs_area_m2</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="s1">&#39;LOWTRAN7&#39;</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_reflector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">,</span> <span class="n">tObs_JDUT1</span><span class="p">,</span> <span class="n">obs_pos_km</span><span class="p">,</span> <span class="n">tar_pos_km</span><span class="p">,</span> <span class="n">obs_area_m2</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="s1">&#39;LOWTRAN7&#39;</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">places</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Test: Reflected energy for visible wavelengths must be greater than that of other wavelengths, keeping bandwidth same.</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_reflector</span><span class="p">(</span><span class="mf">0.5e-6</span><span class="p">,</span> <span class="mf">0.2e-6</span><span class="p">,</span> <span class="n">tObs_JDUT1</span><span class="p">,</span> <span class="n">obs_pos_km</span><span class="p">,</span> <span class="n">tar_pos_km</span><span class="p">,</span> <span class="n">obs_area_m2</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="s1">&#39;LOWTRAN7&#39;</span><span class="p">),</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_reflector</span><span class="p">(</span><span class="mf">6e-6</span><span class="p">,</span> <span class="mf">0.2e-6</span><span class="p">,</span> <span class="n">tObs_JDUT1</span><span class="p">,</span> <span class="n">obs_pos_km</span><span class="p">,</span> <span class="n">tar_pos_km</span><span class="p">,</span> <span class="n">obs_area_m2</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="s1">&#39;LOWTRAN7&#39;</span><span class="p">))</span> <span class="c1"># longer wavelengths than visible</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_reflector</span><span class="p">(</span><span class="mf">0.5e-6</span><span class="p">,</span> <span class="mf">0.2e-6</span><span class="p">,</span> <span class="n">tObs_JDUT1</span><span class="p">,</span> <span class="n">obs_pos_km</span><span class="p">,</span> <span class="n">tar_pos_km</span><span class="p">,</span> <span class="n">obs_area_m2</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="s1">&#39;LOWTRAN7&#39;</span><span class="p">),</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_reflector</span><span class="p">(</span><span class="mf">0.25e-6</span><span class="p">,</span> <span class="mf">0.2e-6</span><span class="p">,</span> <span class="n">tObs_JDUT1</span><span class="p">,</span> <span class="n">obs_pos_km</span><span class="p">,</span> <span class="n">tar_pos_km</span><span class="p">,</span> <span class="n">obs_area_m2</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="s1">&#39;LOWTRAN7&#39;</span><span class="p">))</span> <span class="c1"># shorter wavelengths than visible</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Test with another observer position, one where the observer sees the target pixel (of fixed area) at a larger angle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">opWav_m</span> <span class="o">=</span> <span class="mf">0.5e-6</span>
+        <span class="n">bw_m</span> <span class="o">=</span> <span class="mf">0.2e-6</span>
+        <span class="n">obs2_pos_km</span> <span class="o">=</span> <span class="p">[</span><span class="mf">6893.654271085462</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.186593534864809e-013</span><span class="p">,</span> <span class="mf">1215.537243668513</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_reflector</span><span class="p">(</span><span class="n">opWav_m</span><span class="p">,</span> <span class="n">bw_m</span><span class="p">,</span> <span class="n">tObs_JDUT1</span><span class="p">,</span> <span class="n">obs_pos_km</span><span class="p">,</span> <span class="n">tar_pos_km</span><span class="p">,</span> <span class="n">obs_area_m2</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="s1">&#39;LOWTRAN7&#39;</span><span class="p">),</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_reflector</span><span class="p">(</span><span class="n">opWav_m</span><span class="p">,</span> <span class="n">bw_m</span><span class="p">,</span> <span class="n">tObs_JDUT1</span><span class="p">,</span> <span class="n">obs2_pos_km</span><span class="p">,</span> <span class="n">tar_pos_km</span><span class="p">,</span> <span class="n">obs_area_m2</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="s1">&#39;LOWTRAN7&#39;</span><span class="p">))</span> <span class="c1"># longer wavelengths than visible</span></div>
+    
+    <span class="k">def</span> <span class="nf">test_calculate_number_of_signal_electrons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
+        <span class="c1"># Test: Truth data from SMAD 3rd edition, Table 9-15.</span>
+        <span class="n">opWav_m</span> <span class="o">=</span> <span class="mf">4.2e-6</span>
+        <span class="n">bw_m</span> <span class="o">=</span> <span class="mf">1.9e-6</span>
+        <span class="n">bbT_K</span> <span class="o">=</span> <span class="mi">290</span>
+        <span class="n">apDia_m</span> <span class="o">=</span> <span class="mf">0.2626</span>
+        <span class="n">opTrns</span> <span class="o">=</span> <span class="mf">0.75</span>
+        <span class="n">QE</span> <span class="o">=</span> <span class="mf">0.5</span>   
+        <span class="n">tObs_JDUT1</span> <span class="o">=</span> <span class="mf">2451623.999630</span> <span class="c1">#  date corresponds to satellite over target at day-time.</span>
+        <span class="n">obs_pos_km</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6378</span><span class="o">+</span><span class="mi">700</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># satellite on the X-axis at altitude 700 km</span>
+        <span class="n">tar_pos_km</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6378</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> 
+        <span class="n">pixelArea_m2</span> <span class="o">=</span> <span class="mf">30.0519</span> <span class="o">*</span> <span class="mf">30.0519</span>
+        <span class="n">Ti_s</span> <span class="o">=</span> <span class="mf">24.1827e-6</span>
+        <span class="c1"># The InstruPy computed value must be greater than truth value since SMAD does not consider the energy reflected off Sun, and the date corresponds to satellite over target at day-time.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_number_of_signal_electrons</span><span class="p">(</span><span class="n">opWav_m</span><span class="p">,</span> <span class="n">bw_m</span><span class="p">,</span> <span class="n">bbT_K</span><span class="p">,</span> <span class="n">apDia_m</span><span class="p">,</span> <span class="n">opTrns</span><span class="p">,</span> <span class="n">QE</span><span class="p">,</span> <span class="n">tObs_JDUT1</span><span class="p">,</span> <span class="n">obs_pos_km</span><span class="p">,</span> <span class="n">tar_pos_km</span><span class="p">,</span> <span class="n">pixelArea_m2</span><span class="p">,</span> <span class="n">Ti_s</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="o">=</span><span class="s1">&#39;LOWTRAN7&#39;</span><span class="p">),</span> <span class="mf">8286.104444633884</span><span class="p">)</span>        
+    
+    <span class="k">def</span> <span class="nf">test_calculate_integration_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Test: PUSHBROOM scanning</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">PUSHBROOM</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mf">12.5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">PUSHBROOM</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="mf">12.5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">PUSHBROOM</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">angle_width_deg</span><span class="o">=</span><span class="mi">30</span><span class="p">),</span> <span class="mf">12.5</span><span class="p">)</span>
+        <span class="c1"># check max exposure time functionality</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">PUSHBROOM</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">max_det_exp_time</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span> <span class="c1"># Exception expected if number of detector rows in along-track direction is not 1.</span>
+            <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">PUSHBROOM</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Test: Whiskroom scanning</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">WHISKBROOM</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">max_det_exp_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">angle_width_deg</span><span class="o">=</span><span class="mi">30</span><span class="p">),</span> <span class="mf">12.5</span><span class="o">/</span><span class="mi">30</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">WHISKBROOM</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">max_det_exp_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">angle_width_deg</span><span class="o">=</span><span class="mi">30</span><span class="p">),</span> <span class="mf">12.5</span><span class="o">/</span><span class="mi">300</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">WHISKBROOM</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">max_det_exp_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">angle_width_deg</span><span class="o">=</span><span class="mi">30</span><span class="p">),</span> <span class="mf">12.5</span><span class="o">/</span><span class="mi">300</span><span class="p">)</span>
+        <span class="c1"># check max exposure time functionality</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">WHISKBROOM</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">max_det_exp_time</span><span class="o">=</span><span class="p">(</span><span class="mf">12.5</span><span class="o">/</span><span class="mi">3000</span><span class="p">),</span> <span class="n">angle_width_deg</span><span class="o">=</span><span class="mi">30</span><span class="p">),</span> <span class="mf">12.5</span><span class="o">/</span><span class="mi">3000</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span> <span class="c1"># Exception expected if number of detector columns in cross-track direction is not 1.</span>
+            <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">WHISKBROOM</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">max_det_exp_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">angle_width_deg</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span> <span class="c1"># Exception expected if cross-track-fov is not specified</span>
+            <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">WHISKBROOM</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">max_det_exp_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">angle_width_deg</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># Test: MATRIX_IMAGER scanning</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">MATRIX_IMAGER</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mf">12.5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">MATRIX_IMAGER</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="mf">12.5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">MATRIX_IMAGER</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="mf">12.5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">MATRIX_IMAGER</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="mf">12.5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">MATRIX_IMAGER</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="mf">12.5</span><span class="p">)</span>
+        <span class="c1"># check max exposure time functionality</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="n">ScanTech</span><span class="o">.</span><span class="n">MATRIX_IMAGER</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mf">12.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">max_det_exp_time</span><span class="o">=</span><span class="mf">1.2</span><span class="p">),</span> <span class="mf">1.2</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="TestPassiveOpticalScannerModel.test_calc_data_metrics_smad_truth"><a class="viewcode-back" href="../tests.html#test_passive_optical_scanner_model.TestPassiveOpticalScannerModel.test_calc_data_metrics_smad_truth">[docs]</a>    <span class="k">def</span> <span class="nf">test_calc_data_metrics_smad_truth</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Test: Truth data from SMAD 3rd edition, Table 9-15. Note that the  inputs are made so that they are consistent with the example.</span>
+<span class="sd">             Further note that SMAD does not consider the energy from Sun reflected off Sun in their calculations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">firesat</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">firesat_json</span><span class="p">)</span>
+        <span class="n">epoch_JDUT1</span> <span class="o">=</span> <span class="mf">2451623.999630</span>
+        <span class="n">sc_orbit_state</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time [JDUT1]&#39;</span><span class="p">:</span><span class="n">epoch_JDUT1</span><span class="p">,</span> <span class="s1">&#39;x [km]&#39;</span><span class="p">:</span> <span class="mf">7078.137</span><span class="p">,</span> <span class="s1">&#39;y [km]&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;z [km]&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;vx [km/s]&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;vy [km/s]&#39;</span><span class="p">:</span> <span class="mf">7.5</span><span class="p">,</span> <span class="s1">&#39;vz [km/s]&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span> <span class="c1"># equatorial orbit, altitude about 700 km</span>
+        <span class="n">target_coords</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;lat [deg]&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;lon [deg]&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span> <span class="c1"># lat = 0, lon = 0 corresponds to [6378, 0, 0] km in ECI for observer position, check using Matlab function: eci2lla([6378, 0, 0] ,[2000 3 20 11 59 28.000])</span>
+        <span class="n">obsv_metrics</span> <span class="o">=</span> <span class="n">firesat</span><span class="o">.</span><span class="n">calc_data_metrics</span><span class="p">(</span><span class="n">sc_orbit_state</span><span class="p">,</span> <span class="n">target_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s2">&quot;ground pixel along-track resolution [m]&quot;</span><span class="p">],</span> <span class="mi">30</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s2">&quot;ground pixel cross-track resolution [m]&quot;</span><span class="p">],</span> <span class="mi">30</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="c1"># A (positive) deviation is expected since SMAD does not consider the energy from Sun reflected off Sun</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s2">&quot;SNR&quot;</span><span class="p">],</span> <span class="mi">88</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s2">&quot;dynamic range&quot;</span><span class="p">],</span> <span class="mf">332.9</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s2">&quot;noise-equivalent delta T [K]&quot;</span><span class="p">],</span> <span class="mf">0.3</span> <span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ground pixel along-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">31.34</span><span class="p">,</span> <span class="s1">&#39;ground pixel cross-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">32.91</span><span class="p">,</span> <span class="s1">&#39;SNR&#39;</span><span class="p">:</span> <span class="mf">148.15</span><span class="p">,</span> <span class="s1">&#39;dynamic range&#39;</span><span class="p">:</span> <span class="mf">902.27</span><span class="p">,</span> <span class="s1">&#39;noise-equivalent delta T [K]&#39;</span><span class="p">:</span> <span class="mf">0.30609</span><span class="p">})</span></div>
+
+
+        <span class="c1"># @TODO, make test with satellite in night region, thus no reflected energy of Sun. Result should match SMAD.</span>
+    
+<div class="viewcode-block" id="TestPassiveOpticalScannerModel.test_calc_data_metrics_TIRSBand1_precomputed"><a class="viewcode-back" href="../tests.html#test_passive_optical_scanner_model.TestPassiveOpticalScannerModel.test_calc_data_metrics_TIRSBand1_precomputed">[docs]</a>    <span class="k">def</span> <span class="nf">test_calc_data_metrics_TIRSBand1_precomputed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Model instrument with TIRS Band 1 specs (IR, pushbroom) and test with the results as computed on 4 April 2021.</span>
+
+<span class="sd">        Refer to the following article more context:</span>
+<span class="sd">        V. Ravindra and S. Nag, &quot;Instrument Data Metrics Evaluator for Tradespace Analysis of Earth Observing Constellations,&quot; </span>
+<span class="sd">        2020 IEEE Aerospace Conference, Big Sky, MT, USA, 2020.</span>
+
+<span class="sd">        .. note:: The results using the LOWTRAN7 model are computed at resolution wav_step_percm = 5.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">landsat_tirs_band1_dict</span> <span class="o">=</span> <span class="p">{</span>
+                                    <span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;Passive Optical Scanner&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Landsat 8 TIRS Band1&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;mass&quot;</span><span class="p">:</span> <span class="mi">236</span><span class="p">,</span>
+                                    <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="mf">0.261</span><span class="p">,</span> 
+                                    <span class="s2">&quot;power&quot;</span><span class="p">:</span> <span class="mi">380</span><span class="p">,</span> 
+                                    <span class="s2">&quot;fieldOfViewGeometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                        <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="s2">&quot;RECTANGULAR&quot;</span><span class="p">,</span>
+                                        <span class="s2">&quot;angleHeight&quot;</span><span class="p">:</span> <span class="mf">0.0081</span><span class="p">,</span>
+                                        <span class="s2">&quot;angleWidth&quot;</span><span class="p">:</span> <span class="mi">15</span>
+                                    <span class="p">},</span>
+                                    <span class="s2">&quot;scanTechnique&quot;</span><span class="p">:</span> <span class="s2">&quot;PUSHBROOM&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;orientation&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                        <span class="s2">&quot;referenceFrame&quot;</span><span class="p">:</span> <span class="s2">&quot;SC_BODY_FIXED&quot;</span><span class="p">,</span>
+                                        <span class="s2">&quot;convention&quot;</span><span class="p">:</span> <span class="s2">&quot;REF_FRAME_ALIGNED&quot;</span>
+                                    <span class="p">},</span>
+                                    <span class="s2">&quot;dataRate&quot;</span><span class="p">:</span>  <span class="mi">384</span><span class="p">,</span>
+                                    <span class="s2">&quot;numberDetectorRows&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                                    <span class="s2">&quot;numberDetectorCols&quot;</span><span class="p">:</span> <span class="mi">1850</span><span class="p">,</span>
+                                    <span class="s2">&quot;detectorWidth&quot;</span><span class="p">:</span> <span class="mf">25e-6</span><span class="p">,</span>
+                                    <span class="s2">&quot;focalLength&quot;</span><span class="p">:</span> <span class="mf">0.178</span><span class="p">,</span>
+                                    <span class="s2">&quot;operatingWavelength&quot;</span><span class="p">:</span> <span class="mf">10.9e-6</span><span class="p">,</span>
+                                    <span class="s2">&quot;bandwidth&quot;</span><span class="p">:</span> <span class="mf">0.6e-6</span><span class="p">,</span>
+                                    <span class="s2">&quot;quantumEff&quot;</span><span class="p">:</span> <span class="mf">0.025</span><span class="p">,</span>
+                                    <span class="s2">&quot;targetBlackBodyTemp&quot;</span><span class="p">:</span> <span class="mi">290</span><span class="p">,</span>
+                                    <span class="s2">&quot;bitsPerPixel&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+                                    <span class="s2">&quot;opticsSysEff&quot;</span><span class="p">:</span> <span class="mf">0.60</span> <span class="p">,</span>
+                                    <span class="s2">&quot;numOfReadOutE&quot;</span><span class="p">:</span>  <span class="mi">20</span><span class="p">,</span>
+                                    <span class="s2">&quot;apertureDia&quot;</span><span class="p">:</span>  <span class="mf">0.1085366</span><span class="p">,</span>
+                                    <span class="s2">&quot;Fnum&quot;</span><span class="p">:</span>  <span class="mf">1.64</span><span class="p">,</span>
+                                    <span class="s2">&quot;maxDetectorExposureTime&quot;</span><span class="p">:</span> <span class="mf">3.49e-3</span><span class="p">,</span>
+                                    <span class="s2">&quot;atmosLossModel&quot;</span><span class="p">:</span> <span class="s2">&quot;LOWTRAN7&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;_comments&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Above is Total payload data-rate not just off the TIRS.&quot;</span><span class="p">,</span>
+                                                <span class="s2">&quot;numReadOutE is guessed.&quot;</span><span class="p">]</span>
+                                   <span class="p">}</span>
+        <span class="n">landsat_tirs_band1</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">landsat_tirs_band1_dict</span><span class="p">)</span>
+        <span class="c1"># landsat 8 orbit at 10 Apr 2021 14:24:17.819 UTC            </span>
+        <span class="n">sc_orbit_state</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time [JDUT1]&#39;</span><span class="p">:</span><span class="mf">2459315.100208333</span><span class="p">,</span>  <span class="s1">&#39;x [km]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">7012.215259847972</span><span class="p">,</span>    <span class="s1">&#39;y [km]&#39;</span><span class="p">:</span> <span class="mf">981.6284579029395</span><span class="p">,</span>    <span class="s1">&#39;z [km]&#39;</span><span class="p">:</span> <span class="mf">16.62328546479549</span><span class="p">,</span> 
+                                                            <span class="s1">&#39;vx [km/s]&#39;</span><span class="p">:</span> <span class="mf">0.1664588472531363</span><span class="p">,</span> <span class="s1">&#39;vy [km/s]&#39;</span><span class="p">:</span> <span class="mf">1.055747095699285</span><span class="p">,</span> <span class="s1">&#39;vz [km/s]&#39;</span><span class="p">:</span> <span class="mf">7.426472416008381</span> <span class="p">}</span>
+        <span class="n">target_coords</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;lat [deg]&#39;</span><span class="p">:</span> <span class="mf">0.01942147899019397</span> <span class="p">,</span> <span class="s1">&#39;lon [deg]&#39;</span><span class="p">:</span> <span class="mf">117.1899962481559</span><span class="p">}</span> <span class="c1"># nadir position of satellite</span>
+        <span class="n">obsv_metrics</span> <span class="o">=</span> <span class="n">landsat_tirs_band1</span><span class="o">.</span><span class="n">calc_data_metrics</span><span class="p">(</span><span class="n">sc_orbit_state</span><span class="p">,</span> <span class="n">target_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ground pixel along-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">98.78</span><span class="p">,</span> <span class="s1">&#39;ground pixel cross-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">98.92</span><span class="p">,</span> <span class="s1">&#39;SNR&#39;</span><span class="p">:</span> <span class="mf">1507.48</span><span class="p">,</span> <span class="s1">&#39;dynamic range&#39;</span><span class="p">:</span> <span class="mf">113645.23</span><span class="p">,</span> <span class="s1">&#39;noise-equivalent delta T [K]&#39;</span><span class="p">:</span> <span class="mf">0.04162</span><span class="p">})</span>
+        <span class="c1"># disable LOWTRAN7 atmospheric loss model and evaluate results</span>
+        <span class="n">landsat_tirs_band1_dict</span><span class="p">[</span><span class="s2">&quot;atmosLossModel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">landsat_tirs_band1</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">landsat_tirs_band1_dict</span><span class="p">)</span>
+        <span class="n">obsv_metrics</span> <span class="o">=</span> <span class="n">landsat_tirs_band1</span><span class="o">.</span><span class="n">calc_data_metrics</span><span class="p">(</span><span class="n">sc_orbit_state</span><span class="p">,</span> <span class="n">target_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ground pixel along-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">98.78</span><span class="p">,</span> <span class="s1">&#39;ground pixel cross-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">98.92</span><span class="p">,</span> <span class="s1">&#39;SNR&#39;</span><span class="p">:</span> <span class="mf">1610.69</span><span class="p">,</span> <span class="s1">&#39;dynamic range&#39;</span><span class="p">:</span> <span class="mf">129736.13</span><span class="p">,</span> <span class="s1">&#39;noise-equivalent delta T [K]&#39;</span><span class="p">:</span> <span class="mf">0.03895</span><span class="p">})</span></div>
+ 
+<div class="viewcode-block" id="TestPassiveOpticalScannerModel.test_calc_data_metrics_OLIBlueBand_precomputed"><a class="viewcode-back" href="../tests.html#test_passive_optical_scanner_model.TestPassiveOpticalScannerModel.test_calc_data_metrics_OLIBlueBand_precomputed">[docs]</a>    <span class="k">def</span> <span class="nf">test_calc_data_metrics_OLIBlueBand_precomputed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;  Model instrument with OLI Blue band specs (Optical, pushbroom) and test with the results as computed on 4 April 2021.</span>
+
+<span class="sd">        Refer to the following article more context:</span>
+<span class="sd">        V. Ravindra and S. Nag, &quot;Instrument Data Metrics Evaluator for Tradespace Analysis of Earth Observing Constellations,&quot; </span>
+<span class="sd">        2020 IEEE Aerospace Conference, Big Sky, MT, USA, 2020.</span>
+
+<span class="sd">        .. note:: The results using the LOWTRAN7 model are computed at resolution wav_step_percm = 5.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">landsat_oli_blue_dict</span> <span class="o">=</span> <span class="p">{</span>   <span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;Passive Optical Scanner&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Landsat 8 OLI Blue band&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;mass&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                                    <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> 
+                                    <span class="s2">&quot;power&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> 
+                                    <span class="s2">&quot;fieldOfViewGeometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                        <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="s2">&quot;RECTANGULAR&quot;</span><span class="p">,</span>
+                                        <span class="s2">&quot;angleHeight&quot;</span><span class="p">:</span> <span class="mf">0.00244080020725731</span><span class="p">,</span>
+                                        <span class="s2">&quot;angleWidth&quot;</span><span class="p">:</span> <span class="mi">15</span>
+                                    <span class="p">},</span>
+                                    <span class="s2">&quot;scanTechnique&quot;</span><span class="p">:</span> <span class="s2">&quot;PUSHBROOM&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;dataRate&quot;</span><span class="p">:</span>  <span class="mi">384</span><span class="p">,</span>
+                                    <span class="s2">&quot;numberDetectorRows&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                                    <span class="s2">&quot;numberDetectorCols&quot;</span><span class="p">:</span> <span class="mi">6146</span><span class="p">,</span>
+                                    <span class="s2">&quot;detectorWidth&quot;</span><span class="p">:</span> <span class="mf">36e-6</span><span class="p">,</span>
+                                    <span class="s2">&quot;focalLength&quot;</span><span class="p">:</span> <span class="mf">845.1e-3</span><span class="p">,</span>
+                                    <span class="s2">&quot;operatingWavelength&quot;</span><span class="p">:</span> <span class="mf">482e-9</span><span class="p">,</span>
+                                    <span class="s2">&quot;bandwidth&quot;</span><span class="p">:</span> <span class="mf">65e-9</span><span class="p">,</span>
+                                    <span class="s2">&quot;quantumEff&quot;</span><span class="p">:</span>  <span class="mf">0.85</span><span class="p">,</span>
+                                    <span class="s2">&quot;targetBlackBodyTemp&quot;</span><span class="p">:</span> <span class="mi">290</span><span class="p">,</span>
+                                    <span class="s2">&quot;bitsPerPixel&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+                                    <span class="s2">&quot;opticsSysEff&quot;</span><span class="p">:</span> <span class="mf">0.90</span> <span class="p">,</span>
+                                    <span class="s2">&quot;numOfReadOutE&quot;</span><span class="p">:</span>  <span class="mi">8</span><span class="p">,</span>
+                                    <span class="s2">&quot;apertureDia&quot;</span><span class="p">:</span> <span class="mf">0.1320</span><span class="p">,</span>
+                                    <span class="s2">&quot;Fnum&quot;</span><span class="p">:</span>  <span class="mf">6.4</span><span class="p">,</span>
+                                    <span class="s2">&quot;maxDetectorExposureTime&quot;</span><span class="p">:</span> <span class="mf">3.6e-3</span><span class="p">,</span>
+                                    <span class="s2">&quot;atmosLossModel&quot;</span><span class="p">:</span> <span class="s2">&quot;LOWTRAN7&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;_comments&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Above is Total payload data-rate not just off the OLI.&quot;</span><span class="p">,</span>
+                                                  <span class="s2">&quot;Mass, power and volume are simply wrong.&quot;</span><span class="p">,</span> 
+                                                  <span class="s2">&quot;numReadOutE is guessed.&quot;</span><span class="p">]</span>
+                                <span class="p">}</span>
+        <span class="n">landsat_oli_blue</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">landsat_oli_blue_dict</span><span class="p">)</span>
+        <span class="c1"># landsat 8 orbit at 10 Apr 2021 14:24:17.819 UTC  (NIGHT time)          </span>
+        <span class="n">sc_orbit_state</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time [JDUT1]&#39;</span><span class="p">:</span><span class="mf">2459315.100208333</span><span class="p">,</span>  <span class="s1">&#39;x [km]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">7012.215259847972</span><span class="p">,</span>    <span class="s1">&#39;y [km]&#39;</span><span class="p">:</span> <span class="mf">981.6284579029395</span><span class="p">,</span>    <span class="s1">&#39;z [km]&#39;</span><span class="p">:</span> <span class="mf">16.62328546479549</span><span class="p">,</span> 
+                                                            <span class="s1">&#39;vx [km/s]&#39;</span><span class="p">:</span> <span class="mf">0.1664588472531363</span><span class="p">,</span> <span class="s1">&#39;vy [km/s]&#39;</span><span class="p">:</span> <span class="mf">1.055747095699285</span><span class="p">,</span> <span class="s1">&#39;vz [km/s]&#39;</span><span class="p">:</span> <span class="mf">7.426472416008381</span> <span class="p">}</span>
+        <span class="n">target_coords</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;lat [deg]&#39;</span><span class="p">:</span> <span class="mf">0.01942147899019397</span> <span class="p">,</span> <span class="s1">&#39;lon [deg]&#39;</span><span class="p">:</span> <span class="mf">117.1899962481559</span><span class="p">}</span> <span class="c1"># nadir position of satellite</span>
+        <span class="n">obsv_metrics</span> <span class="o">=</span> <span class="n">landsat_oli_blue</span><span class="o">.</span><span class="n">calc_data_metrics</span><span class="p">(</span><span class="n">sc_orbit_state</span><span class="p">,</span> <span class="n">target_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;ground pixel along-track resolution [m]&#39;</span><span class="p">],</span> <span class="mf">29.96</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;ground pixel cross-track resolution [m]&#39;</span><span class="p">],</span> <span class="mf">30.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;SNR&#39;</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;dynamic range&#39;</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;noise-equivalent delta T [K]&#39;</span><span class="p">],</span> <span class="mf">1318917697165785.8</span><span class="p">,</span> <span class="n">rel_tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>
+
+        <span class="c1"># 10 Apr 2021 15:07:22.788   (Day time)                                    </span>
+        <span class="n">sc_orbit_state</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time [JDUT1]&#39;</span><span class="p">:</span><span class="mf">2459315.130127315</span><span class="p">,</span>  <span class="s1">&#39;x [km]&#39;</span><span class="p">:</span> <span class="mf">6512.435033854175</span><span class="p">,</span>    <span class="s1">&#39;y [km]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">511.354859668807</span><span class="p">,</span>    <span class="s1">&#39;z [km]&#39;</span><span class="p">:</span> <span class="mf">2713.225164499847</span><span class="p">,</span> 
+                                                            <span class="s1">&#39;vx [km/s]&#39;</span><span class="p">:</span> <span class="mf">2.748229230268995</span><span class="p">,</span> <span class="s1">&#39;vy [km/s]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.377488737466059</span><span class="p">,</span> <span class="s1">&#39;vz [km/s]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">6.850883979753837</span> <span class="p">}</span>
+        <span class="n">target_coords</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;lat [deg]&#39;</span><span class="p">:</span> <span class="mf">22.7948561533915</span> <span class="p">,</span> <span class="s1">&#39;lon [deg]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">70.13495405345812</span><span class="p">}</span> <span class="c1"># nadir position of satellite</span>
+        <span class="n">obsv_metrics</span> <span class="o">=</span> <span class="n">landsat_oli_blue</span><span class="o">.</span><span class="n">calc_data_metrics</span><span class="p">(</span><span class="n">sc_orbit_state</span><span class="p">,</span> <span class="n">target_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ground pixel along-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">29.67</span><span class="p">,</span> <span class="s1">&#39;ground pixel cross-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">29.73</span><span class="p">,</span> <span class="s1">&#39;SNR&#39;</span><span class="p">:</span> <span class="mf">1065.8</span><span class="p">,</span> <span class="s1">&#39;dynamic range&#39;</span><span class="p">:</span> <span class="mf">141998.68</span><span class="p">,</span> <span class="s1">&#39;noise-equivalent delta T [K]&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">})</span>
+        
+        <span class="c1"># disable LOWTRAN7 atmospheric loss model and evaluate results</span>
+        <span class="n">landsat_oli_blue_dict</span><span class="p">[</span><span class="s2">&quot;atmosLossModel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">landsat_oli_blue</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">landsat_oli_blue_dict</span><span class="p">)</span>
+        <span class="n">obsv_metrics</span> <span class="o">=</span> <span class="n">landsat_oli_blue</span><span class="o">.</span><span class="n">calc_data_metrics</span><span class="p">(</span><span class="n">sc_orbit_state</span><span class="p">,</span> <span class="n">target_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ground pixel along-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">29.67</span><span class="p">,</span> <span class="s1">&#39;ground pixel cross-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">29.73</span><span class="p">,</span> <span class="s1">&#39;SNR&#39;</span><span class="p">:</span> <span class="mf">1281.85</span><span class="p">,</span> <span class="s1">&#39;dynamic range&#39;</span><span class="p">:</span> <span class="mf">205400.19</span><span class="p">,</span> <span class="s1">&#39;noise-equivalent delta T [K]&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="TestPassiveOpticalScannerModel.test_calc_data_metrics_MODISBand10_precomputed"><a class="viewcode-back" href="../tests.html#test_passive_optical_scanner_model.TestPassiveOpticalScannerModel.test_calc_data_metrics_MODISBand10_precomputed">[docs]</a>    <span class="k">def</span> <span class="nf">test_calc_data_metrics_MODISBand10_precomputed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;  Model instrument with MODIS Band 10 specs (Optical, whiskbroom) and test with the results as computed on 4 April 2021.</span>
+
+<span class="sd">        Refer to the following article more context:</span>
+<span class="sd">        V. Ravindra and S. Nag, &quot;Instrument Data Metrics Evaluator for Tradespace Analysis of Earth Observing Constellations,&quot; </span>
+<span class="sd">        2020 IEEE Aerospace Conference, Big Sky, MT, USA, 2020.</span>
+
+<span class="sd">        .. note:: The results using the LOWTRAN7 model are computed at resolution wav_step_percm = 5.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">modis_band10_dict</span> <span class="o">=</span> <span class="p">{</span>
+                                <span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;Passive Optical Scanner&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;MODIS Band10&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;mass&quot;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
+                                <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="mf">1.6</span><span class="p">,</span> 
+                                <span class="s2">&quot;power&quot;</span><span class="p">:</span> <span class="mf">162.5</span><span class="p">,</span> 
+                                <span class="s2">&quot;fieldOfViewGeometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                    <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="s2">&quot;RECTANGULAR&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;angleHeight&quot;</span><span class="p">:</span> <span class="mf">0.812366806011266</span><span class="p">,</span>
+                                    <span class="s2">&quot;angleWidth&quot;</span><span class="p">:</span> <span class="mi">110</span>
+                                <span class="p">},</span>
+                                <span class="s2">&quot;scanTechnique&quot;</span><span class="p">:</span> <span class="s2">&quot;WHISKBROOM&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;dataRate&quot;</span><span class="p">:</span> <span class="mf">6.2</span><span class="p">,</span>
+                                <span class="s2">&quot;numberDetectorRows&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+                                <span class="s2">&quot;numberDetectorCols&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                                <span class="s2">&quot;detectorWidth&quot;</span><span class="p">:</span> <span class="mf">540e-6</span><span class="p">,</span>
+                                <span class="s2">&quot;focalLength&quot;</span><span class="p">:</span> <span class="mf">380.859e-3</span><span class="p">,</span>
+                                <span class="s2">&quot;operatingWavelength&quot;</span><span class="p">:</span> <span class="mf">490e-9</span><span class="p">,</span>
+                                <span class="s2">&quot;bandwidth&quot;</span><span class="p">:</span> <span class="mf">10e-9</span><span class="p">,</span>
+                                <span class="s2">&quot;quantumEff&quot;</span><span class="p">:</span> <span class="mf">0.33</span><span class="p">,</span>
+                                <span class="s2">&quot;targetBlackBodyTemp&quot;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+                                <span class="s2">&quot;bitsPerPixel&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+                                <span class="s2">&quot;opticsSysEff&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
+                                <span class="s2">&quot;numOfReadOutE&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+                                <span class="s2">&quot;apertureDia&quot;</span><span class="p">:</span> <span class="mf">0.1778</span><span class="p">,</span>
+                                <span class="s2">&quot;Fnum&quot;</span><span class="p">:</span> <span class="mf">2.1421</span><span class="p">,</span>
+                                <span class="s2">&quot;maxDetectorExposureTime&quot;</span><span class="p">:</span> <span class="mf">323.333e-6</span><span class="p">,</span>
+                                <span class="s2">&quot;atmosLossModel&quot;</span><span class="p">:</span> <span class="s2">&quot;LOWTRAN7&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;_comments&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;purpose is for observation of surface/ cloud temperature(note target temp)&quot;</span><span class="p">,</span>
+                                              <span class="s2">&quot;quantumEff, opticsSysEff, numofReadoutE are guessed.&quot;</span><span class="p">]</span>
+                            <span class="p">}</span>
+        <span class="n">modis_band10</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">modis_band10_dict</span><span class="p">)</span>
+        <span class="c1"># Aqua orbit at 10 Apr 2021 15:07:56.800 UTC  (NIGHT time)                                                                          </span>
+        <span class="n">sc_orbit_state</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time [JDUT1]&#39;</span><span class="p">:</span><span class="mf">2459315.130520833</span><span class="p">,</span>  <span class="s1">&#39;x [km]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">5054.315202286442</span><span class="p">,</span>    <span class="s1">&#39;y [km]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">4878.491479401228</span><span class="p">,</span>    <span class="s1">&#39;z [km]&#39;</span><span class="p">:</span> <span class="mf">883.5310463297755</span><span class="p">,</span> 
+                                                            <span class="s1">&#39;vx [km/s]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.417318347731835</span><span class="p">,</span> <span class="s1">&#39;vy [km/s]&#39;</span><span class="p">:</span> <span class="mf">0.1319708892386859</span><span class="p">,</span> <span class="s1">&#39;vz [km/s]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">7.367383505358474</span> <span class="p">}</span>
+        <span class="n">target_coords</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;lat [deg]&#39;</span><span class="p">:</span> <span class="mf">7.127116160568699</span> <span class="p">,</span> <span class="s1">&#39;lon [deg]&#39;</span><span class="p">:</span> <span class="mf">158.1924750010043</span><span class="p">}</span> <span class="c1"># nadir position of satellite</span>
+        <span class="n">obsv_metrics</span> <span class="o">=</span> <span class="n">modis_band10</span><span class="o">.</span><span class="n">calc_data_metrics</span><span class="p">(</span><span class="n">sc_orbit_state</span><span class="p">,</span> <span class="n">target_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;ground pixel along-track resolution [m]&#39;</span><span class="p">],</span> <span class="mf">996.11</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;ground pixel cross-track resolution [m]&#39;</span><span class="p">],</span> <span class="mf">997.19</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;SNR&#39;</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;dynamic range&#39;</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;noise-equivalent delta T [K]&#39;</span><span class="p">],</span> <span class="mf">224514118246476.62</span><span class="p">,</span> <span class="n">rel_tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>
+
+        <span class="c1"># 10 Apr 2021 15:55:53.269   (Day time)                                                                                                                   </span>
+        <span class="n">sc_orbit_state</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time [JDUT1]&#39;</span><span class="p">:</span><span class="mf">2459315.1638078704</span><span class="p">,</span>  <span class="s1">&#39;x [km]&#39;</span><span class="p">:</span> <span class="mf">4904.051098680667</span><span class="p">,</span>    <span class="s1">&#39;y [km]&#39;</span><span class="p">:</span> <span class="mf">4868.949787679997</span><span class="p">,</span>    <span class="s1">&#39;z [km]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1516.567875770611</span><span class="p">,</span> 
+                                                            <span class="s1">&#39;vx [km/s]&#39;</span><span class="p">:</span> <span class="mf">1.903191094106026</span><span class="p">,</span> <span class="s1">&#39;vy [km/s]&#39;</span><span class="p">:</span> <span class="mf">0.3436316797910688</span><span class="p">,</span> <span class="s1">&#39;vz [km/s]&#39;</span><span class="p">:</span> <span class="mf">7.255195566766275</span> <span class="p">}</span>
+        <span class="n">target_coords</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;lat [deg]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">12.36694967995247</span> <span class="p">,</span> <span class="s1">&#39;lon [deg]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">33.02510031498068</span><span class="p">}</span> <span class="c1"># nadir position of satellite</span>
+        <span class="n">obsv_metrics</span> <span class="o">=</span> <span class="n">modis_band10</span><span class="o">.</span><span class="n">calc_data_metrics</span><span class="p">(</span><span class="n">sc_orbit_state</span><span class="p">,</span> <span class="n">target_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ground pixel along-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">988.98</span><span class="p">,</span> <span class="s1">&#39;ground pixel cross-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">989.93</span><span class="p">,</span> <span class="s1">&#39;SNR&#39;</span><span class="p">:</span> <span class="mf">3254.27</span><span class="p">,</span> <span class="s1">&#39;dynamic range&#39;</span><span class="p">:</span> <span class="mf">423635.37</span><span class="p">,</span> <span class="s1">&#39;noise-equivalent delta T [K]&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">})</span>
+        
+        
+        <span class="c1"># disable LOWTRAN7 atmospheric loss model and evaluate results</span>
+        <span class="n">modis_band10_dict</span><span class="p">[</span><span class="s2">&quot;atmosLossModel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">modis_band10</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">modis_band10_dict</span><span class="p">)</span>
+        <span class="n">obsv_metrics</span> <span class="o">=</span> <span class="n">modis_band10</span><span class="o">.</span><span class="n">calc_data_metrics</span><span class="p">(</span><span class="n">sc_orbit_state</span><span class="p">,</span> <span class="n">target_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ground pixel along-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">988.98</span><span class="p">,</span> <span class="s1">&#39;ground pixel cross-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">989.93</span><span class="p">,</span> <span class="s1">&#39;SNR&#39;</span><span class="p">:</span> <span class="mf">3892.58</span><span class="p">,</span> <span class="s1">&#39;dynamic range&#39;</span><span class="p">:</span> <span class="mf">606110.78</span><span class="p">,</span> <span class="s1">&#39;noise-equivalent delta T [K]&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="TestPassiveOpticalScannerModel.test_calc_data_metrics_MODISBand1_precomputed"><a class="viewcode-back" href="../tests.html#test_passive_optical_scanner_model.TestPassiveOpticalScannerModel.test_calc_data_metrics_MODISBand1_precomputed">[docs]</a>    <span class="k">def</span> <span class="nf">test_calc_data_metrics_MODISBand1_precomputed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;  Model instrument with MODIS Band 1 specs (Optical, whiskbroom) and test with the results as computed on 4 April 2021.</span>
+
+<span class="sd">        Refer to the following article more context:</span>
+<span class="sd">        V. Ravindra and S. Nag, &quot;Instrument Data Metrics Evaluator for Tradespace Analysis of Earth Observing Constellations,&quot; </span>
+<span class="sd">        2020 IEEE Aerospace Conference, Big Sky, MT, USA, 2020.</span>
+
+<span class="sd">        .. note:: The results using the LOWTRAN7 model are computed at resolution wav_step_percm = 5.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">modis_band1_dict</span> <span class="o">=</span> <span class="p">{</span>
+                                <span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;Passive Optical Scanner&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;MODIS Band1&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;mass&quot;</span><span class="p">:</span> <span class="mi">274</span><span class="p">,</span>
+                                <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="mf">1.6</span><span class="p">,</span> 
+                                <span class="s2">&quot;power&quot;</span><span class="p">:</span> <span class="mf">162.5</span><span class="p">,</span> 
+                                <span class="s2">&quot;fieldOfViewGeometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                    <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="s2">&quot;RECTANGULAR&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;angleHeight&quot;</span><span class="p">:</span> <span class="mf">0.812366806011266</span><span class="p">,</span>
+                                    <span class="s2">&quot;angleWidth&quot;</span><span class="p">:</span> <span class="mi">110</span>
+                                <span class="p">},</span>
+                                <span class="s2">&quot;scanTechnique&quot;</span><span class="p">:</span> <span class="s2">&quot;WHISKBROOM&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;dataRate&quot;</span><span class="p">:</span> <span class="mf">6.2</span><span class="p">,</span>
+                                <span class="s2">&quot;numberDetectorRows&quot;</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span>
+                                <span class="s2">&quot;numberDetectorCols&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                                <span class="s2">&quot;detectorWidth&quot;</span><span class="p">:</span> <span class="mf">135e-6</span><span class="p">,</span>
+                                <span class="s2">&quot;focalLength&quot;</span><span class="p">:</span> <span class="mf">380.859e-3</span><span class="p">,</span>
+                                <span class="s2">&quot;operatingWavelength&quot;</span><span class="p">:</span> <span class="mf">645e-9</span><span class="p">,</span>
+                                <span class="s2">&quot;bandwidth&quot;</span><span class="p">:</span> <span class="mf">50e-9</span><span class="p">,</span>
+                                <span class="s2">&quot;quantumEff&quot;</span><span class="p">:</span> <span class="mf">0.33</span><span class="p">,</span>
+                                <span class="s2">&quot;targetBlackBodyTemp&quot;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+                                <span class="s2">&quot;bitsPerPixel&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+                                <span class="s2">&quot;opticsSysEff&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
+                                <span class="s2">&quot;numOfReadOutE&quot;</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+                                <span class="s2">&quot;apertureDia&quot;</span><span class="p">:</span> <span class="mf">0.1778</span><span class="p">,</span>
+                                <span class="s2">&quot;Fnum&quot;</span><span class="p">:</span> <span class="mf">2.1421</span><span class="p">,</span>
+                                <span class="s2">&quot;maxDetectorExposureTime&quot;</span><span class="p">:</span> <span class="mf">73.3e-6</span><span class="p">,</span>
+                                <span class="s2">&quot;atmosLossModel&quot;</span><span class="p">:</span> <span class="s2">&quot;LOWTRAN7&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;_comments&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;purpose for surface/ cloud temperature(note target temp)&quot;</span><span class="p">,</span>
+                                              <span class="s2">&quot;quantumEff, opticsSysEff, numofReadoutE are guessed.&quot;</span><span class="p">]</span>
+                            <span class="p">}</span>
+        <span class="n">modis_band1</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">modis_band1_dict</span><span class="p">)</span>
+        <span class="c1"># Aqua orbit at 10 Apr 2021 15:07:56.800 UTC  (NIGHT time)                                                                          </span>
+        <span class="n">sc_orbit_state</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time [JDUT1]&#39;</span><span class="p">:</span><span class="mf">2459315.130520833</span><span class="p">,</span>  <span class="s1">&#39;x [km]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">5054.315202286442</span><span class="p">,</span>    <span class="s1">&#39;y [km]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">4878.491479401228</span><span class="p">,</span>    <span class="s1">&#39;z [km]&#39;</span><span class="p">:</span> <span class="mf">883.5310463297755</span><span class="p">,</span> 
+                                                            <span class="s1">&#39;vx [km/s]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.417318347731835</span><span class="p">,</span> <span class="s1">&#39;vy [km/s]&#39;</span><span class="p">:</span> <span class="mf">0.1319708892386859</span><span class="p">,</span> <span class="s1">&#39;vz [km/s]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">7.367383505358474</span> <span class="p">}</span>
+        <span class="n">target_coords</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;lat [deg]&#39;</span><span class="p">:</span> <span class="mf">7.127116160568699</span> <span class="p">,</span> <span class="s1">&#39;lon [deg]&#39;</span><span class="p">:</span> <span class="mf">158.1924750010043</span><span class="p">}</span> <span class="c1"># nadir position of satellite</span>
+        <span class="n">obsv_metrics</span> <span class="o">=</span> <span class="n">modis_band1</span><span class="o">.</span><span class="n">calc_data_metrics</span><span class="p">(</span><span class="n">sc_orbit_state</span><span class="p">,</span> <span class="n">target_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;ground pixel along-track resolution [m]&#39;</span><span class="p">],</span> <span class="mf">249.03</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;ground pixel cross-track resolution [m]&#39;</span><span class="p">],</span> <span class="mf">249.3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;SNR&#39;</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;dynamic range&#39;</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;noise-equivalent delta T [K]&#39;</span><span class="p">],</span> <span class="mf">10124816467.16259</span><span class="p">,</span> <span class="n">rel_tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>
+
+        <span class="c1"># 10 Apr 2021 15:55:53.269   (Day time)                                                                                                                   </span>
+        <span class="n">sc_orbit_state</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time [JDUT1]&#39;</span><span class="p">:</span><span class="mf">2459315.1638078704</span><span class="p">,</span>  <span class="s1">&#39;x [km]&#39;</span><span class="p">:</span> <span class="mf">4904.051098680667</span><span class="p">,</span>    <span class="s1">&#39;y [km]&#39;</span><span class="p">:</span> <span class="mf">4868.949787679997</span><span class="p">,</span>    <span class="s1">&#39;z [km]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1516.567875770611</span><span class="p">,</span> 
+                                                            <span class="s1">&#39;vx [km/s]&#39;</span><span class="p">:</span> <span class="mf">1.903191094106026</span><span class="p">,</span> <span class="s1">&#39;vy [km/s]&#39;</span><span class="p">:</span> <span class="mf">0.3436316797910688</span><span class="p">,</span> <span class="s1">&#39;vz [km/s]&#39;</span><span class="p">:</span> <span class="mf">7.255195566766275</span> <span class="p">}</span>
+        <span class="n">target_coords</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;lat [deg]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">12.36694967995247</span> <span class="p">,</span> <span class="s1">&#39;lon [deg]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">33.02510031498068</span><span class="p">}</span> <span class="c1"># nadir position of satellite</span>
+        <span class="n">obsv_metrics</span> <span class="o">=</span> <span class="n">modis_band1</span><span class="o">.</span><span class="n">calc_data_metrics</span><span class="p">(</span><span class="n">sc_orbit_state</span><span class="p">,</span> <span class="n">target_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ground pixel along-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">247.24</span><span class="p">,</span> <span class="s1">&#39;ground pixel cross-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">247.48</span><span class="p">,</span> <span class="s1">&#39;SNR&#39;</span><span class="p">:</span> <span class="mf">986.24</span><span class="p">,</span> <span class="s1">&#39;dynamic range&#39;</span><span class="p">:</span> <span class="mf">38932.1</span><span class="p">,</span> <span class="s1">&#39;noise-equivalent delta T [K]&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">})</span>
+
+        <span class="c1"># disable LOWTRAN7 atmospheric loss model and evaluate results</span>
+        <span class="n">modis_band1_dict</span><span class="p">[</span><span class="s2">&quot;atmosLossModel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">modis_band1</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">modis_band1_dict</span><span class="p">)</span>
+        <span class="n">obsv_metrics</span> <span class="o">=</span> <span class="n">modis_band1</span><span class="o">.</span><span class="n">calc_data_metrics</span><span class="p">(</span><span class="n">sc_orbit_state</span><span class="p">,</span> <span class="n">target_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ground pixel along-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">247.24</span><span class="p">,</span> <span class="s1">&#39;ground pixel cross-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">247.48</span><span class="p">,</span> <span class="s1">&#39;SNR&#39;</span><span class="p">:</span> <span class="mf">1085.11</span><span class="p">,</span> <span class="s1">&#39;dynamic range&#39;</span><span class="p">:</span> <span class="mf">47123.85</span><span class="p">,</span> <span class="s1">&#39;noise-equivalent delta T [K]&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="TestPassiveOpticalScannerModel.test_calc_data_metrics_CCAMBlueBand_precomputed"><a class="viewcode-back" href="../tests.html#test_passive_optical_scanner_model.TestPassiveOpticalScannerModel.test_calc_data_metrics_CCAMBlueBand_precomputed">[docs]</a>    <span class="k">def</span> <span class="nf">test_calc_data_metrics_CCAMBlueBand_precomputed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;  Model instrument with CCAM Blue Band specs (Matrix, optical) and test with the results as computed on 4 April 2021.</span>
+
+<span class="sd">        Refer to the following article more context:</span>
+<span class="sd">        V. Ravindra and S. Nag, &quot;Instrument Data Metrics Evaluator for Tradespace Analysis of Earth Observing Constellations,&quot; </span>
+<span class="sd">        2020 IEEE Aerospace Conference, Big Sky, MT, USA, 2020.</span>
+
+<span class="sd">        .. note:: The results using the LOWTRAN7 model are computed at resolution wav_step_percm = 5.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ccam_blue_band_dict</span> <span class="o">=</span> <span class="p">{</span>
+                                <span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;Passive Optical Scanner&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;CCAM&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;fieldOfViewGeometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                    <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="s2">&quot;RECTANGULAR&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;angleHeight&quot;</span><span class="p">:</span> <span class="mf">1.2</span><span class="p">,</span>
+                                    <span class="s2">&quot;angleWidth&quot;</span><span class="p">:</span> <span class="mf">1.2</span>
+                                <span class="p">},</span>
+                                <span class="s2">&quot;scanTechnique&quot;</span><span class="p">:</span> <span class="s2">&quot;MATRIX_IMAGER&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;numberDetectorRows&quot;</span><span class="p">:</span> <span class="mi">2048</span><span class="p">,</span>
+                                <span class="s2">&quot;numberDetectorCols&quot;</span><span class="p">:</span> <span class="mi">2048</span><span class="p">,</span>
+                                <span class="s2">&quot;detectorWidth&quot;</span><span class="p">:</span> <span class="mf">5.5e-6</span><span class="p">,</span>
+                                <span class="s2">&quot;focalLength&quot;</span><span class="p">:</span> <span class="mf">520e-3</span><span class="p">,</span>
+                                <span class="s2">&quot;operatingWavelength&quot;</span><span class="p">:</span> <span class="mf">470e-9</span><span class="p">,</span>
+                                <span class="s2">&quot;bandwidth&quot;</span><span class="p">:</span> <span class="mf">150e-9</span><span class="p">,</span>
+                                <span class="s2">&quot;quantumEff&quot;</span><span class="p">:</span> <span class="mf">0.40</span><span class="p">,</span>
+                                <span class="s2">&quot;targetBlackBodyTemp&quot;</span><span class="p">:</span> <span class="mi">290</span><span class="p">,</span>
+                                <span class="s2">&quot;opticsSysEff&quot;</span><span class="p">:</span> <span class="mf">0.6</span><span class="p">,</span>
+                                <span class="s2">&quot;numOfReadOutE&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span>
+                                <span class="s2">&quot;apertureDia&quot;</span><span class="p">:</span> <span class="mf">94.6e-3</span><span class="p">,</span>
+                                <span class="s2">&quot;Fnum&quot;</span><span class="p">:</span> <span class="mf">5.5</span><span class="p">,</span>
+                                <span class="s2">&quot;maxDetectorExposureTime&quot;</span><span class="p">:</span> <span class="mf">678e-6</span><span class="p">,</span>
+                                <span class="s2">&quot;atmosLossModel&quot;</span><span class="p">:</span> <span class="s2">&quot;LOWTRAN7&quot;</span>
+                            <span class="p">}</span>
+        <span class="n">ccam_blue_band</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">ccam_blue_band_dict</span><span class="p">)</span>
+        <span class="c1"># Aqua orbit at 10 Apr 2021 15:07:56.800 UTC  (NIGHT time)                                                                          </span>
+        <span class="n">sc_orbit_state</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time [JDUT1]&#39;</span><span class="p">:</span><span class="mf">2459315.130520833</span><span class="p">,</span>  <span class="s1">&#39;x [km]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">5054.315202286442</span><span class="p">,</span>    <span class="s1">&#39;y [km]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">4878.491479401228</span><span class="p">,</span>    <span class="s1">&#39;z [km]&#39;</span><span class="p">:</span> <span class="mf">883.5310463297755</span><span class="p">,</span> 
+                                                            <span class="s1">&#39;vx [km/s]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.417318347731835</span><span class="p">,</span> <span class="s1">&#39;vy [km/s]&#39;</span><span class="p">:</span> <span class="mf">0.1319708892386859</span><span class="p">,</span> <span class="s1">&#39;vz [km/s]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">7.367383505358474</span> <span class="p">}</span>
+        <span class="n">target_coords</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;lat [deg]&#39;</span><span class="p">:</span> <span class="mf">7.127116160568699</span> <span class="p">,</span> <span class="s1">&#39;lon [deg]&#39;</span><span class="p">:</span> <span class="mf">158.1924750010043</span><span class="p">}</span> <span class="c1"># nadir position of satellite</span>
+        <span class="n">obsv_metrics</span> <span class="o">=</span> <span class="n">ccam_blue_band</span><span class="o">.</span><span class="n">calc_data_metrics</span><span class="p">(</span><span class="n">sc_orbit_state</span><span class="p">,</span> <span class="n">target_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;ground pixel along-track resolution [m]&#39;</span><span class="p">],</span> <span class="mf">7.43</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;ground pixel cross-track resolution [m]&#39;</span><span class="p">],</span> <span class="mf">7.44</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;SNR&#39;</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;dynamic range&#39;</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">[</span><span class="s1">&#39;noise-equivalent delta T [K]&#39;</span><span class="p">],</span> <span class="mf">2302356852773662.0</span><span class="p">,</span> <span class="n">rel_tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>
+
+        <span class="c1"># 10 Apr 2021 15:55:53.269   (Day time)                                                                                                                   </span>
+        <span class="n">sc_orbit_state</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time [JDUT1]&#39;</span><span class="p">:</span><span class="mf">2459315.1638078704</span><span class="p">,</span>  <span class="s1">&#39;x [km]&#39;</span><span class="p">:</span> <span class="mf">4904.051098680667</span><span class="p">,</span>    <span class="s1">&#39;y [km]&#39;</span><span class="p">:</span> <span class="mf">4868.949787679997</span><span class="p">,</span>    <span class="s1">&#39;z [km]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1516.567875770611</span><span class="p">,</span> 
+                                                            <span class="s1">&#39;vx [km/s]&#39;</span><span class="p">:</span> <span class="mf">1.903191094106026</span><span class="p">,</span> <span class="s1">&#39;vy [km/s]&#39;</span><span class="p">:</span> <span class="mf">0.3436316797910688</span><span class="p">,</span> <span class="s1">&#39;vz [km/s]&#39;</span><span class="p">:</span> <span class="mf">7.255195566766275</span> <span class="p">}</span>
+        <span class="n">target_coords</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;lat [deg]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">12.36694967995247</span> <span class="p">,</span> <span class="s1">&#39;lon [deg]&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">33.02510031498068</span><span class="p">}</span> <span class="c1"># nadir position of satellite</span>
+        <span class="n">obsv_metrics</span> <span class="o">=</span> <span class="n">ccam_blue_band</span><span class="o">.</span><span class="n">calc_data_metrics</span><span class="p">(</span><span class="n">sc_orbit_state</span><span class="p">,</span> <span class="n">target_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ground pixel along-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">7.38</span><span class="p">,</span> <span class="s1">&#39;ground pixel cross-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">7.38</span><span class="p">,</span> <span class="s1">&#39;SNR&#39;</span><span class="p">:</span> <span class="mf">63.3</span><span class="p">,</span> <span class="s1">&#39;dynamic range&#39;</span><span class="p">:</span> <span class="mf">320.71</span><span class="p">,</span> <span class="s1">&#39;noise-equivalent delta T [K]&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">})</span>
+
+        <span class="c1"># disable LOWTRAN7 atmospheric loss model and evaluate results</span>
+        <span class="n">ccam_blue_band_dict</span><span class="p">[</span><span class="s2">&quot;atmosLossModel&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">ccam_blue_band</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">ccam_blue_band_dict</span><span class="p">)</span>
+        <span class="n">obsv_metrics</span> <span class="o">=</span> <span class="n">ccam_blue_band</span><span class="o">.</span><span class="n">calc_data_metrics</span><span class="p">(</span><span class="n">sc_orbit_state</span><span class="p">,</span> <span class="n">target_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">obsv_metrics</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ground pixel along-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">7.38</span><span class="p">,</span> <span class="s1">&#39;ground pixel cross-track resolution [m]&#39;</span><span class="p">:</span> <span class="mf">7.38</span><span class="p">,</span> <span class="s1">&#39;SNR&#39;</span><span class="p">:</span> <span class="mf">79.01</span><span class="p">,</span> <span class="s1">&#39;dynamic range&#39;</span><span class="p">:</span> <span class="mf">492.91</span><span class="p">,</span> <span class="s1">&#39;noise-equivalent delta T [K]&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">})</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, BAERI.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

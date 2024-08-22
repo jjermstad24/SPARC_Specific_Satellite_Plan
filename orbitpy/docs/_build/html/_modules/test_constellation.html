@@ -1,0 +1,488 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>test_constellation &mdash; OrbitPy 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> OrbitPy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../miscellaneous.html">Miscellaneous</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OrbitPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>test_constellation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for test_constellation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Unit tests for orbitpy.constellation module.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">orbitpy.util</span> <span class="kn">import</span> <span class="n">OrbitState</span>
+<span class="kn">from</span> <span class="nn">orbitpy.constellation</span> <span class="kn">import</span> <span class="n">ConstellationFactory</span><span class="p">,</span> <span class="n">WalkerDeltaConstellation</span><span class="p">,</span> <span class="n">TrainConstellation</span>
+
+<span class="n">RE</span> <span class="o">=</span> <span class="mf">6378.137</span> <span class="c1"># radius of Earth in km</span>
+
+<div class="viewcode-block" id="angle_difference"><a class="viewcode-back" href="../tests.html#test_constellation.angle_difference">[docs]</a><span class="k">def</span> <span class="nf">angle_difference</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Compute angle difference (b-a) in the range of -180 deg to 180 deg.</span>
+
+<span class="sd">    :param a: Angle in degrees.</span>
+<span class="sd">    :paramtype: float</span>
+
+<span class="sd">    :param b: Angle in degrees.</span>
+<span class="sd">    :paramtype b: float:</span>
+
+<span class="sd">    :returns: (b-a) in range of -180 deg to 180 deg.</span>
+<span class="sd">    :rtype: float</span>
+
+<span class="sd">    Usage:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        &gt;&gt; angle_difference(1,3)</span>
+<span class="sd">        2</span>
+<span class="sd">        &gt;&gt; angle_difference(1,358)</span>
+<span class="sd">        -3</span>
+<span class="sd">        </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">%</span> <span class="mi">360</span>
+    <span class="k">if</span> <span class="n">c</span> <span class="o">&gt;</span> <span class="mi">180</span><span class="p">:</span>
+       <span class="n">c</span> <span class="o">-=</span> <span class="mi">360</span>
+    <span class="k">return</span> <span class="n">c</span></div>
+
+<div class="viewcode-block" id="TestConstellationFactory"><a class="viewcode-back" href="../tests.html#test_constellation.TestConstellationFactory">[docs]</a><span class="k">class</span> <span class="nc">TestConstellationFactory</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+  
+    <span class="k">class</span> <span class="nc">DummyNewConstellation</span><span class="p">:</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">pass</span>
+            
+        <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">TestConstellationFactory</span><span class="o">.</span><span class="n">DummyNewConstellation</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">test___init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">factory</span> <span class="o">=</span> <span class="n">ConstellationFactory</span><span class="p">()</span>
+
+        <span class="c1"># test the built-in constellation models are registered</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Walker Delta Constellation&#39;</span><span class="p">,</span> <span class="n">factory</span><span class="o">.</span><span class="n">_creators</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">factory</span><span class="o">.</span><span class="n">_creators</span><span class="p">[</span><span class="s1">&#39;Walker Delta Constellation&#39;</span><span class="p">],</span> <span class="n">WalkerDeltaConstellation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Train Constellation&#39;</span><span class="p">,</span> <span class="n">factory</span><span class="o">.</span><span class="n">_creators</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">factory</span><span class="o">.</span><span class="n">_creators</span><span class="p">[</span><span class="s1">&#39;Train Constellation&#39;</span><span class="p">],</span> <span class="n">TrainConstellation</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">test_register_constellation_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">factory</span> <span class="o">=</span> <span class="n">ConstellationFactory</span><span class="p">()</span>
+        <span class="n">factory</span><span class="o">.</span><span class="n">register_constellation_model</span><span class="p">(</span><span class="s1">&#39;New Constellation 2021&#39;</span><span class="p">,</span> <span class="n">TestConstellationFactory</span><span class="o">.</span><span class="n">DummyNewConstellation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;New Constellation 2021&#39;</span><span class="p">,</span> <span class="n">factory</span><span class="o">.</span><span class="n">_creators</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">factory</span><span class="o">.</span><span class="n">_creators</span><span class="p">[</span><span class="s1">&#39;New Constellation 2021&#39;</span><span class="p">],</span> <span class="n">TestConstellationFactory</span><span class="o">.</span><span class="n">DummyNewConstellation</span><span class="p">)</span>
+        <span class="c1"># test the built-in constellation models remain registered after registration of new model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Walker Delta Constellation&#39;</span><span class="p">,</span> <span class="n">factory</span><span class="o">.</span><span class="n">_creators</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">factory</span><span class="o">.</span><span class="n">_creators</span><span class="p">[</span><span class="s1">&#39;Walker Delta Constellation&#39;</span><span class="p">],</span> <span class="n">WalkerDeltaConstellation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s1">&#39;Train Constellation&#39;</span><span class="p">,</span> <span class="n">factory</span><span class="o">.</span><span class="n">_creators</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">factory</span><span class="o">.</span><span class="n">_creators</span><span class="p">[</span><span class="s1">&#39;Train Constellation&#39;</span><span class="p">],</span> <span class="n">TrainConstellation</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_get_constellation_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="n">factory</span> <span class="o">=</span> <span class="n">ConstellationFactory</span><span class="p">()</span>
+        <span class="c1"># register dummy constellation model</span>
+        <span class="n">factory</span><span class="o">.</span><span class="n">register_constellation_model</span><span class="p">(</span><span class="s1">&#39;New Constellation 2021&#39;</span><span class="p">,</span> <span class="n">TestConstellationFactory</span><span class="o">.</span><span class="n">DummyNewConstellation</span><span class="p">)</span>
+        
+        <span class="c1"># test the constellation model classes can be obtained depending on the input specifications</span>
+        <span class="c1"># Walker Delta Constellation model</span>
+        <span class="n">specs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s1">&#39;Walker Delta Constellation&#39;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">:{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;JULIAN_DATE_UT1&quot;</span><span class="p">,</span> <span class="s2">&quot;jd&quot;</span><span class="p">:</span><span class="mf">2459270.75</span><span class="p">}}</span> <span class="c1"># in practice additional constellation specs shall be present in the dictionary</span>
+        <span class="n">wd_model</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">get_constellation_model</span><span class="p">(</span><span class="n">specs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">wd_model</span><span class="p">,</span> <span class="n">WalkerDeltaConstellation</span><span class="p">)</span>
+
+        <span class="c1"># add test for train constellation   @TODO</span>
+
+        <span class="c1"># DummyNewConstellation</span>
+        <span class="n">specs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s1">&#39;New Constellation 2021&#39;</span><span class="p">}</span> <span class="c1"># in practice additional constellation specs shall be present in the dictionary</span>
+        <span class="n">dc_model</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">get_constellation_model</span><span class="p">(</span><span class="n">specs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">dc_model</span><span class="p">,</span> <span class="n">TestConstellationFactory</span><span class="o">.</span><span class="n">DummyNewConstellation</span><span class="p">)</span></div>
+   
+<div class="viewcode-block" id="TestWalkerDeltaConstellation"><a class="viewcode-back" href="../tests.html#test_constellation.TestWalkerDeltaConstellation">[docs]</a><span class="k">class</span> <span class="nc">TestWalkerDeltaConstellation</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    
+    <span class="n">factory</span> <span class="o">=</span> <span class="n">ConstellationFactory</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">test_from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># typical case</span>
+        <span class="n">specs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s1">&#39;Walker Delta Constellation&#39;</span><span class="p">,</span> 
+                  <span class="s2">&quot;date&quot;</span><span class="p">:{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;JULIAN_DATE_UT1&quot;</span><span class="p">,</span> <span class="s2">&quot;jd&quot;</span><span class="p">:</span><span class="mf">2459270.75</span><span class="p">},</span>
+                  <span class="s2">&quot;numberSatellites&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                  <span class="s2">&quot;numberPlanes&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                  <span class="s2">&quot;relativeSpacing&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                  <span class="s2">&quot;alt&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+                  <span class="s2">&quot;ecc&quot;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+                  <span class="s2">&quot;inc&quot;</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span>
+                  <span class="s2">&quot;aop&quot;</span><span class="p">:</span> <span class="mi">135</span><span class="p">,</span>
+                  <span class="s2">&quot;@id&quot;</span><span class="p">:</span> <span class="s2">&quot;abc&quot;</span><span class="p">}</span>
+        <span class="n">wd_model</span> <span class="o">=</span> <span class="n">TestWalkerDeltaConstellation</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">get_constellation_model</span><span class="p">(</span><span class="n">specs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">wd_model</span><span class="p">,</span> <span class="n">WalkerDeltaConstellation</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span> <span class="s2">&quot;abc&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">_type</span><span class="p">,</span> <span class="s2">&quot;Walker Delta Constellation&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">OrbitState</span><span class="o">.</span><span class="n">date_from_dict</span><span class="p">({</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;JULIAN_DATE_UT1&quot;</span><span class="p">,</span> <span class="s2">&quot;jd&quot;</span><span class="p">:</span><span class="mf">2459270.75</span><span class="p">}))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">numberSatellites</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">numberPlanes</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">relativeSpacing</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">alt</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">ecc</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">inc</span><span class="p">,</span> <span class="mi">45</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">aop</span><span class="p">,</span> <span class="mi">135</span><span class="p">)</span>
+        
+        <span class="c1"># minimal definition, defaults shall be applied</span>
+        <span class="n">specs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s1">&#39;Walker Delta Constellation&#39;</span><span class="p">}</span> 
+        <span class="n">wd_model</span> <span class="o">=</span> <span class="n">TestWalkerDeltaConstellation</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">get_constellation_model</span><span class="p">(</span><span class="n">specs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsInstance</span><span class="p">(</span><span class="n">wd_model</span><span class="p">,</span> <span class="n">WalkerDeltaConstellation</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">_type</span><span class="p">,</span> <span class="s2">&quot;Walker Delta Constellation&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">OrbitState</span><span class="o">.</span><span class="n">date_from_dict</span><span class="p">({</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;JULIAN_DATE_UT1&quot;</span><span class="p">,</span> <span class="s2">&quot;jd&quot;</span><span class="p">:</span><span class="mf">2415019.5</span><span class="p">}))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">numberSatellites</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">numberPlanes</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">relativeSpacing</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">alt</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">ecc</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">inc</span><span class="p">,</span> <span class="mf">98.22</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">wd_model</span><span class="o">.</span><span class="n">aop</span><span class="p">,</span> <span class="mi">135</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">test_to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1">#@TODO</span>
+        <span class="k">pass</span>
+    
+    <span class="k">def</span> <span class="nf">test___eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1">#@TODO</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="TestWalkerDeltaConstellation.test_generate_orbits_1"><a class="viewcode-back" href="../tests.html#test_constellation.TestWalkerDeltaConstellation.test_generate_orbits_1">[docs]</a>    <span class="k">def</span> <span class="nf">test_generate_orbits_1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Test the calculation of Keplerian elements of the orbits given the Walker Delta Constellation constellation</span>
+<span class="sd">            parameters by comparing to the partial truth data from SMAD 4th ed, pg. 274, Table 10.26.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># partial truth data from SMAD 4th ed, Pg. 274, Table 10.26.</span>
+        <span class="n">specs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s1">&#39;Walker Delta Constellation&#39;</span><span class="p">,</span> 
+                  <span class="s2">&quot;date&quot;</span><span class="p">:{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;JULIAN_DATE_UT1&quot;</span><span class="p">,</span> <span class="s2">&quot;jd&quot;</span><span class="p">:</span><span class="mf">2459270.75</span><span class="p">},</span>
+                  <span class="s2">&quot;numberSatellites&quot;</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span>
+                  <span class="s2">&quot;numberPlanes&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                  <span class="s2">&quot;relativeSpacing&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                  <span class="s2">&quot;alt&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+                  <span class="s2">&quot;ecc&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+                  <span class="s2">&quot;inc&quot;</span><span class="p">:</span> <span class="mi">54</span><span class="p">,</span>
+                  <span class="s2">&quot;aop&quot;</span><span class="p">:</span> <span class="mi">0</span>
+                <span class="p">}</span>
+        <span class="n">wd_model</span> <span class="o">=</span> <span class="n">TestWalkerDeltaConstellation</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">get_constellation_model</span><span class="p">(</span><span class="n">specs</span><span class="p">)</span>
+        <span class="n">orbits</span> <span class="o">=</span> <span class="n">wd_model</span><span class="o">.</span><span class="n">generate_orbits</span><span class="p">()</span>
+
+        <span class="c1"># convert list of propcov.OrbitState objects to list of dictionaries</span>
+        <span class="n">orbit_dict</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">orb</span> <span class="ow">in</span> <span class="n">orbits</span><span class="p">:</span>
+            <span class="n">orbit_dict</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">orb</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">state_type</span><span class="o">=</span><span class="s2">&quot;KEPLERIAN_EARTH_CENTERED_INERTIAL&quot;</span><span class="p">)[</span><span class="s2">&quot;state&quot;</span><span class="p">])</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">),</span> <span class="mi">15</span><span class="p">)</span> <span class="c1"># 15 satellites, hence 15 orbits</span>
+
+        <span class="c1"># all orbits have the same inclination, altitude and eccentricity</span>
+        <span class="k">for</span> <span class="n">orb</span> <span class="ow">in</span> <span class="n">orbit_dict</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orb</span><span class="p">[</span><span class="s2">&quot;inc&quot;</span><span class="p">],</span> <span class="mi">54</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orb</span><span class="p">[</span><span class="s2">&quot;sma&quot;</span><span class="p">],</span> <span class="n">RE</span><span class="o">+</span><span class="mi">500</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orb</span><span class="p">[</span><span class="s2">&quot;ecc&quot;</span><span class="p">],</span> <span class="mf">0.2</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">angle_difference</span><span class="p">(</span><span class="n">orb</span><span class="p">[</span><span class="s2">&quot;aop&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        
+        <span class="c1"># 3 satellites per plane, consecutive 3 satellites shall have the same RAAN</span>
+        <span class="n">plane1_raan</span> <span class="o">=</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">angle_difference</span><span class="p">(</span><span class="n">plane1_raan</span><span class="p">,</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">]),</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">angle_difference</span><span class="p">(</span><span class="n">plane1_raan</span><span class="p">,</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">]),</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">plane2_raan</span> <span class="o">=</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane2_raan</span><span class="p">,</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane2_raan</span><span class="p">,</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">])</span>
+
+        <span class="n">plane3_raan</span> <span class="o">=</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">6</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane3_raan</span><span class="p">,</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">7</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane3_raan</span><span class="p">,</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">8</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">])</span>
+
+        <span class="n">plane4_raan</span> <span class="o">=</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">9</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane4_raan</span><span class="p">,</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">10</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane4_raan</span><span class="p">,</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">11</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">])</span>
+
+        <span class="n">plane5_raan</span> <span class="o">=</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">12</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane5_raan</span><span class="p">,</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">13</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane5_raan</span><span class="p">,</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">14</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">])</span>
+
+        <span class="c1"># the raans are uniformly spaced</span>
+        <span class="n">raan_spacing</span> <span class="o">=</span> <span class="mi">72</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane2_raan</span><span class="o">-</span><span class="n">plane1_raan</span><span class="p">,</span> <span class="n">raan_spacing</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane3_raan</span><span class="o">-</span><span class="n">plane2_raan</span><span class="p">,</span> <span class="n">raan_spacing</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane4_raan</span><span class="o">-</span><span class="n">plane3_raan</span><span class="p">,</span> <span class="n">raan_spacing</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane5_raan</span><span class="o">-</span><span class="n">plane4_raan</span><span class="p">,</span> <span class="n">raan_spacing</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane5_raan</span><span class="o">-</span><span class="n">plane1_raan</span><span class="p">,</span> <span class="mi">360</span> <span class="o">-</span> <span class="n">raan_spacing</span><span class="p">)</span>
+
+        <span class="c1"># check inplane spacing between satellites</span>
+        <span class="n">in_plane_spc</span> <span class="o">=</span> <span class="mi">120</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">in_plane_spc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">in_plane_spc</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">in_plane_spc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">in_plane_spc</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">7</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">6</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">in_plane_spc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">8</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">7</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">in_plane_spc</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">10</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">9</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">in_plane_spc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">11</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">10</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">in_plane_spc</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">13</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">12</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">in_plane_spc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">14</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">13</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">in_plane_spc</span><span class="p">)</span>
+
+        <span class="c1"># check phase difference between adjacent planes</span>
+        <span class="n">phase_diff</span> <span class="o">=</span> <span class="mi">24</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">phase_diff</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">6</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">phase_diff</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">9</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">6</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">phase_diff</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">12</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">9</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">phase_diff</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="TestWalkerDeltaConstellation.test_generate_orbits_2"><a class="viewcode-back" href="../tests.html#test_constellation.TestWalkerDeltaConstellation.test_generate_orbits_2">[docs]</a>    <span class="k">def</span> <span class="nf">test_generate_orbits_2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Test the calculation of Keplerian elements of the orbits given the Walker Delta constellation</span>
+<span class="sd">            parameters using fixed inputs and expected outputs. &quot;&quot;&quot;</span>
+        
+        <span class="n">specs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s1">&#39;Walker Delta Constellation&#39;</span><span class="p">,</span> 
+                  <span class="s2">&quot;date&quot;</span><span class="p">:{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;JULIAN_DATE_UT1&quot;</span><span class="p">,</span> <span class="s2">&quot;jd&quot;</span><span class="p">:</span><span class="mf">2459270.75</span><span class="p">},</span>
+                  <span class="s2">&quot;numberSatellites&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+                  <span class="s2">&quot;numberPlanes&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                  <span class="s2">&quot;relativeSpacing&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+                  <span class="s2">&quot;alt&quot;</span><span class="p">:</span> <span class="mi">700</span><span class="p">,</span>
+                  <span class="s2">&quot;ecc&quot;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+                  <span class="s2">&quot;inc&quot;</span><span class="p">:</span> <span class="mi">98</span><span class="p">,</span>
+                  <span class="s2">&quot;aop&quot;</span><span class="p">:</span> <span class="mi">10</span>
+                <span class="p">}</span>
+        <span class="n">wd_model</span> <span class="o">=</span> <span class="n">TestWalkerDeltaConstellation</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">get_constellation_model</span><span class="p">(</span><span class="n">specs</span><span class="p">)</span>
+        <span class="n">orbits</span> <span class="o">=</span> <span class="n">wd_model</span><span class="o">.</span><span class="n">generate_orbits</span><span class="p">()</span>
+
+        <span class="c1"># convert list of propcov.OrbitState objects to list of dictionaries</span>
+        <span class="n">orbit_dict</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">orb</span> <span class="ow">in</span> <span class="n">orbits</span><span class="p">:</span>
+            <span class="n">orbit_dict</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">orb</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">state_type</span><span class="o">=</span><span class="s2">&quot;KEPLERIAN_EARTH_CENTERED_INERTIAL&quot;</span><span class="p">)[</span><span class="s2">&quot;state&quot;</span><span class="p">])</span>
+
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">),</span> <span class="mi">6</span><span class="p">)</span> <span class="c1"># 6 satellites, hence 24 orbits</span>
+        <span class="c1"># all orbits have the same inclination, altitude and eccentrivity</span>
+        <span class="k">for</span> <span class="n">orb</span> <span class="ow">in</span> <span class="n">orbit_dict</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orb</span><span class="p">[</span><span class="s2">&quot;inc&quot;</span><span class="p">],</span> <span class="mi">98</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orb</span><span class="p">[</span><span class="s2">&quot;sma&quot;</span><span class="p">],</span> <span class="n">RE</span><span class="o">+</span><span class="mi">700</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orb</span><span class="p">[</span><span class="s2">&quot;ecc&quot;</span><span class="p">],</span> <span class="mf">0.001</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orb</span><span class="p">[</span><span class="s2">&quot;aop&quot;</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+        
+        <span class="c1"># 3 satellites per plane, consecutive 3 satellites shall have the same RAAN</span>
+        <span class="n">plane1_raan</span> <span class="o">=</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane1_raan</span><span class="p">,</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">])</span>
+
+        <span class="n">plane2_raan</span> <span class="o">=</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane2_raan</span><span class="p">,</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">])</span>
+
+        <span class="n">plane3_raan</span> <span class="o">=</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane3_raan</span><span class="p">,</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="s2">&quot;raan&quot;</span><span class="p">])</span>
+
+        <span class="c1"># the raans are uniformly spaced</span>
+        <span class="n">raan_spacing</span> <span class="o">=</span> <span class="mi">120</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane2_raan</span><span class="o">-</span><span class="n">plane1_raan</span><span class="p">,</span> <span class="n">raan_spacing</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane3_raan</span><span class="o">-</span><span class="n">plane2_raan</span><span class="p">,</span> <span class="n">raan_spacing</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">plane3_raan</span><span class="o">-</span><span class="n">plane1_raan</span><span class="p">,</span> <span class="mi">360</span> <span class="o">-</span> <span class="n">raan_spacing</span><span class="p">)</span>
+
+        <span class="c1"># check inplane spacing between satellites</span>
+        <span class="n">in_plane_spc</span> <span class="o">=</span> <span class="mi">180</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">in_plane_spc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">in_plane_spc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="o">-</span><span class="mi">360</span><span class="o">+</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]),</span> <span class="n">in_plane_spc</span><span class="p">)</span>
+
+        <span class="c1"># check phase difference between adjacent planes</span>
+        <span class="n">phase_diff</span> <span class="o">=</span> <span class="mi">360</span><span class="o">/</span><span class="mi">6</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">phase_diff</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">orbit_dict</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">orbit_dict</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="s2">&quot;ta&quot;</span><span class="p">],</span> <span class="n">phase_diff</span><span class="p">)</span></div></div>
+  
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, BAERI.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

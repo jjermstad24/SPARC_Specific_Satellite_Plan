@@ -1,0 +1,60 @@
+{
+    "epoch": "2018, 1, 15, 12, 0, 0",
+    "duration": 0.1,
+    "constellation":{
+        "@type": "Walkerdelta",
+        "numberSatellites": 3,
+        "numberPlanes": 3,
+        "relativeSpacing":1,
+        "inc":0,
+        "alt": 700,
+        "ecc": 0.0001,
+        "aop": 0
+    }, 
+    "instrument":    [{        
+        "@type": "Basic Sensor",
+        "name": "Atom",
+        "@id": "sen1",  
+        "mass": 28, 
+        "volume": 0.12, 
+        "power": 32, 
+        "bitsPerPixel": 8, 
+        "fieldOfView": {
+            "sensorGeometry": "CONICAL",
+            "fullConeAngle": 45
+        },
+        "orientation": {
+            "convention": "NADIR"
+        },
+        "maneuverability":{
+            "@type": "FIXED"   
+        }        
+    }]
+    ,
+    "groundStations":{
+        "gndStnFileName":"groundStations"
+    },   
+    "grid":{
+        "@type": "autoGrid",
+        "customGridRes": 1,
+        "regions":[{
+            "@id":1,
+            "latUpper":20,
+            "latLower":1,
+            "lonUpper":-60,
+            "lonLower":-110                
+        },
+        {
+            "@id":2,
+            "latUpper":-1,
+            "latLower":-20,
+            "lonUpper":-60,
+            "lonLower":-110                
+        }
+        ]
+    },
+    "propagator":{
+        "customTimeStep": 1
+
+    }
+}

@@ -1,0 +1,36 @@
+
+{   "@type": "Passive Optical Scanner",
+    "name": "Landsat 8 OLI Blue band",
+    "mass": 1,
+    "volume": 1, 
+    "power": 1, 
+    "fieldOfViewGeometry": {
+        "shape": "RECTANGULAR",
+        "angleHeight": 0.00244080020725731,
+        "angleWidth": 15
+    },
+    "scanTechnique": "PUSHBROOM",
+    "orientation": {
+        "referenceFrame": "SC_BODY_FIXED",
+        "convention": "REF_FRAME_ALIGNED"
+    },
+    "dataRate":  384,
+    "numberDetectorRows": 1,
+    "numberDetectorCols": 6146,
+    "detectorWidth": 36e-6,
+    "focalLength": 845.1e-3,
+    "operatingWavelength": 482e-9,
+    "bandwidth": 65e-9,
+    "quantumEff":  0.85,
+    "targetBlackBodyTemp": 290,
+    "bitsPerPixel": 12,
+    "opticsSysEff": 0.90 ,
+    "numOfReadOutE":  20,
+    "apertureDia": 0.1320,
+    "Fnum":  6.4,
+    "maxDetectorExposureTime": 3.6e-3,
+    "atmosLossModel": "LOWTRAN7",
+    "_comments": ["Above is Total payload data-rate not just off the OLI.",
+                  "Mass, power and volume are simply wrong.", 
+                  "numReadOutE and snrThreshold are guessed."]
+}

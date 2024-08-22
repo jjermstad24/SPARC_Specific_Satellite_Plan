@@ -1,0 +1,593 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>orbitpy.grid &mdash; OrbitPy 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> OrbitPy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../miscellaneous.html">Miscellaneous</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OrbitPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>orbitpy.grid</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for orbitpy.grid</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">.. module:: grid</span>
+
+<span class="sd">:synopsis: *Module to handle grid (array of geo-coordinates) related operations.*</span>
+
+<span class="sd">.. todo:: Revise the module to a factory pattern implementation. </span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+<span class="kn">import</span> <span class="nn">propcov</span>
+<span class="kn">from</span> <span class="nn">instrupy.util</span> <span class="kn">import</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">EnumEntity</span><span class="p">,</span> <span class="n">Constants</span>
+<span class="kn">import</span> <span class="nn">orbitpy.util</span>
+<span class="kn">from</span> <span class="nn">orbitpy.util</span> <span class="kn">import</span> <span class="n">OutputInfoUtility</span>
+
+<span class="n">GridPoint</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;GridPoint&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;latitude&quot;</span><span class="p">,</span> <span class="s2">&quot;longitude&quot;</span><span class="p">])</span>
+<span class="sd">&quot;&quot;&quot;Function returns a namedtuple class to store grid-points as (in general this shall be a list) latitudes and longitudes in degrees.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Grid"><a class="viewcode-back" href="../../generated/orbitpy.grid.Grid.html#orbitpy.grid.Grid">[docs]</a><span class="k">class</span> <span class="nc">Grid</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Class to handle grid related operations. </span>
+
+<span class="sd">    :ivar point_group: A ``propcov`` object of the instance ``propcov.PointGroup``, used to store and handle </span>
+<span class="sd">                       the grid locations (latitudes and longitudes in degrees). The grid-points are referred by indices starting from 0.</span>
+<span class="sd">                       E.g. Grid-point 0 refers to the first grid-point in the point_group object (which can be obtained </span>
+<span class="sd">                       using the ``GetLatLon(.)``, ``GetPointPositionVector(.)`` function.).</span>
+<span class="sd">    :vartype point_group: :class:`propcov.PointGroup`</span>
+
+<span class="sd">    :ivar num_points: Total number of grid points.</span>
+<span class="sd">    :vartype num_points: int</span>
+
+<span class="sd">    :ivar filepath: Path to file (with filename) where the grid-point locations are stored. See :class:`orbitpy.grid.Grid.from_customgrid_dict`</span>
+<span class="sd">                    for description of the file-format. The instance variable is ``None`` if no file is present.</span>
+<span class="sd">    :vartype filepath: str or None</span>
+
+<span class="sd">    :ivar _id: Unique identifier of the grid. Could be used to indicate a region identifier, where the set of grid-points represent a region.</span>
+<span class="sd">    :vartype _id: str/ int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Grid.__init__"><a class="viewcode-back" href="../../generated/orbitpy.grid.Grid.html#orbitpy.grid.Grid.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_group</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">point_group</span> <span class="o">=</span> <span class="n">point_group</span> <span class="k">if</span> <span class="n">point_group</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">point_group</span><span class="p">,</span> <span class="n">propcov</span><span class="o">.</span><span class="n">PointGroup</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_group</span><span class="o">.</span><span class="n">GetNumPoints</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">if</span> <span class="n">filepath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Grid</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_id</span><span class="p">,</span> <span class="s2">&quot;Grid&quot;</span><span class="p">)</span></div>
+
+    <span class="k">class</span> <span class="nc">Type</span><span class="p">(</span><span class="n">EnumEntity</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enumeration of recognized grid types.&quot;&quot;&quot;</span>
+        <span class="n">CUSTOMGRID</span> <span class="o">=</span> <span class="s2">&quot;CUSTOMGRID&quot;</span><span class="p">,</span>
+        <span class="n">AUTOGRID</span> <span class="o">=</span> <span class="s2">&quot;AUTOGRID&quot;</span>
+
+<div class="viewcode-block" id="Grid.from_dict"><a class="viewcode-back" href="../../generated/orbitpy.grid.Grid.html#orbitpy.grid.Grid.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Parses an Grid object from a normalized JSON dictionary.</span>
+<span class="sd">        </span>
+<span class="sd">        :param d: Dictionary with the Grid specifications.</span>
+
+<span class="sd">                Following keys are to be specified.</span>
+<span class="sd">                </span>
+<span class="sd">                * &quot;@type&quot;: (str) Grid type. Possible values are &quot;autoGrid&quot; or &quot;customGrid&quot;. Depending on the value, other key/value pairs manifest, as described</span>
+<span class="sd">                                 in the functions ``from_autogrid(d)`` and ``from_custom_grid(d)``.</span>
+
+<span class="sd">        :paramtype d: dict</span>
+
+<span class="sd">        :return: ``Grid`` object.</span>
+<span class="sd">        :rtype: :class:`orbitpy.grid.Grid`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span> 
+        <span class="n">grid_type</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;@type&#39;</span><span class="p">])</span> 
+        <span class="k">if</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="n">Grid</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">AUTOGRID</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Grid</span><span class="o">.</span><span class="n">from_autogrid_dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">grid_type</span> <span class="o">==</span> <span class="n">Grid</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">CUSTOMGRID</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Grid</span><span class="o">.</span><span class="n">from_customgrid_dict</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Please specify a valid grid type.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Grid.to_dict"><a class="viewcode-back" href="../../generated/orbitpy.grid.Grid.html#orbitpy.grid.Grid.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Translate the Grid object to a Python dictionary such that it can be uniquely reconstructed back from the dictionary.</span>
+<span class="sd">            The grid data is stored in a file whose path is to supplied as an argument.</span>
+<span class="sd">        </span>
+<span class="sd">            :return: ``Grid`` object as python dictionary</span>
+<span class="sd">            :rtype: dict</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;CUSTOMGRID&quot;</span><span class="p">,</span> <span class="s2">&quot;covGridFilePath&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">,</span> <span class="s2">&quot;@id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="Grid.from_autogrid_dict"><a class="viewcode-back" href="../../generated/orbitpy.grid.Grid.html#orbitpy.grid.Grid.from_autogrid_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_autogrid_dict</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Parses an ``Grid`` object from dictionary with ``autoGrid`` specifications (i.e. &quot;@type&quot;:&quot;autoGrid&quot;). </span>
+
+<span class="sd">        Following keys are to be specified:</span>
+
+<span class="sd">                * &quot;latUpper&quot;: (float) Upper latitude in degrees. Default value is 90 deg.</span>
+<span class="sd">                * &quot;latLower&quot;: (float) Lower latitude in degrees. Default value is -90 deg.</span>
+<span class="sd">                * &quot;lonUpper&quot;: (float) Upper longitude in degrees. Default value is 180 deg.</span>
+<span class="sd">                * &quot;lonLower&quot;: (float) Lower longitude in degrees. Default value is -180 deg.</span>
+<span class="sd">                * &quot;gridRes&quot;: (float)  Grid resolution in degrees. Default value is 1 deg.</span>
+<span class="sd">                * &quot;@id&quot; : (str or int) Unique grid-identifier. If absent a random id is assigned.</span>
+
+<span class="sd">        *Specify latitude bounds in the range of -90 deg to +90 deg. Specify longitude bounds in the range of -180 deg to +180 deg.*</span>
+<span class="sd">        </span>
+<span class="sd">        Example:</span>
+
+<span class="sd">        .. code-block:: javascript</span>
+<span class="sd">        </span>
+<span class="sd">            {</span>
+<span class="sd">                &quot;@type&quot;: &quot;autoGrid&quot;,</span>
+<span class="sd">                &quot;@id&quot;:1,</span>
+<span class="sd">                &quot;latUpper&quot;:20,</span>
+<span class="sd">                &quot;latLower&quot;:15,</span>
+<span class="sd">                &quot;lonUpper&quot;:45,</span>
+<span class="sd">                &quot;lonLower&quot;:0,</span>
+<span class="sd">                &quot;gridRes&quot;: 0.5               </span>
+<span class="sd">            }</span>
+
+<span class="sd">        :return: Grid object</span>
+<span class="sd">        :rtype: :class:`orbitpy.grid.Grid`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">latUp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;latUpper&quot;</span><span class="p">,</span> <span class="mi">90</span><span class="p">))</span>
+        <span class="n">latLow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;latLower&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">))</span>
+        <span class="n">lonUp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;lonUpper&quot;</span><span class="p">,</span> <span class="mi">180</span><span class="p">))</span>
+        <span class="n">lonLow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;lonLower&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">180</span><span class="p">))</span>
+        <span class="n">angleBetweenPoints</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gridRes&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">point_group</span> <span class="o">=</span> <span class="n">propcov</span><span class="o">.</span><span class="n">PointGroup</span><span class="p">()</span>
+        <span class="n">point_group</span><span class="o">.</span><span class="n">SetLatLonBounds</span><span class="p">(</span><span class="n">latUp</span><span class="o">=</span><span class="n">latUp</span><span class="p">,</span> <span class="n">latLow</span><span class="o">=</span><span class="n">latLow</span><span class="p">,</span> <span class="n">lonUp</span><span class="o">=</span><span class="n">lonUp</span><span class="p">,</span> <span class="n">lonLow</span><span class="o">=</span><span class="n">lonLow</span><span class="p">)</span>
+        <span class="n">point_group</span><span class="o">.</span><span class="n">AddHelicalPointsByAngle</span><span class="p">(</span><span class="n">angleBetweenPoints</span><span class="o">=</span><span class="n">angleBetweenPoints</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Grid</span><span class="p">(</span> <span class="n">point_group</span><span class="o">=</span><span class="n">point_group</span><span class="p">,</span>
+                     <span class="n">_id</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;@id&#39;</span><span class="p">,</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+                    <span class="p">)</span></div>
+        
+<div class="viewcode-block" id="Grid.from_customgrid_dict"><a class="viewcode-back" href="../../generated/orbitpy.grid.Grid.html#orbitpy.grid.Grid.from_customgrid_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_customgrid_dict</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;  Parses an ``Grid`` object from dictionary with ``customGrid`` specifications (i.e. &quot;@type&quot;:&quot;customGrid&quot;). </span>
+
+<span class="sd">        Following keys are to be specified:</span>
+
+<span class="sd">                * &quot;covGridFilePath&quot;: (str) Filepath to the file containing the grid points.</span>
+<span class="sd">                * &quot;@id&quot; : (str or int) Unique grid-identifier. If absent a random id is assigned.</span>
+
+<span class="sd">        Example:</span>
+
+<span class="sd">        .. code-block:: javascript</span>
+<span class="sd">        </span>
+<span class="sd">            {</span>
+<span class="sd">                &quot;@type&quot;: &quot;customGrid&quot;,</span>
+<span class="sd">                &quot;@id&quot;:101,</span>
+<span class="sd">                &quot;covGridFilePath&quot;: &quot;C:\workspace\covGridUSA.csv&quot;</span>
+<span class="sd">            }</span>
+
+<span class="sd">        The datafile needs to be of CSV format as indicated in the example below. *lat [deg]* is the latitude</span>
+<span class="sd">        in degrees, and *lon [deg]* is the longitude in degrees. The grid-points are referred by indices starting from 0.</span>
+
+<span class="sd">        .. csv-table:: Example of the coverage grid data file.</span>
+<span class="sd">            :header: lat [deg], lon [deg]</span>
+<span class="sd">            :widths: 10,10</span>
+<span class="sd">        </span>
+<span class="sd">            9.9,20</span>
+<span class="sd">            9.9,20.1015</span>
+<span class="sd">            9.9,20.203</span>
+<span class="sd">            -49.1,21.9856</span>
+<span class="sd">            -49.1,22.1383</span>
+<span class="sd">            -49.1,22.291</span>
+<span class="sd">            -49.1,22.4438</span>
+<span class="sd">            -49.1,22.5965</span>
+<span class="sd">            -49.1,22.7493</span>
+<span class="sd">            -49.1,22.902</span>
+
+<span class="sd">        .. warning:: Please specify latitudes in the range of -90 deg to +90 deg and longitudes in the range of -180 deg to +180 deg. Do *NOT* </span>
+<span class="sd">                  specify the longitudes in range of 0 deg to 360 deg.</span>
+<span class="sd">        </span>
+<span class="sd">        :return: Grid object</span>
+<span class="sd">        :rtype: :class:`orbitpy.grid.Grid`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;covGridFilePath&#39;</span><span class="p">],</span> <span class="n">usecols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lat [deg]&#39;</span><span class="p">,</span><span class="s1">&#39;lon [deg]&#39;</span><span class="p">])</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">180</span><span class="p">)</span> <span class="c1"># convert angles to radians</span>
+        <span class="n">point_group</span> <span class="o">=</span> <span class="n">propcov</span><span class="o">.</span><span class="n">PointGroup</span><span class="p">()</span>
+        <span class="n">point_group</span><span class="o">.</span><span class="n">AddUserDefinedPoints</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;lat [deg]&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;lon [deg]&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">Grid</span><span class="p">(</span> <span class="n">point_group</span> <span class="o">=</span> <span class="n">point_group</span><span class="p">,</span>
+                     <span class="n">filepath</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;covGridFilePath&#39;</span><span class="p">],</span>
+                     <span class="n">_id</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;@id&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()))</span>
+                    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Grid.write_to_file"><a class="viewcode-back" href="../../generated/orbitpy.grid.Grid.html#orbitpy.grid.Grid.write_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Write the grid points (coordinates) to a csv file.</span>
+
+<span class="sd">        :param filepath: File path (with filename) of the output file. The format of the data written in the file is the same format of an </span>
+<span class="sd">                         input custom grid data file as described in the function ``from_custom_grid``.</span>
+<span class="sd">        :paramtype filepath: str</span>
+
+<span class="sd">        :returns: Output grid info.</span>
+<span class="sd">        :rtype: :class:`orbitpy.grid.GridOutputInfo`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">grid_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lat_lon</span><span class="p">()</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">grid_points</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="n">grid_points</span><span class="o">.</span><span class="n">longitude</span><span class="p">)),</span> <span class="n">columns</span> <span class="o">=</span><span class="p">[</span><span class="s1">&#39;lat [deg]&#39;</span><span class="p">,</span><span class="s1">&#39;lon [deg]&#39;</span><span class="p">])</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span> <span class="o">=</span> <span class="n">filepath</span> <span class="c1"># update the instance variable</span>
+        <span class="k">return</span> <span class="n">GridOutputInfo</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s1">&#39;gridId&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span>
+                                         <span class="s1">&#39;gridFile&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">,</span>
+                                         <span class="s1">&#39;_id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>    
+                                        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Grid.get_lat_lon"><a class="viewcode-back" href="../../generated/orbitpy.grid.Grid.html#orbitpy.grid.Grid.get_lat_lon">[docs]</a>    <span class="k">def</span> <span class="nf">get_lat_lon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Get all the grid points (coordinates).</span>
+
+<span class="sd">        :return: Grid points (latitudes and longitudes in degrees).</span>
+<span class="sd">        :rtype: namedtuple, (list, list), float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="p">[</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_group</span><span class="o">.</span><span class="n">GetLatLonVectors</span><span class="p">()</span>
+        <span class="c1"># convert to degrees and round to two decimal places</span>
+        <span class="n">lat</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lat</span><span class="p">))</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">lon</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lon</span><span class="p">))</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>   
+
+        <span class="k">return</span> <span class="n">GridPoint</span><span class="p">(</span><span class="n">latitude</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">lat</span><span class="p">),</span> <span class="n">longitude</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">lon</span><span class="p">))</span></div>
+    
+<div class="viewcode-block" id="Grid.get_lat_lon_from_index"><a class="viewcode-back" href="../../generated/orbitpy.grid.Grid.html#orbitpy.grid.Grid.get_lat_lon_from_index">[docs]</a>    <span class="k">def</span> <span class="nf">get_lat_lon_from_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indexes</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Get the grid points (coordinates) corresponding to the input (list of) point-indices.</span>
+<span class="sd">        </span>
+<span class="sd">        :param indexes: List of indices.</span>
+<span class="sd">        :paramtype indexes: list, int</span>
+
+<span class="sd">        :return: Grid points (latitudes and longitudes in degrees) corresponding to the input indices.</span>
+<span class="sd">        :rtype: namedtuple, (list, list), float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if only one index specified</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">indexes</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_group</span><span class="o">.</span><span class="n">GetLatAndLon</span><span class="p">(</span><span class="n">indexes</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">GridPoint</span><span class="p">(</span><span class="n">latitude</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">longitude</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">indexes</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">indexes</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                <span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_group</span><span class="o">.</span><span class="n">GetLatAndLon</span><span class="p">(</span><span class="n">indexes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">return</span> <span class="n">GridPoint</span><span class="p">(</span><span class="n">latitude</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span> <span class="n">longitude</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">lon</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+
+        <span class="p">(</span><span class="n">_lat</span><span class="p">,</span> <span class="n">_lon</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_lat_lon</span><span class="p">()</span>
+        <span class="c1"># filter</span>
+        <span class="n">lat</span> <span class="o">=</span> <span class="p">[</span><span class="n">_lat</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">indexes</span><span class="p">]</span>
+        <span class="n">lon</span> <span class="o">=</span> <span class="p">[</span><span class="n">_lon</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">indexes</span><span class="p">]</span>        
+
+        <span class="k">return</span> <span class="n">GridPoint</span><span class="p">(</span><span class="n">latitude</span><span class="o">=</span><span class="n">lat</span><span class="p">,</span> <span class="n">longitude</span><span class="o">=</span><span class="n">lon</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="compute_grid_res"><a class="viewcode-back" href="../../generated/orbitpy.grid.compute_grid_res.html#orbitpy.grid.compute_grid_res">[docs]</a><span class="k">def</span> <span class="nf">compute_grid_res</span><span class="p">(</span><span class="n">spacecraft</span><span class="p">,</span> <span class="n">grid_res_fac</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Compute grid resolution to be used for coverage grid generation. See SMAD 3rd ed Pg 113. Fig 8-13.</span>
+
+<span class="sd">    The grid resolution is to be set such that at any given arbitrary time, the sensor footprint from its (scene) field-of-**view** captures atleast one grid-point</span>
+<span class="sd">    when the satellite is somewhere well within the interior of a region. This can be achieved by setting the grid resolution (spacing between</span>
+<span class="sd">    the grid points) to be less than the minimum footprint dimension. A grid resolution factor :code:`grid_res_fac` is defined </span>
+<span class="sd">    (with default value 0.9) and the grid resolution is computed as (:code:`grid_res_fac` . minimum footprint angular dimension).</span>
+<span class="sd">    For example, in case of rectangular sensor with FOV: 5 deg x 15 deg at an altitude of 500km, the minimum footprint angular dimension </span>
+<span class="sd">    is the Earth centric angle subtended by the 5 deg side = 0.3922 deg. This gives the grid resolution as 0.3530 deg.</span>
+
+<span class="sd">    :param spacecraft: List of spacecrafts in the mission.</span>
+<span class="sd">    :paramtype spacecraft: list, :class:`orbitpy:util.Spacecraft`</span>
+
+<span class="sd">    :param grid_res_fac: Factor which decides the resolution of the generated grid.</span>
+<span class="sd">    :paramtype grid_res_fac: float  </span>
+
+<span class="sd">    :return: Grid resolution in degrees.</span>
+<span class="sd">    :rtype: float  </span>
+
+<span class="sd">    .. note:: The field-of-**view** is used here, and not the field-of-**regard**. The scene-field-of-view is used if different from the field-of-view. </span>
+<span class="sd">              The scene-field-of-view is typically larger than the instrument field-of-view to allow for coarser grid-resolution.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">RE</span> <span class="o">=</span> <span class="n">Constants</span><span class="o">.</span><span class="n">radiusOfEarthInKM</span>        
+
+    <span class="n">params</span> <span class="o">=</span> <span class="n">orbitpy</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">helper_extract_spacecraft_params</span><span class="p">(</span><span class="n">spacecraft</span><span class="p">)</span> <span class="c1"># obtain list of tuples of relevant spacecraft parameters</span>
+    <span class="c1"># find the minimum required grid resolution over all satellites</span>
+    <span class="n">min_grid_res_deg</span> <span class="o">=</span> <span class="mf">1e1000</span> <span class="c1"># some large number</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+
+        <span class="n">sma</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">sma</span> <span class="c1"># orbit semi-major axis</span>
+        <span class="n">fov</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">scfov_height</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fov</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">scfov_height</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">scfov_width</span><span class="p">)</span> <span class="c1"># note that scene field of view is considered not field of regard</span>
+        <span class="k">if</span> <span class="n">fov</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># no instruments specified, hence no scene field-of-view to consider, hence consider the entire horizon angle as field-of-view</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">RE</span><span class="o">/</span><span class="n">sma</span>
+            <span class="n">fov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+
+        <span class="c1"># calculate horizon angle</span>
+        <span class="n">sinRho</span> <span class="o">=</span> <span class="n">RE</span><span class="o">/</span><span class="n">sma</span>            
+        <span class="n">horizon_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">sinRho</span><span class="p">))</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">fov</span> <span class="o">&gt;</span> <span class="n">horizon_angle</span><span class="p">):</span>
+            <span class="n">fov</span> <span class="o">=</span> <span class="n">horizon_angle</span> <span class="c1"># use the horizon angle if the instrument fov is larger than the horizon angle</span>
+
+        <span class="n">hfov_deg</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">fov</span>
+        
+        <span class="c1"># below snippet is needed because sometimes when for_at = horizon angle, it leads to x slightly greater then 1 due to floating-point errors.</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">hfov_deg</span><span class="p">))</span><span class="o">/</span><span class="n">sinRho</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">hfov_deg</span><span class="p">))</span> <span class="o">-</span> <span class="n">sinRho</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-7</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">elev_deg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+        <span class="n">lambda_deg</span> <span class="o">=</span> <span class="mi">90</span> <span class="o">-</span> <span class="n">hfov_deg</span> <span class="o">-</span> <span class="n">elev_deg</span> <span class="c1"># half-earth centric angle </span>
+        <span class="n">eca_deg</span> <span class="o">=</span> <span class="n">lambda_deg</span><span class="o">*</span><span class="mi">2</span> <span class="c1"># total earth centric angle</span>
+        <span class="n">grid_res_deg</span> <span class="o">=</span> <span class="n">eca_deg</span><span class="o">*</span><span class="n">grid_res_fac</span> 
+        <span class="k">if</span><span class="p">(</span><span class="n">grid_res_deg</span> <span class="o">&lt;</span> <span class="n">min_grid_res_deg</span><span class="p">):</span>
+            <span class="n">min_grid_res_deg</span> <span class="o">=</span> <span class="n">grid_res_deg</span>
+
+    <span class="k">return</span> <span class="n">min_grid_res_deg</span></div>
+
+<div class="viewcode-block" id="GridOutputInfo"><a class="viewcode-back" href="../../generated/orbitpy.grid.GridOutputInfo.html#orbitpy.grid.GridOutputInfo">[docs]</a><span class="k">class</span> <span class="nc">GridOutputInfo</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Class to hold information about the grid-data (geo-coordinates).</span>
+<span class="sd">    </span>
+<span class="sd">    :ivar gridId: Grid identifier.</span>
+<span class="sd">    :vartype gridId: str or int</span>
+
+<span class="sd">    :ivar gridFile: File (filename with path) where the grid data is saved.</span>
+<span class="sd">    :vartype gridFile: str</span>
+
+<span class="sd">    :ivar _id: Unique identifier of the ``GridOutputInfo`` instance.</span>
+<span class="sd">    :vartype _id: str or int</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="GridOutputInfo.__init__"><a class="viewcode-back" href="../../generated/orbitpy.grid.GridOutputInfo.html#orbitpy.grid.GridOutputInfo.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gridId</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gridFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gridId</span> <span class="o">=</span> <span class="n">gridId</span> <span class="k">if</span> <span class="n">gridId</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gridFile</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">gridFile</span><span class="p">)</span> <span class="k">if</span> <span class="n">gridFile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">GridOutputInfo</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_id</span><span class="p">,</span> <span class="n">OutputInfoUtility</span><span class="o">.</span><span class="n">OutputInfoType</span><span class="o">.</span><span class="n">GridOutputInfo</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="GridOutputInfo.from_dict"><a class="viewcode-back" href="../../generated/orbitpy.grid.GridOutputInfo.html#orbitpy.grid.GridOutputInfo.from_dict">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Parses an ``GridOutputInfo`` object from a normalized JSON dictionary.</span>
+<span class="sd">        </span>
+<span class="sd">        :param d: Dictionary with the GridOutputInfo attributes.</span>
+
+<span class="sd">        Following keys are to be specified:</span>
+
+<span class="sd">                * &quot;gridId&quot;: (str or int) Grid identifier.</span>
+<span class="sd">                * &quot;gridFile&quot;: (str)  File (filename with path) where the grid data is saved.</span>
+<span class="sd">                * &quot;@id&quot; : (str or int) Unique identifier. Default is None.</span>
+
+<span class="sd">        :paramtype d: dict</span>
+
+<span class="sd">        :return: GridOutputInfo object.</span>
+<span class="sd">        :rtype: :class:`orbitpy.grid.GridOutputInfo`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">GridOutputInfo</span><span class="p">(</span> <span class="n">gridId</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gridId&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                               <span class="n">gridFile</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;gridFile&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                               <span class="n">_id</span>  <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;@id&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="GridOutputInfo.to_dict"><a class="viewcode-back" href="../../generated/orbitpy.grid.GridOutputInfo.html#orbitpy.grid.GridOutputInfo.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Translate the GridOutputInfo object to a Python dictionary such that it can be uniquely reconstructed back from the dictionary.</span>
+<span class="sd">        </span>
+<span class="sd">        :return: GridOutputInfo object as python dictionary</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">({</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="n">OutputInfoUtility</span><span class="o">.</span><span class="n">OutputInfoType</span><span class="o">.</span><span class="n">GridOutputInfo</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                     <span class="s2">&quot;gridId&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">gridId</span><span class="p">,</span>
+                     <span class="s2">&quot;gridFile&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">gridFile</span><span class="p">,</span>
+                     <span class="s2">&quot;@id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">})</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;GridOutputInfo.from_dict(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+    
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="c1"># Equality test is simple one which compares the data attributes. Note that _id data attribute may be different</span>
+        <span class="k">if</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gridId</span><span class="o">==</span><span class="n">other</span><span class="o">.</span><span class="n">gridId</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gridFile</span><span class="o">==</span><span class="n">other</span><span class="o">.</span><span class="n">gridFile</span><span class="p">)</span>
+                
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+    
+<div class="viewcode-block" id="GridOutputInfo.check_loose_equality"><a class="viewcode-back" href="../../generated/orbitpy.grid.GridOutputInfo.html#orbitpy.grid.GridOutputInfo.check_loose_equality">[docs]</a>    <span class="k">def</span> <span class="nf">check_loose_equality</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Check for equality with another ``GridOutputInfo`` object considering only some instance variables.</span>
+
+<span class="sd">            :param other: The other ``GridOutputInfo`` object with which the comparision shall be done.</span>
+<span class="sd">            :paramtype other: :class:`orbitpy.grid.GridOutputInfo`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gridId</span><span class="o">==</span><span class="n">other</span><span class="o">.</span><span class="n">gridId</span><span class="p">)</span>
+                
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, BAERI.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

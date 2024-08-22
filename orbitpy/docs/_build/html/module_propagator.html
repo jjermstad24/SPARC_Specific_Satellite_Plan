@@ -1,0 +1,499 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>orbit.propagator — Propagator Module &mdash; OrbitPy 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="PropagatorFactory" href="generated/orbitpy.propagator.PropagatorFactory.html" />
+    <link rel="prev" title="TrainConstellation" href="generated/orbitpy.constellation.TrainConstellation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> OrbitPy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="module_constellation.html"><code class="docutils literal notranslate"><span class="pre">orbit.constellation</span></code> — Constellation Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">orbit.propagator</span></code> — Propagator Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#description">Description</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#output-data-file-format">Output data file format</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api">API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/orbitpy.propagator.PropagatorFactory.html">PropagatorFactory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/orbitpy.propagator.J2AnalyticalPropagator.html">J2AnalyticalPropagator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/orbitpy.propagator.PropagatorOutputInfo.html">PropagatorOutputInfo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/orbitpy.propagator.compute_time_step.html">compute_time_step</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="module_grid.html"><code class="docutils literal notranslate"><span class="pre">orbit.grid</span></code> — Grid Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_coveragecalculator.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.coveragecalculator</span></code> — Coverage Calculator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_contactfinder.html"><code class="docutils literal notranslate"><span class="pre">orbit.contactfinder</span></code> — Contact Finder Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_eclipsefinder.html"><code class="docutils literal notranslate"><span class="pre">orbit.eclipsefinder</span></code> — Eclipse Finder Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_datametricscalculator.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.datametricscalculator</span></code> — Data Metrics Calculator Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_mission.html"><code class="docutils literal notranslate"><span class="pre">orbit.mission</span></code> — Mission Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_sensorpixelprojection.html"><code class="docutils literal notranslate"><span class="pre">orbit.sensorpixelprojection</span></code> — Sensor Pixel Projection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_util.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.util</span></code> — Util Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="miscellaneous.html">Miscellaneous</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">OrbitPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="api_reference.html">API Reference</a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">orbit.propagator</span></code> — Propagator Module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/module_propagator.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="orbit-propagator-propagator-module">
+<span id="module-propagator"></span><h1><code class="docutils literal notranslate"><span class="pre">orbit.propagator</span></code> — Propagator Module<a class="headerlink" href="#orbit-propagator-propagator-module" title="Permalink to this heading">¶</a></h1>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
+<p>Module providing classes and functions to handle orbit propagation. Factory method pattern is used for initializing the propagator
+object (please see <a class="reference internal" href="module_constellation.html#module-constellation"><span class="std std-ref">orbit.constellation — Constellation Module</span></a> for details). The module provides for an J2 analytical propagator class (model)
+which has been validated with the STK J2 analytical propagator. Users may additionally define their own propagator classes
+adherent to the same interface functions (<code class="docutils literal notranslate"><span class="pre">from_dict(.)</span></code>, <code class="docutils literal notranslate"><span class="pre">to_dict(.)</span></code>, <code class="docutils literal notranslate"><span class="pre">execute(.)</span></code>, <code class="docutils literal notranslate"><span class="pre">__eq__(.)</span></code>) as in the in-built propagator class.</p>
+<div class="section" id="output-data-file-format">
+<span id="propagated-state-file-format"></span><h3>Output data file format<a class="headerlink" href="#output-data-file-format" title="Permalink to this heading">¶</a></h3>
+<p>The computed satellite states are in the Earth Centered Inertial frame, identical to EarthMJ2000Eq used in NASA GMAT software. For more description see:
+See: <a class="reference external" href="http://gmat.sourceforge.net/docs/nightly/html/CoordinateSystem.html">GMAT CoordinateSystem</a></p>
+<p>The output of executing the propagator is a csv data file containing the satellite states (Cartesian Earth centered inertial and/or Keplerian Earth centered inertial).</p>
+<ul class="simple">
+<li><p>The first row specifies if the states are in <code class="docutils literal notranslate"><span class="pre">CARTESIAN_EARTH_CENTERED_INERTIAL</span></code> or <code class="docutils literal notranslate"><span class="pre">KEPLERIAN_EARTH_CENTERED_INERTIAL</span></code> reference frame.</p></li>
+<li><p>The second row containing the mission epoch in Julian Day UT1. The time (index) in the state data is referenced to this epoch.</p></li>
+<li><p>The third row contains the time-step size in seconds.</p></li>
+<li><p>The fourth row contains the mission duration in days.</p></li>
+<li><p>The fifth row contains the columns headers and the sixth row onwards contains the corresponding data.</p></li>
+</ul>
+<p>Note that time associated with a row is:  <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">=</span> <span class="pre">epoch</span> <span class="pre">(in</span> <span class="pre">JDUT1)</span> <span class="pre">+</span> <span class="pre">time-index</span> <span class="pre">*</span> <span class="pre">time-step-size</span> <span class="pre">(in</span> <span class="pre">secs)</span> <span class="pre">*</span> <span class="pre">(1/86400)</span></code></p>
+<p>Description of the column headers and data (in either <code class="docutils literal notranslate"><span class="pre">CARTESIAN_EARTH_CENTERED_INERTIAL</span></code> or <code class="docutils literal notranslate"><span class="pre">KEPLERIAN_EARTH_CENTERED_INERTIAL</span></code> reference frame) is given below:</p>
+<table class="colwidths-given docutils align-default" id="id2">
+<caption><span class="caption-text">CARTESIAN_EARTH_CENTERED_INERTIAL state data description</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>time index</p></td>
+<td><p>int</p></td>
+<td></td>
+<td><p>Time-index</p></td>
+</tr>
+<tr class="row-odd"><td><p>x [km]</p></td>
+<td><p>float</p></td>
+<td><p>km</p></td>
+<td><p>X component of spacecraft position.</p></td>
+</tr>
+<tr class="row-even"><td><p>y [km]</p></td>
+<td><p>float</p></td>
+<td><p>km</p></td>
+<td><p>Y component of spacecraft position.</p></td>
+</tr>
+<tr class="row-odd"><td><p>z [km]</p></td>
+<td><p>float</p></td>
+<td><p>km</p></td>
+<td><p>Z component of spacecraft position.</p></td>
+</tr>
+<tr class="row-even"><td><p>vx [km/s]</p></td>
+<td><p>float</p></td>
+<td><p>km per sec</p></td>
+<td><p>X component of spacecraft velocity.</p></td>
+</tr>
+<tr class="row-odd"><td><p>vy [km/s]</p></td>
+<td><p>float</p></td>
+<td><p>km per sec</p></td>
+<td><p>Y component of spacecraft velocity.</p></td>
+</tr>
+<tr class="row-even"><td><p>vz [km/s]</p></td>
+<td><p>float</p></td>
+<td><p>km per sec</p></td>
+<td><p>Z component of spacecraft velocity.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="colwidths-given docutils align-default" id="id3">
+<caption><span class="caption-text">KEPLERIAN_EARTH_CENTERED_INERTIAL state data description</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>time index</p></td>
+<td><p>int</p></td>
+<td></td>
+<td><p>Time-index</p></td>
+</tr>
+<tr class="row-odd"><td><p>sma [km]</p></td>
+<td><p>float</p></td>
+<td><p>km</p></td>
+<td><p>Orbit semi-major axis dimension.</p></td>
+</tr>
+<tr class="row-even"><td><p>ecc</p></td>
+<td><p>float</p></td>
+<td></td>
+<td><p>Orbit eccentricity</p></td>
+</tr>
+<tr class="row-odd"><td><p>inc [deg]</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Orbit inclination</p></td>
+</tr>
+<tr class="row-even"><td><p>raan [deg]</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Orbit right ascension of ascending node</p></td>
+</tr>
+<tr class="row-odd"><td><p>aop [deg]</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Orbit argument of Perigee</p></td>
+</tr>
+<tr class="row-even"><td><p>ta [deg]</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>True Anomaly</p></td>
+</tr>
+</tbody>
+</table>
+<p>The module also offers computation of an appropriate propagation time-step for list of satellites (considering the orbit sma and the sensor field-of-regard)
+and an user-set <em>time-resolution factor</em> by using the <code class="docutils literal notranslate"><span class="pre">compute_time_step(.)</span></code> function. The propagation time step is calculated based on the time taken
+to cover the length (along-track) of the sensor field-of-<strong>regard</strong> footprint and a time-resolution factor (<code class="code docutils literal notranslate"><span class="pre">time_res_fac</span></code>) (default = 0.25).
+Smaller <code class="code docutils literal notranslate"><span class="pre">time_res_fac</span></code> implies higher precision in calculation of the access interval over a grid-point.
+Note that in case of sensors with circular FOV there is always a chance that grid-points are missed during the access calculations.</p>
+<p>The field-of-regard is assumed to be oriented about the nadir (aligned to the <code class="docutils literal notranslate"><span class="pre">NADIR_POINTING</span></code> frame) and the calculated time-step is based on the
+resulting along-track footprint length. Only <code class="docutils literal notranslate"><span class="pre">CIRCULAR</span></code> and <code class="docutils literal notranslate"><span class="pre">RECTANGULAR</span></code> field-of-regard spherical geometry shapes are supported. In case of <code class="docutils literal notranslate"><span class="pre">RECTANGULAR</span></code>
+shaped spherical geometry note that the FOV/FOR angle-height would correspond to the along-track FOV/FOR.</p>
+<div class="figure align-center" id="id4">
+<a class="reference internal image-reference" href="_images/time_step_illus.png"><img alt="_images/time_step_illus.png" src="_images/time_step_illus.png" style="width: 480.75px; height: 375.75px;" /></a>
+<p class="caption"><span class="caption-text">Illustration of possible inaccuracies due to a large time resolution factor (0.75 in above figure) during calculation of access intervals.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Add additional propagator models (SGP4, etc) and also provide support to read-in propagated data from GMAT, STK.</p>
+</div>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic">
+<li><p>Working with the J2 analytical propagator.</p>
+<p>The following snippet of code initializes and executes the orbit of a satellite. The propagation step-size
+is 15 secs and propagation duration is 0.25 days. The start date of propagation is equal to the date at which the spacecraft orbit-state is referenced
+Only the Keplerian states are produced since only the path to the Keplerian state output data file is specified.
+The execution returns the <code class="docutils literal notranslate"><span class="pre">PropagatorOutputInfo</span></code> object which contains the metadata of the propagation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">orbitpy.util</span> <span class="kn">import</span> <span class="n">OrbitState</span><span class="p">,</span> <span class="n">Spacecraft</span>
+<span class="kn">from</span> <span class="nn">orbitpy.propagator</span> <span class="kn">import</span> <span class="n">PropagatorFactory</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">factory</span> <span class="o">=</span> <span class="n">PropagatorFactory</span><span class="p">()</span>
+<span class="c1"># initialize J2 analytical propagator with 15 secs propagation step-size (i.e. the interval at which the satellite states are produced)</span>
+<span class="n">specs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s1">&#39;J2 ANALYTICAL PROPAGATOR&#39;</span><span class="p">,</span> <span class="s1">&#39;stepSize&#39;</span><span class="p">:</span><span class="mi">15</span> <span class="p">}</span>
+<span class="n">j2_prop</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">get_propagator</span><span class="p">(</span><span class="n">specs</span><span class="p">)</span>
+
+<span class="c1"># initialize orbit (initial state of the satellite)</span>
+<span class="n">orbit</span> <span class="o">=</span> <span class="n">OrbitState</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s2">&quot;date&quot;</span><span class="p">:{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span><span class="s2">&quot;GREGORIAN_UT1&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span><span class="mi">2018</span><span class="p">,</span> <span class="s2">&quot;month&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;day&quot;</span><span class="p">:</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;hour&quot;</span><span class="p">:</span><span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;minute&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;second&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">},</span>
+               <span class="s2">&quot;state&quot;</span><span class="p">:{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;KEPLERIAN_EARTH_CENTERED_INERTIAL&quot;</span><span class="p">,</span> <span class="s2">&quot;sma&quot;</span><span class="p">:</span> <span class="mi">700</span><span class="p">,</span> <span class="s2">&quot;ecc&quot;</span><span class="p">:</span> <span class="mf">0.002</span><span class="p">,</span> <span class="s2">&quot;inc&quot;</span><span class="p">:</span> <span class="mf">98.8</span><span class="p">,</span> <span class="s2">&quot;raan&quot;</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span> <span class="s2">&quot;aop&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;ta&quot;</span><span class="p">:</span> <span class="mi">39</span><span class="p">}</span> <span class="p">})</span>
+<span class="c1"># spacecraft with 1 instrument</span>
+<span class="n">sc</span> <span class="o">=</span> <span class="n">Spacecraft</span><span class="p">(</span><span class="n">orbitState</span><span class="o">=</span><span class="n">orbit</span><span class="p">)</span>
+<span class="n">out_file_kep</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;/kep_state.csv&#39;</span> <span class="c1"># path to the output file containing the Keplerian states</span>
+<span class="n">out_info</span> <span class="o">=</span> <span class="n">j2_prop</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sc</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">out_file_kep</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span> <span class="c1"># execute the propagator for duration of 0.25 days</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">out_info</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;</span> <span class="n">PropagatorOutputInfo</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s1">&#39;@type&#39;</span><span class="p">:</span> <span class="s1">&#39;PROPAGATOR OUTPUT INFO&#39;</span><span class="p">,</span> <span class="s1">&#39;propagatorType&#39;</span><span class="p">:</span> <span class="s1">&#39;J2 ANALYTICAL PROPAGATOR&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;spacecraftId&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;stateCartFile&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+         <span class="s1">&#39;stateKeplerianFile&#39;</span><span class="p">:</span> <span class="s1">&#39;/mnt/hgfs/Workspace/orbits/kep_state.csv&#39;</span><span class="p">,</span>
+         <span class="s1">&#39;startDate&#39;</span><span class="p">:</span> <span class="mf">2458265.0</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">:</span> <span class="mf">0.25</span><span class="p">,</span> <span class="s1">&#39;@id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
+
+<span class="n">kep_state</span><span class="o">.</span><span class="n">csv</span>
+<span class="o">--------------</span>
+<span class="n">Satellite</span> <span class="n">states</span> <span class="k">as</span> <span class="n">KEPLERIAN_EARTH_CENTERED_INERTIAL</span> <span class="n">elements</span><span class="o">.</span>
+<span class="n">Epoch</span> <span class="p">[</span><span class="n">JDUT1</span><span class="p">]</span> <span class="ow">is</span> <span class="mf">2458265.0</span>
+<span class="n">Step</span> <span class="n">size</span> <span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="ow">is</span> <span class="mf">15.0</span>
+<span class="n">Mission</span> <span class="n">Duration</span> <span class="p">[</span><span class="n">Days</span><span class="p">]</span> <span class="ow">is</span> <span class="mf">0.25</span>
+<span class="n">time</span> <span class="n">index</span><span class="p">,</span><span class="n">sma</span> <span class="p">[</span><span class="n">km</span><span class="p">],</span><span class="n">ecc</span><span class="p">,</span><span class="n">inc</span> <span class="p">[</span><span class="n">deg</span><span class="p">],</span><span class="n">raan</span> <span class="p">[</span><span class="n">deg</span><span class="p">],</span><span class="n">aop</span> <span class="p">[</span><span class="n">deg</span><span class="p">],</span><span class="n">ta</span> <span class="p">[</span><span class="n">deg</span><span class="p">]</span>
+<span class="mi">0</span><span class="p">,</span><span class="mf">700.0000000000002</span><span class="p">,</span><span class="mf">0.0020000000000001046</span><span class="p">,</span><span class="mf">98.8</span><span class="p">,</span><span class="mf">119.99999999999999</span><span class="p">,</span><span class="mf">10.000000000006276</span><span class="p">,</span><span class="mf">38.99999999999376</span>
+<span class="mi">1</span><span class="p">,</span><span class="mf">700.0000000000003</span><span class="p">,</span><span class="mf">0.0020000000000001262</span><span class="p">,</span><span class="mf">98.8</span><span class="p">,</span><span class="mf">120.60429914109106</span><span class="p">,</span><span class="mf">8.256106395436355</span><span class="p">,</span><span class="mf">66.52753827588562</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>In below snippet the start date of the propagation is different from the date at which the spacecraft orbit-state is referenced.
+Also both the Cartesian and Keplerian states of the satellite are produced since both the output data filepaths are supplied to the executor.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prop_start_date</span> <span class="o">=</span> <span class="n">OrbitState</span><span class="o">.</span><span class="n">date_from_dict</span><span class="p">({</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span><span class="s2">&quot;GREGORIAN_UT1&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">:</span><span class="mi">2018</span><span class="p">,</span> <span class="s2">&quot;month&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;day&quot;</span><span class="p">:</span><span class="mi">27</span><span class="p">,</span> <span class="s2">&quot;hour&quot;</span><span class="p">:</span><span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;minute&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;second&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">})</span>
+<span class="n">j2_prop</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sc</span><span class="p">,</span> <span class="n">prop_start_date</span><span class="p">,</span> <span class="n">out_file_cart</span><span class="p">,</span> <span class="n">out_file_kep</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Propagation time-step calculation</p>
+<p>Computing time-step for a set of 2 satellites with 1 and 2 instruments respectively. Note that the first instrument has maneuverability
+and hence it’s FOR is different from the FOV. (The FOR is considered in the propagation time-step calculations.)
+Output is in seconds.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">orbitpy.propagator</span>
+<span class="kn">from</span> <span class="nn">orbitpy.util</span> <span class="kn">import</span> <span class="n">OrbitState</span><span class="p">,</span> <span class="n">Spacecraft</span>
+<span class="kn">from</span> <span class="nn">instrupy</span> <span class="kn">import</span> <span class="n">Instrument</span>
+
+<span class="n">RE</span> <span class="o">=</span> <span class="mf">6378.137</span> <span class="c1"># radius of Earth in kilometers</span>
+<span class="n">instru1</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s1">&#39;{&quot;@type&quot;: &quot;Basic Sensor&quot;,&quot;fieldOfViewGeometry&quot;: {&quot;shape&quot;: &quot;Rectangular&quot;, &quot;angleHeight&quot;: 10, &quot;angleWidth&quot;: 5}, &quot;maneuver&quot;:{&quot;maneuverType&quot;: &quot;CIRCULAR&quot;, &quot;diameter&quot;:10}}&#39;</span><span class="p">)</span>
+<span class="n">instru2</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s1">&#39;{&quot;@type&quot;: &quot;Basic Sensor&quot;,&quot;fieldOfViewGeometry&quot;: {&quot;shape&quot;: &quot;Rectangular&quot;, &quot;angleHeight&quot;: 10, &quot;angleWidth&quot;: 5}}&#39;</span><span class="p">)</span>
+<span class="n">instru3</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s1">&#39;{&quot;@type&quot;: &quot;Basic Sensor&quot;,&quot;fieldOfViewGeometry&quot;: {&quot;shape&quot;: &quot;Rectangular&quot;, &quot;angleHeight&quot;: 10, &quot;angleWidth&quot;: 15}}&#39;</span><span class="p">)</span>
+
+<span class="n">orbit1</span> <span class="o">=</span> <span class="n">OrbitState</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s2">&quot;date&quot;</span><span class="p">:{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span><span class="s2">&quot;JULIAN_DATE_UT1&quot;</span><span class="p">,</span> <span class="s2">&quot;jd&quot;</span><span class="p">:</span><span class="mf">2459270.75</span><span class="p">},</span><span class="s2">&quot;state&quot;</span><span class="p">:{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;KEPLERIAN_EARTH_CENTERED_INERTIAL&quot;</span><span class="p">,</span> <span class="s2">&quot;sma&quot;</span><span class="p">:</span> <span class="n">RE</span><span class="o">+</span><span class="mi">700</span><span class="p">,</span> <span class="s2">&quot;ecc&quot;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span> <span class="s2">&quot;inc&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;raan&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;aop&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;ta&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}})</span>
+<span class="n">orbit2</span> <span class="o">=</span> <span class="n">OrbitState</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s2">&quot;date&quot;</span><span class="p">:{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span><span class="s2">&quot;JULIAN_DATE_UT1&quot;</span><span class="p">,</span> <span class="s2">&quot;jd&quot;</span><span class="p">:</span><span class="mf">2459270.75</span><span class="p">},</span><span class="s2">&quot;state&quot;</span><span class="p">:{</span><span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;KEPLERIAN_EARTH_CENTERED_INERTIAL&quot;</span><span class="p">,</span> <span class="s2">&quot;sma&quot;</span><span class="p">:</span> <span class="n">RE</span><span class="o">+</span><span class="mi">750</span><span class="p">,</span> <span class="s2">&quot;ecc&quot;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span> <span class="s2">&quot;inc&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="s2">&quot;raan&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;aop&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;ta&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}})</span>
+
+<span class="n">sats</span> <span class="o">=</span> <span class="p">[</span><span class="n">Spacecraft</span><span class="p">(</span><span class="n">orbitState</span><span class="o">=</span><span class="n">orbit1</span><span class="p">,</span> <span class="n">instrument</span><span class="o">=</span><span class="p">[</span><span class="n">instru1</span><span class="p">]),</span> <span class="c1"># list of 2 satellites with 1 and 2 instruments respectively</span>
+        <span class="n">Spacecraft</span><span class="p">(</span><span class="n">orbitState</span><span class="o">=</span><span class="n">orbit2</span><span class="p">,</span> <span class="n">instrument</span><span class="o">=</span><span class="p">[</span><span class="n">instru2</span><span class="p">,</span> <span class="n">instru3</span><span class="p">])]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">orbitpy</span><span class="o">.</span><span class="n">propagator</span><span class="o">.</span><span class="n">compute_time_step</span><span class="p">(</span><span class="n">sats</span><span class="p">,</span> <span class="mf">0.125</span><span class="p">)</span> <span class="c1"># custom time resolution factor is chosen as 0.125</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;</span> <span class="mf">2.452774546516295</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this heading">¶</a></h2>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/orbitpy.propagator.PropagatorFactory.html#orbitpy.propagator.PropagatorFactory" title="orbitpy.propagator.PropagatorFactory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orbitpy.propagator.PropagatorFactory</span></code></a></p></td>
+<td><p>Factory class which allows to register and invoke the appropriate propagator class.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/orbitpy.propagator.J2AnalyticalPropagator.html#orbitpy.propagator.J2AnalyticalPropagator" title="orbitpy.propagator.J2AnalyticalPropagator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orbitpy.propagator.J2AnalyticalPropagator</span></code></a></p></td>
+<td><p>A J2 ANALYTICAL PROPAGATOR class.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/orbitpy.propagator.PropagatorOutputInfo.html#orbitpy.propagator.PropagatorOutputInfo" title="orbitpy.propagator.PropagatorOutputInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orbitpy.propagator.PropagatorOutputInfo</span></code></a></p></td>
+<td><p>Class to hold information about the results of the propagation. An object of this class is returned upon the execution</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/orbitpy.propagator.compute_time_step.html#orbitpy.propagator.compute_time_step" title="orbitpy.propagator.compute_time_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orbitpy.propagator.compute_time_step</span></code></a></p></td>
+<td><p>Compute time step to be used for orbit propagation based on list of input spacecrafts (considering the orbit sma and the sensor field-of-regard.)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="generated/orbitpy.propagator.PropagatorFactory.html" class="btn btn-neutral float-right" title="PropagatorFactory" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="generated/orbitpy.constellation.TrainConstellation.html" class="btn btn-neutral float-left" title="TrainConstellation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, BAERI.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

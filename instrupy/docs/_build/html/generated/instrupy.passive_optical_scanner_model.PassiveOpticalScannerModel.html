@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>instrupy.passive_optical_scanner_model.PassiveOpticalScannerModel &mdash; InstruPy 0.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="instrupy.synthetic_aperture_radar_model — Synthetic Aperture Radar Model" href="../module_synthetic_aperture_radar_model.html" />
+    <link rel="prev" title="instrupy.passive_optical_scanner_model.AtmosphericLossModel" href="instrupy.passive_optical_scanner_model.AtmosphericLossModel.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> InstruPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../instrument_models.html">Instrument Models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../module_base.html"><code class="docutils literal notranslate"><span class="pre">instrupy.base</span></code> — Base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_basic_sensor_model.html"><code class="docutils literal notranslate"><span class="pre">instrupy.basic_sensor_model</span></code> — Basic Sensor Model</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../module_passive_optical_scanner_model.html"><code class="docutils literal notranslate"><span class="pre">instrupy.passive_optical_scanner_model</span></code> — Passive Optical Scanner Model</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../module_passive_optical_scanner_model.html#description">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../module_passive_optical_scanner_model.html#examples">Examples</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../module_passive_optical_scanner_model.html#api">API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="instrupy.passive_optical_scanner_model.ScanTech.html">instrupy.passive_optical_scanner_model.ScanTech</a></li>
+<li class="toctree-l4"><a class="reference internal" href="instrupy.passive_optical_scanner_model.AtmosphericLossModel.html">instrupy.passive_optical_scanner_model.AtmosphericLossModel</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">instrupy.passive_optical_scanner_model.PassiveOpticalScannerModel</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../module_synthetic_aperture_radar_model.html"><code class="docutils literal notranslate"><span class="pre">instrupy.synthetic_aperture_radar_model</span></code> — Synthetic Aperture Radar Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_radiometer_model.html"><code class="docutils literal notranslate"><span class="pre">instrupy.radiometer_model</span></code> — Radiometer Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_util.html"><code class="docutils literal notranslate"><span class="pre">instrupy.util</span></code> — Utility classes, functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../miscellaneous.html">Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use_cases.html">Use Cases</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">InstruPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api_reference.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="../module_passive_optical_scanner_model.html"><code class="docutils literal notranslate"><span class="pre">instrupy.passive_optical_scanner_model</span></code> — Passive Optical Scanner Model</a> &raquo;</li>
+        
+      <li>instrupy.passive_optical_scanner_model.PassiveOpticalScannerModel</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/generated/instrupy.passive_optical_scanner_model.PassiveOpticalScannerModel.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="instrupy-passive-optical-scanner-model-passiveopticalscannermodel">
+<h1>instrupy.passive_optical_scanner_model.PassiveOpticalScannerModel<a class="headerlink" href="#instrupy-passive-optical-scanner-model-passiveopticalscannermodel" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="instrupy.passive_optical_scanner_model.PassiveOpticalScannerModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">instrupy.passive_optical_scanner_model.</span></span><span class="sig-name descname"><span class="pre">PassiveOpticalScannerModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldOfViewGeometry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sceneFieldOfViewGeometry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maneuver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pointingOption</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataRate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scanTechnique</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberDetectorRows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberDetectorCols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apertureDia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Fnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">focalLength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operatingWavelength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bandwidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quantumEff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opticsSysEff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numOfReadOutE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targetBlackBodyTemp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bitsPerPixel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">detectorWidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxDetectorExposureTime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atmosLossModel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/instrupy/passive_optical_scanner_model.html#PassiveOpticalScannerModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#instrupy.passive_optical_scanner_model.PassiveOpticalScannerModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>A passive optical scanner class. Supports following types of passive optical scanners:</p>
+<ul class="simple">
+<li><p>Rectangular aperture imager with square detector elements.</p></li>
+<li><p>WHISKBROOM, PUSHBROOM and MATRIX_IMAGER scanning techniques.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Full name of the instrument.</p></li>
+<li><p><strong>mass</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Total mass (kg) of this entity.</p></li>
+<li><p><strong>volume</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Total volume (m3) of this entity.</p></li>
+<li><p><strong>power</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Nominal operating power (W).</p></li>
+<li><p><strong>orientation</strong> (<a class="reference internal" href="instrupy.util.Orientation.html#instrupy.util.Orientation" title="instrupy.util.Orientation"><code class="xref py py-class docutils literal notranslate"><span class="pre">instrupy.util.Orientation</span></code></a>) – Orientation of the instrument.</p></li>
+<li><p><strong>fieldOfView</strong> (<a class="reference internal" href="instrupy.util.ViewGeometry.html#instrupy.util.ViewGeometry" title="instrupy.util.ViewGeometry"><code class="xref py py-class docutils literal notranslate"><span class="pre">instrupy.util.ViewGeometry</span></code></a>) – Field of view of instrument specification (SphericalGeometry and Orientation).</p></li>
+<li><p><strong>sceneFieldOfView</strong> – Scene field of view specification (SphericalGeometry and Orientation).</p></li>
+<li><p><strong>maneuver</strong> (<a class="reference internal" href="instrupy.util.Maneuver.html#instrupy.util.Maneuver" title="instrupy.util.Maneuver"><code class="xref py py-class docutils literal notranslate"><span class="pre">instrupy.util.Maneuver</span></code></a>) – Maneuver specification of the instrument.</p></li>
+<li><p><strong>fieldOfRegard</strong> (list, <a class="reference internal" href="instrupy.util.ViewGeometry.html#instrupy.util.ViewGeometry" title="instrupy.util.ViewGeometry"><code class="xref py py-class docutils literal notranslate"><span class="pre">instrupy.util.ViewGeometry</span></code></a>) – Field of regard of the instrument taking into account the sceneFOV and manueverability of the satellite-sensor system. 
+Note that this shall be a list in order to accommodate non-intersecting view-geometries. 
+TODO: Modify behavior to have FOR = FOV when no maneuver is specified (hence fixed pointing).</p></li>
+<li><p><strong>pointingOption</strong> (list, <code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.util.Orientation</span></code>) – List of <code class="docutils literal notranslate"><span class="pre">Orientation</span></code> objects which specify the orientationsinto which the instrument-axis can be maneuvered. 
+The orientation must be specified in the NADIR_POINTING frame.</p></li>
+<li><p><strong>dataRate</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Rate of data recorded (Mbps) during nominal operations.</p></li>
+<li><p><strong>scanTechnique</strong> (<a class="reference internal" href="instrupy.passive_optical_scanner_model.ScanTech.html#instrupy.passive_optical_scanner_model.ScanTech" title="instrupy.passive_optical_scanner_model.ScanTech"><code class="xref py py-class docutils literal notranslate"><span class="pre">instrupy.passive_optical_scanner_model.ScanTech</span></code></a>) – Scan technique.</p></li>
+<li><p><strong>numberDetectorRows</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of detector rows (along the Y-axis of the SENOR_BODY_FIXED frame). If the SENSOR_BODY_FIXED frame is aligned to the NADIR_POINTING frame, this direction corresponds to the along-track direction.</p></li>
+<li><p><strong>numberDetectorCols</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of detector columns (along the X-axis of the SENOR_BODY_FIXED frame). If the SENSOR_BODY_FIXED frame is aligned to the NADIR_POINTING frame, this direction corresponds to the cross-track direction.</p></li>
+<li><p><strong>Fnum</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – F-number/ F# of lens.</p></li>
+<li><p><strong>focalLength</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Focal length of lens in meters.</p></li>
+<li><p><strong>operatingWavelength</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Center operating wavelength in meters.</p></li>
+<li><p><strong>bandwidth</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – <p>Bandwidth of operation in meters.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is assumed that the detector element supports the entire bandwidth with same quantum efficiency for all wavelengths.
+Assumption maybe reasonable for narrow-bandwidths.</p>
+</div>
+</p></li>
+<li><p><strong>quantumEff</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Quantum efficiency of the detector element (<span class="math notranslate nohighlight">\(0 &lt; qe &lt; 1\)</span>)</p></li>
+<li><p><strong>opticsSysEff</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Optical systems efficiency (<span class="math notranslate nohighlight">\(0 &lt; \tau_0 &lt; 1\)</span>)</p></li>
+<li><p><strong>numOfReadOutE</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Number of read out electrons of the detector.</p></li>
+<li><p><strong>targetBlackBodyTemp</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Target body’s equivalent black-body temperature in Kelvin.</p></li>
+<li><p><strong>bitsPerPixel</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Bits encoded per pixel of image.</p></li>
+<li><p><strong>detectorWidth</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Width of detector element in meters.</p></li>
+<li><p><strong>apertureDia</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Telescope aperture diameter in meters.</p></li>
+<li><p><strong>maxDetectorExposureTime</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Maximum exposure time of detector in seconds.</p></li>
+<li><p><strong>atmosLossModel</strong> (<a class="reference internal" href="instrupy.passive_optical_scanner_model.AtmosphericLossModel.html#instrupy.passive_optical_scanner_model.AtmosphericLossModel" title="instrupy.passive_optical_scanner_model.AtmosphericLossModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">instrupy.passive_optical_scanner_model.AtmosphericLossModel</span></code></a> or None) – The atmospheric loss model. ‘LOWTRAN7’ model is supported. If <code class="docutils literal notranslate"><span class="pre">None</span></code> the atmospheric losses are not be considered.</p></li>
+<li><p><strong>_id</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Unique instrument identifier.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Accommodate input of specific detectivity D* for infrared detectors</p>
+</div>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="../module_synthetic_aperture_radar_model.html" class="btn btn-neutral float-right" title="instrupy.synthetic_aperture_radar_model — Synthetic Aperture Radar Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="instrupy.passive_optical_scanner_model.AtmosphericLossModel.html" class="btn btn-neutral float-left" title="instrupy.passive_optical_scanner_model.AtmosphericLossModel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, BAERI.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

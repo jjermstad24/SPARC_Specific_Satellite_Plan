@@ -1,0 +1,1142 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>instrupy.passive_optical_scanner_model &mdash; InstruPy 0.2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> InstruPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../instrument_models.html">Instrument Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../miscellaneous.html">Miscellaneous</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../use_cases.html">Use Cases</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">InstruPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>instrupy.passive_optical_scanner_model</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for instrupy.passive_optical_scanner_model</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">.. module:: passive_optical_scanner_model</span>
+
+<span class="sd">:synopsis: *Module to handle passive optical scanners with detectors operating at </span>
+<span class="sd">            Visible and near-Visible (IR and UV) wavelengths.*</span>
+<span class="sd">            </span>
+<span class="sd">            Formulation based on Chapter 9 in Space Mission Analysis and Design, 3rd edition. </span>
+<span class="sd">            </span>
+<span class="sd">            Also see (for optical instruments): V. Ravindra and S. Nag, &quot;Instrument Data Metrics Evaluator for Tradespace Analysis of Earth Observing Constellations,&quot; </span>
+<span class="sd">            2020 IEEE Aerospace Conference, Big Sky, MT, USA, 2020.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">from</span> <span class="nn">instrupy.util</span> <span class="kn">import</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">EnumEntity</span><span class="p">,</span> <span class="n">Orientation</span><span class="p">,</span> <span class="n">SphericalGeometry</span><span class="p">,</span> <span class="n">ViewGeometry</span><span class="p">,</span> <span class="n">Maneuver</span><span class="p">,</span> <span class="n">MathUtilityFunctions</span><span class="p">,</span> <span class="n">GeoUtilityFunctions</span><span class="p">,</span> <span class="n">Constants</span><span class="p">,</span> <span class="n">FileUtilityFunctions</span>
+
+<div class="viewcode-block" id="ScanTech"><a class="viewcode-back" href="../../generated/instrupy.passive_optical_scanner_model.ScanTech.html#instrupy.passive_optical_scanner_model.ScanTech">[docs]</a><span class="k">class</span> <span class="nc">ScanTech</span><span class="p">(</span><span class="n">EnumEntity</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enumeration of recognized scanning techniques.</span>
+<span class="sd">    </span>
+<span class="sd">    :cvar PUSHBROOM: Indicates pushbroom scanners such as the Landsat-8 TIRS, OLI instruments, which consist of a linear array of square detectors along the cross-track direction.</span>
+<span class="sd">    :vartype PUSHBROOM: str</span>
+
+<span class="sd">    :cvar WHISKBROOM: Indicates whiskbroom (multielement) scanners such as the MODIS radiometer, which consists of linear array of square detectors in along-track direction with movable mirror assembly.</span>
+<span class="sd">    :vartype WHISKBROOM: str</span>
+
+<span class="sd">    :cvar MATRIX_IMAGER: Indicates matrix imager (also called as the step-and-stare imager) with 2D array of square detectors.</span>
+<span class="sd">    :vartype MATRIX_IMAGER: str</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">PUSHBROOM</span> <span class="o">=</span> <span class="s2">&quot;PUSHBROOM&quot;</span><span class="p">,</span>
+    <span class="n">WHISKBROOM</span> <span class="o">=</span> <span class="s2">&quot;WHISKBROOM&quot;</span><span class="p">,</span>
+    <span class="n">MATRIX_IMAGER</span> <span class="o">=</span> <span class="s2">&quot;MATRIX_IMAGER&quot;</span></div>
+
+<div class="viewcode-block" id="AtmosphericLossModel"><a class="viewcode-back" href="../../generated/instrupy.passive_optical_scanner_model.AtmosphericLossModel.html#instrupy.passive_optical_scanner_model.AtmosphericLossModel">[docs]</a><span class="k">class</span> <span class="nc">AtmosphericLossModel</span><span class="p">(</span><span class="n">EnumEntity</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enumeration of recognized atmospheric loss models.</span>
+<span class="sd">    </span>
+<span class="sd">    :cvar LOWTRAN7: Indicates the Lowtran atmospheric loss model as implemented in the python package available here: https://pypi.org/project/lowtran/2.2.2a0/.</span>
+<span class="sd">    :vartype LOWTRAN7: str</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">LOWTRAN7</span> <span class="o">=</span> <span class="s2">&quot;LOWTRAN7&quot;</span></div>
+
+<div class="viewcode-block" id="PassiveOpticalScannerModel"><a class="viewcode-back" href="../../generated/instrupy.passive_optical_scanner_model.PassiveOpticalScannerModel.html#instrupy.passive_optical_scanner_model.PassiveOpticalScannerModel">[docs]</a><span class="k">class</span> <span class="nc">PassiveOpticalScannerModel</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A passive optical scanner class. Supports following types of passive optical scanners: </span>
+<span class="sd">       </span>
+<span class="sd">       * Rectangular aperture imager with square detector elements. </span>
+<span class="sd">       * WHISKBROOM, PUSHBROOM and MATRIX_IMAGER scanning techniques.       </span>
+<span class="sd">      </span>
+<span class="sd">       :ivar name: Full name of the instrument.</span>
+<span class="sd">       :vartype name: str</span>
+
+<span class="sd">       :ivar mass: Total mass (kg) of this entity.</span>
+<span class="sd">       :vartype mass: float</span>
+
+<span class="sd">       :ivar volume: Total volume (m3) of this entity.</span>
+<span class="sd">       :vartype volume: float</span>
+<span class="sd">        </span>
+<span class="sd">       :ivar power: Nominal operating power (W).</span>
+<span class="sd">       :vartype power: float</span>
+
+<span class="sd">       :ivar orientation: Orientation of the instrument.</span>
+<span class="sd">       :vartype orientation: :class:`instrupy.util.Orientation`</span>
+
+<span class="sd">       :ivar fieldOfView: Field of view of instrument specification (SphericalGeometry and Orientation).</span>
+<span class="sd">       :vartype fieldOfView: :class:`instrupy.util.ViewGeometry`</span>
+
+<span class="sd">       :ivar sceneFieldOfView: Scene field of view specification (SphericalGeometry and Orientation).</span>
+<span class="sd">       :vartype fieldOfView: :class:`instrupy.util.ViewGeometry`</span>
+
+<span class="sd">       :ivar maneuver: Maneuver specification of the instrument. </span>
+<span class="sd">       :vartype maneuver: :class:`instrupy.util.Maneuver`  </span>
+
+<span class="sd">       :ivar fieldOfRegard: Field of regard of the instrument taking into account the sceneFOV and manueverability of the satellite-sensor system. </span>
+<span class="sd">                            Note that this shall be a list in order to accommodate non-intersecting view-geometries. </span>
+<span class="sd">                            TODO: Modify behavior to have FOR = FOV when no maneuver is specified (hence fixed pointing).</span>
+<span class="sd">       :vartype fieldOfRegard: list, :class:`instrupy.util.ViewGeometry`</span>
+<span class="sd">       </span>
+<span class="sd">       :ivar pointingOption: List of ``Orientation`` objects which specify the orientationsinto which the instrument-axis can be maneuvered. </span>
+<span class="sd">                             The orientation must be specified in the NADIR_POINTING frame.</span>
+<span class="sd">       :vartype pointingOption: list, :class:`orbitpy.util.Orientation`    </span>
+<span class="sd">       </span>
+<span class="sd">       :ivar dataRate: Rate of data recorded (Mbps) during nominal operations.</span>
+<span class="sd">       :vartype dataRate: float  </span>
+
+<span class="sd">       :ivar scanTechnique: Scan technique.</span>
+<span class="sd">       :vartype scanTechnique: :class:`instrupy.passive_optical_scanner_model.ScanTech`</span>
+<span class="sd">        </span>
+<span class="sd">       :ivar numberDetectorRows: Number of detector rows (along the Y-axis of the SENOR_BODY_FIXED frame). If the SENSOR_BODY_FIXED frame is aligned to the NADIR_POINTING frame, this direction corresponds to the along-track direction.</span>
+<span class="sd">       :vartype numberDetectorRows: int</span>
+
+<span class="sd">       :ivar numberDetectorCols: Number of detector columns (along the X-axis of the SENOR_BODY_FIXED frame). If the SENSOR_BODY_FIXED frame is aligned to the NADIR_POINTING frame, this direction corresponds to the cross-track direction.</span>
+<span class="sd">       :vartype numberDetectorCols: int</span>
+
+<span class="sd">       :ivar Fnum: F-number/ F# of lens.</span>
+<span class="sd">       :vartype Fnum: float</span>
+
+<span class="sd">       :ivar focalLength: Focal length of lens in meters.</span>
+<span class="sd">       :vartype focalLength: float</span>
+
+<span class="sd">       :ivar operatingWavelength: Center operating wavelength in meters.</span>
+<span class="sd">       :vartype operatingWavelength: float</span>
+
+<span class="sd">       :ivar bandwidth: Bandwidth of operation in meters.</span>
+
+<span class="sd">                    .. note:: It is assumed that the detector element supports the entire bandwidth with same quantum efficiency for all wavelengths.</span>
+<span class="sd">                                Assumption maybe reasonable for narrow-bandwidths.</span>
+<span class="sd">    </span>
+<span class="sd">       :vartype bandwidth: float</span>
+
+<span class="sd">       :ivar quantumEff: Quantum efficiency of the detector element (:math:`0 &lt; qe &lt; 1`)</span>
+<span class="sd">       :vartype quantumEff: float</span>
+
+<span class="sd">       :ivar opticsSysEff: Optical systems efficiency (:math:`0 &lt; \\tau_0 &lt; 1`)</span>
+<span class="sd">       :vartype opticsSysEff: float</span>
+
+<span class="sd">       :ivar numOfReadOutE: Number of read out electrons of the detector.</span>
+<span class="sd">       :vartype numOfReadOutE: float</span>
+
+<span class="sd">       :ivar targetBlackBodyTemp: Target body&#39;s equivalent black-body temperature in Kelvin.</span>
+<span class="sd">       :vartype targetBlackBodyTemp: float</span>
+
+<span class="sd">       :ivar bitsPerPixel: Bits encoded per pixel of image.</span>
+<span class="sd">       :vartype bitsPerPixel: int</span>
+
+<span class="sd">       :ivar detectorWidth: Width of detector element in meters.</span>
+<span class="sd">       :vartype detectorWidth: float</span>
+
+<span class="sd">       :ivar apertureDia: Telescope aperture diameter in meters.</span>
+<span class="sd">       :vartype apertureDia: float</span>
+
+<span class="sd">       :ivar maxDetectorExposureTime: Maximum exposure time of detector in seconds.</span>
+<span class="sd">       :vartype maxDetectorExposureTime: float</span>
+<span class="sd">       </span>
+<span class="sd">       :ivar atmosLossModel: The atmospheric loss model. &#39;LOWTRAN7&#39; model is supported. If ``None`` the atmospheric losses are not be considered.</span>
+<span class="sd">       :vartype atmosLossModel: :class:`instrupy.passive_optical_scanner_model.AtmosphericLossModel` or None</span>
+
+<span class="sd">       :ivar _id: Unique instrument identifier.</span>
+<span class="sd">       :vartype _id: str or int</span>
+
+<span class="sd">       .. todo:: Accommodate input of specific detectivity D* for infrared detectors</span>
+<span class="sd">   </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mass</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">volume</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">fieldOfViewGeometry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sceneFieldOfViewGeometry</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maneuver</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pointingOption</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dataRate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+            <span class="n">scanTechnique</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numberDetectorRows</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numberDetectorCols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+            <span class="n">apertureDia</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">Fnum</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">focalLength</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+            <span class="n">operatingWavelength</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">quantumEff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+            <span class="n">opticsSysEff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">numOfReadOutE</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">targetBlackBodyTemp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">bitsPerPixel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">detectorWidth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maxDetectorExposureTime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">atmosLossModel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initialization. All except the below two parameters have identical description as that of the corresponding class instance variables.</span>
+
+<span class="sd">        :param fieldOfViewGeometry: Instrument field-of-view spherical geometry.</span>
+<span class="sd">        :paramtype fieldOfViewGeometry: :class:`instrupy.util.SphericalGeometry`</span>
+
+<span class="sd">        :param sceneFieldOfViewGeometry: Scene field-of-view spherical geometry.</span>
+<span class="sd">        :paramtype sceneFieldOfViewGeometry: :class:`instrupy.util.SphericalGeometry`</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        :rtype: None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mass</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">mass</span><span class="p">)</span> <span class="k">if</span> <span class="n">mass</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">volume</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">volume</span><span class="p">)</span> <span class="k">if</span> <span class="n">volume</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">power</span><span class="p">)</span> <span class="k">if</span> <span class="n">power</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">power</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">orientation</span><span class="p">)</span> <span class="k">if</span> <span class="n">orientation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fieldOfView</span> <span class="o">=</span> <span class="n">ViewGeometry</span><span class="p">(</span><span class="n">orien</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">,</span> <span class="n">sph_geom</span><span class="o">=</span><span class="n">fieldOfViewGeometry</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fieldOfViewGeometry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fieldOfViewGeometry</span><span class="p">,</span> <span class="n">SphericalGeometry</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sceneFieldOfView</span> <span class="o">=</span> <span class="n">ViewGeometry</span><span class="p">(</span><span class="n">orien</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">,</span> <span class="n">sph_geom</span><span class="o">=</span><span class="n">sceneFieldOfViewGeometry</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">sceneFieldOfViewGeometry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sceneFieldOfViewGeometry</span><span class="p">,</span> <span class="n">SphericalGeometry</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maneuver</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">maneuver</span><span class="p">)</span> <span class="k">if</span> <span class="n">maneuver</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">maneuver</span><span class="p">,</span> <span class="n">Maneuver</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fieldOfRegard</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maneuver</span><span class="o">.</span><span class="n">calc_field_of_regard</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sceneFieldOfView</span><span class="o">.</span><span class="n">sph_geom</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maneuver</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">sceneFieldOfView</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pointingOption</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pointingOption</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">Orientation</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pointingOption</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pointingOption</span> <span class="o">=</span> <span class="n">pointingOption</span> 
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pointingOption</span><span class="p">,</span> <span class="n">Orientation</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pointingOption</span> <span class="o">=</span> <span class="p">[</span><span class="n">pointingOption</span><span class="p">]</span> <span class="c1"># make into single-element lis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataRate</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dataRate</span><span class="p">)</span> <span class="k">if</span> <span class="n">dataRate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>    
+        <span class="bp">self</span><span class="o">.</span><span class="n">scanTechnique</span> <span class="o">=</span> <span class="n">ScanTech</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scanTechnique</span><span class="p">)</span> <span class="k">if</span> <span class="n">scanTechnique</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>   
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberDetectorRows</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numberDetectorRows</span><span class="p">)</span> <span class="k">if</span> <span class="n">numberDetectorRows</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numberDetectorCols</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numberDetectorCols</span><span class="p">)</span> <span class="k">if</span> <span class="n">numberDetectorCols</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apertureDia</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">apertureDia</span><span class="p">)</span> <span class="k">if</span> <span class="n">apertureDia</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Fnum</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">Fnum</span><span class="p">)</span> <span class="k">if</span> <span class="n">Fnum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">focalLength</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">focalLength</span><span class="p">)</span> <span class="k">if</span> <span class="n">focalLength</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">operatingWavelength</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">operatingWavelength</span><span class="p">)</span> <span class="k">if</span> <span class="n">operatingWavelength</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">bandwidth</span><span class="p">)</span> <span class="k">if</span> <span class="n">bandwidth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">quantumEff</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">quantumEff</span><span class="p">)</span> <span class="k">if</span> <span class="n">quantumEff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">opticsSysEff</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">opticsSysEff</span><span class="p">)</span> <span class="k">if</span> <span class="n">opticsSysEff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">numOfReadOutE</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">numOfReadOutE</span><span class="p">)</span> <span class="k">if</span> <span class="n">numOfReadOutE</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">targetBlackBodyTemp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">targetBlackBodyTemp</span><span class="p">)</span> <span class="k">if</span> <span class="n">targetBlackBodyTemp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">bitsPerPixel</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bitsPerPixel</span><span class="p">)</span> <span class="k">if</span> <span class="n">bitsPerPixel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">detectorWidth</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">detectorWidth</span><span class="p">)</span> <span class="k">if</span> <span class="n">detectorWidth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxDetectorExposureTime</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">maxDetectorExposureTime</span><span class="p">)</span> <span class="k">if</span> <span class="n">maxDetectorExposureTime</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>    
+        <span class="bp">self</span><span class="o">.</span><span class="n">atmosLossModel</span> <span class="o">=</span> <span class="n">AtmosphericLossModel</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">atmosLossModel</span><span class="p">)</span> <span class="k">if</span> <span class="n">atmosLossModel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span> <span class="c1"># Set to None by default</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">_id</span><span class="p">,</span> <span class="s2">&quot;Passive Optical Scanner&quot;</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Parses a ``PassiveOpticalScannerModel`` object from a normalized JSON dictionary. </span>
+<span class="sd">            Refer to :ref:`passive_optical_scanner_model_desc` for description of the accepted key/value pairs.</span>
+<span class="sd">        </span>
+<span class="sd">        .. warning:: Some of the inputs are interdependent. The dependency **must** be satisfied by the values input by the user.</span>
+<span class="sd">                     The present version of the instrupy package does **not** check for the consistency of the values.</span>
+
+<span class="sd">                    Following relations between the inputs must be satisfied:</span>
+
+<span class="sd">                    *   Only square detectors are supported. Hence the IFOV of the detectors must be equal for the along-track </span>
+<span class="sd">                        and cross-track directions. This results in following relationship: </span>
+
+<span class="sd">                        :math:`IFOV = \\dfrac{\\theta_{AT}}{N_{pix}^{AT}} = \\dfrac{\\theta_{CT}}{N_{pix}^{CT}} = \\dfrac{d}{f}`</span>
+
+<span class="sd">                        where,</span>
+<span class="sd">                        :math:`IFOV` is the instantaneous FOV or FOV per detector, </span>
+<span class="sd">                        :math:`\\theta_{AT}` is the along-track (angular) FOV,</span>
+<span class="sd">                        :math:`\\theta_{CT}` is the cross-track (angular) FOV,</span>
+<span class="sd">                        :math:`N_{pix}^{AT}` is the number of ground-pixels in along-track direction,</span>
+<span class="sd">                        :math:`N_{pix}^{CT}` is the number of ground-pixels in cross-track direction,</span>
+<span class="sd">                        :math:`d` is detector element length,</span>
+<span class="sd">                        :math:`f` is the focal length.</span>
+
+<span class="sd">                    *   :math:`F\# = \\dfrac{f}{D}`</span>
+<span class="sd"> </span>
+<span class="sd">                        where,</span>
+<span class="sd">                        :math:`F\#` is the F-number and :math:`D` is the aperture diameter.</span>
+
+<span class="sd">        .. todo:: Change behavior to put less burden on user. </span>
+
+<span class="sd">        The following default values are assigned to the object instance parameters in case of </span>
+<span class="sd">        :class:`None` values or missing key/value pairs in the input dictionary.</span>
+
+<span class="sd">        .. csv-table:: Default values</span>
+<span class="sd">            :header: Parameter, Default Value</span>
+<span class="sd">            :widths: 10,40</span>
+
+<span class="sd">            orientation, Referenced and aligned to the SC_BODY_FIXED frame.</span>
+<span class="sd">            sceneFieldOfViewGeometry, fieldOfViewGeometry</span>
+<span class="sd">            atmosLossModel, None (i.e. do not consider atmospheric loss).</span>
+<span class="sd">            targetBlackBodyTemp, 290 Kelvin</span>
+<span class="sd">            _id, random string</span>
+
+<span class="sd">        :param d: Normalized JSON dictionary with the corresponding model specifications. </span>
+<span class="sd">        :paramtype d: dict</span>
+
+<span class="sd">        :returns: ``PassiveOpticalScannerModel`` object initialized with the input specifications.</span>
+<span class="sd">        :rtype: :class:`instrupy.PassiveOpticalScannerModel`</span>
+<span class="sd">            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># parse the pointing options as a list of Orientation objects.</span>
+        <span class="n">pnt_opt_dict</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pointingOption&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">_pointing_option</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">pnt_opt_dict</span><span class="p">:</span>
+            <span class="c1"># translate to a list of Orientation objects</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pnt_opt_dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">_pointing_option</span> <span class="o">=</span> <span class="p">[</span><span class="n">Orientation</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pnt_opt_dict</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">_pointing_option</span> <span class="o">=</span> <span class="p">[</span><span class="n">Orientation</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">pnt_opt_dict</span><span class="p">)]</span>
+
+        <span class="n">_scan</span> <span class="o">=</span> <span class="n">ScanTech</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scanTechnique&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="c1"># Only whiskbroom, pushbroom and step-and-stare scan techniques supported.</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">_scan</span> <span class="o">==</span> <span class="n">ScanTech</span><span class="o">.</span><span class="n">WHISKBROOM</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">_scan</span> <span class="o">==</span> <span class="n">ScanTech</span><span class="o">.</span><span class="n">PUSHBROOM</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">_scan</span> <span class="o">==</span> <span class="n">ScanTech</span><span class="o">.</span><span class="n">MATRIX_IMAGER</span><span class="p">):</span>
+
+            <span class="c1"># Only rectangular FOV specs supported</span>
+            <span class="n">fov_dict</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fieldOfViewGeometry&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">fov_dict</span><span class="p">:</span>
+                <span class="n">fov</span> <span class="o">=</span> <span class="n">SphericalGeometry</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">fov_dict</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Please specify a valid field-of-view geometry specification.&#39;</span><span class="p">)</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">fov</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span><span class="n">SphericalGeometry</span><span class="o">.</span><span class="n">Shape</span><span class="o">.</span><span class="n">RECTANGULAR</span><span class="p">):</span>
+                <span class="k">if</span><span class="p">(</span><span class="n">_scan</span> <span class="o">==</span> <span class="s2">&quot;PUSHBROOM&quot;</span><span class="p">):</span>
+                    <span class="k">if</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;numberDetectorRows&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;For PUSHBROOM scanning, only 1 detector-row is allowed.&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span><span class="p">(</span><span class="n">_scan</span> <span class="o">==</span> <span class="s2">&quot;WHISKBROOM&quot;</span><span class="p">):</span>
+                    <span class="k">if</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;numberDetectorCols&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;For whiskbroom scanning only one detector-column is allowed.&quot;</span><span class="p">)</span>  
+
+                <span class="n">scene_fov_geom</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sceneFieldOfViewGeometry&quot;</span><span class="p">,</span> <span class="n">fov_dict</span><span class="p">)</span>  <span class="c1"># default sceneFOV geometry is the instrument FOV geometry</span>
+
+                <span class="k">return</span> <span class="n">PassiveOpticalScannerModel</span><span class="p">(</span>
+                        <span class="n">name</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">mass</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mass&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">volume</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;volume&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">power</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;power&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">orientation</span> <span class="o">=</span> <span class="n">Orientation</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;orientation&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;referenceFrame&quot;</span><span class="p">:</span> <span class="s2">&quot;SC_BODY_FIXED&quot;</span><span class="p">,</span> <span class="s2">&quot;convention&quot;</span><span class="p">:</span> <span class="s2">&quot;REF_FRAME_ALIGNED&quot;</span><span class="p">})),</span> <span class="c1"># default orientation is referenced and aligned to to the SENSOR_BODY_FIXED frame.</span>
+                        <span class="n">fieldOfViewGeometry</span> <span class="o">=</span> <span class="n">fov</span><span class="p">,</span>
+                        <span class="n">sceneFieldOfViewGeometry</span> <span class="o">=</span> <span class="n">SphericalGeometry</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">scene_fov_geom</span><span class="p">),</span> 
+                        <span class="n">maneuver</span><span class="o">=</span> <span class="n">Maneuver</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;maneuver&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)),</span>
+                        <span class="n">pointingOption</span> <span class="o">=</span> <span class="n">_pointing_option</span><span class="p">,</span>
+                        <span class="n">dataRate</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dataRate&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">operatingWavelength</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;operatingWavelength&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">bandwidth</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;bandwidth&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">quantumEff</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;quantumEff&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">targetBlackBodyTemp</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;targetBlackBodyTemp&quot;</span><span class="p">,</span> <span class="mi">290</span><span class="p">),</span> <span class="c1"># default is 290 K</span>
+                        <span class="n">bitsPerPixel</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;bitsPerPixel&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">scanTechnique</span> <span class="o">=</span> <span class="n">_scan</span><span class="p">,</span>
+                        <span class="n">opticsSysEff</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;opticsSysEff&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">numOfReadOutE</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;numOfReadOutE&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">numberDetectorRows</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;numberDetectorRows&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">numberDetectorCols</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;numberDetectorCols&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">detectorWidth</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;detectorWidth&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">focalLength</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;focalLength&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">apertureDia</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;apertureDia&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">Fnum</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Fnum&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">maxDetectorExposureTime</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;maxDetectorExposureTime&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">atmosLossModel</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;atmosLossModel&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                        <span class="n">_id</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;@id&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()))</span>
+                        <span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Only Rectangular FOV geometries supported for passive-optical scanner instrument type.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Please specify scanning technique as one of WHISKBROOM/ PUSHBROOM/ MATRIX_IMAGER.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Translate the ``PassiveOpticalScannerModel`` object to a python dictionary such that it can be uniquely reconstructed back from the dictionary.</span>
+
+<span class="sd">        :returns: ``PassiveOpticalScannerModel`` object as a python dictionary.</span>
+<span class="sd">        :rtype: dict</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fieldOfViewGeometry_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fieldOfView</span><span class="o">.</span><span class="n">sph_geom</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fieldOfView</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fieldOfView</span><span class="p">,</span> <span class="n">ViewGeometry</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">sceneFieldOfViewGeometry_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sceneFieldOfView</span><span class="o">.</span><span class="n">sph_geom</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sceneFieldOfView</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sceneFieldOfView</span><span class="p">,</span> <span class="n">ViewGeometry</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">orientation_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">,</span> <span class="n">Orientation</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">maneuver_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maneuver</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">maneuver</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maneuver</span><span class="p">,</span> <span class="n">Maneuver</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">pointing_opt_dict</span> <span class="o">=</span> <span class="p">[</span><span class="n">Orientation</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointingOption</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointingOption</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">({</span>
+                <span class="s2">&quot;@type&quot;</span><span class="p">:</span> <span class="s2">&quot;Passive Optical Scanner&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;mass&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span>
+                <span class="s2">&quot;volume&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">volume</span><span class="p">,</span>
+                <span class="s2">&quot;power&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">power</span><span class="p">,</span>
+                <span class="s2">&quot;fieldOfViewGeometry&quot;</span><span class="p">:</span><span class="n">fieldOfViewGeometry_dict</span><span class="p">,</span>
+                <span class="s2">&quot;sceneFieldOfViewGeometry&quot;</span><span class="p">:</span> <span class="n">sceneFieldOfViewGeometry_dict</span><span class="p">,</span>
+                <span class="s2">&quot;orientation&quot;</span><span class="p">:</span><span class="n">orientation_dict</span><span class="p">,</span>
+                <span class="s2">&quot;maneuver&quot;</span><span class="p">:</span><span class="n">maneuver_dict</span><span class="p">,</span>
+                <span class="s2">&quot;pointingOption&quot;</span><span class="p">:</span> <span class="n">pointing_opt_dict</span><span class="p">,</span>
+                <span class="s2">&quot;dataRate&quot;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">dataRate</span><span class="p">,</span>
+                <span class="s2">&quot;bitsPerPixel&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bitsPerPixel</span><span class="p">,</span>
+                <span class="s2">&quot;operatingWavelength&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">operatingWavelength</span><span class="p">,</span>
+                <span class="s2">&quot;bandwidth&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">,</span>
+                <span class="s2">&quot;quantumEff&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantumEff</span><span class="p">,</span>
+                <span class="s2">&quot;targetBlackBodyTemp&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">targetBlackBodyTemp</span><span class="p">,</span>
+                <span class="s2">&quot;scanTechnique&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">scanTechnique</span><span class="p">,</span>
+                <span class="s2">&quot;opticsSysEff&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">opticsSysEff</span><span class="p">,</span>
+                <span class="s2">&quot;numOfReadOutE&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">numOfReadOutE</span><span class="p">,</span>
+                <span class="s2">&quot;numberDetectorRows&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">numberDetectorRows</span><span class="p">,</span>
+                <span class="s2">&quot;numberDetectorCols&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">numberDetectorCols</span><span class="p">,</span>
+                <span class="s2">&quot;detectorWidth&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">detectorWidth</span><span class="p">,</span>
+                <span class="s2">&quot;focalLength&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">focalLength</span><span class="p">,</span>
+                <span class="s2">&quot;apertureDia&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">apertureDia</span><span class="p">,</span>
+                <span class="s2">&quot;Fnum&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Fnum</span><span class="p">,</span>
+                <span class="s2">&quot;maxDetectorExposureTime&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxDetectorExposureTime</span><span class="p">,</span>
+                <span class="s2">&quot;atmosLossModel&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">atmosLossModel</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="s2">&quot;@id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span>
+                <span class="p">})</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;PassiveOpticalScannerModel.from_dict(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">calc_data_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sc_orbit_state</span><span class="p">,</span> <span class="n">target_coords</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Calculate typical observation data metrics.</span>
+
+<span class="sd">        :param sc_orbit_state: Spacecraft state at the time of observation.</span>
+
+<span class="sd">        Dictionary keys are: </span>
+<span class="sd">        </span>
+<span class="sd">        * :code:`time [JDUT1]` (:class:`float`), Time in Julian Day UT1. Corresponds to the time of observation. </span>
+<span class="sd">        * :code:`x [km]` (:class:`float`), :code:`y [km]` (:class:`float`), :code:`z [km]` (:class:`float`), Cartesian coordinates of spacecraft in EARTH_CENTERED_INERTIAL frame at the time of observation.</span>
+<span class="sd">        * :code:`vx [km/s]` (:class:`float`), :code:`vy [km/s]` (:class:`float`), :code:`vz [km/s]` (:class:`float`), Velocity of spacecraft in EARTH_CENTERED_INERTIAL frame at the time of observation.</span>
+<span class="sd">        </span>
+<span class="sd">        :paramtype sc_orbit_state: dict</span>
+<span class="sd">        </span>
+<span class="sd">        :param target_coords: Location of the observation.</span>
+
+<span class="sd">        Dictionary keys are: </span>
+<span class="sd">    </span>
+<span class="sd">        * :code:`lat [deg]` (:class:`float`), :code:`lon [deg]` (:class:`float`) indicating the corresponding ground-point accessed (latitude, longitude) in degrees.</span>
+
+<span class="sd">        :paramtype target_coords: dict</span>
+
+<span class="sd">        :returns: Typical calculated observation data metrics.</span>
+<span class="sd">        </span>
+<span class="sd">        Dictionary keys are:  </span>
+<span class="sd">    </span>
+<span class="sd">        * :code:`noise-equivalent delta T [K]` (:class:`float`) Noise Equivalent delta temperature in Kelvin. Characterizes the instrument in its ability to resolve temperature variations for a given background temperature. </span>
+<span class="sd">        * :code:`dynamic range` (:class:`float`) Dynamic Range. Is the quotient of the signal and read-out noise electrons the sensor sees between dark and bright scenes.</span>
+<span class="sd">        * :code:`SNR` (:class:`float`) Signal-to-noise Ratio.</span>
+<span class="sd">        * :code:`ground pixel along-track resolution [m]` (:class:`float`) Spatial resolution [meters] of a hypothetical ground-pixel centered about observation point in the along-track direction.</span>
+<span class="sd">        * :code:`ground pixel cross-track resolution [m]` (:class:`float`) Spatial resolution [meters] of a hypothetical ground-pixel centered about observation point in the cross-track direction.</span>
+
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        </span>
+<span class="sd">        .. todo:: Revise pixel-resolution and access-time calculations. Current formula is accurate only for nadir-looking or (purely) side-looking instruments.</span>
+<span class="sd">                    </span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="c1"># Observation time in Julian Day UT1</span>
+        <span class="n">tObs_JDUT1</span> <span class="o">=</span> <span class="n">sc_orbit_state</span><span class="p">[</span><span class="s2">&quot;time [JDUT1]&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Target position in ECI frame</span>
+        <span class="n">target_pos</span> <span class="o">=</span> <span class="n">GeoUtilityFunctions</span><span class="o">.</span><span class="n">geo2eci</span><span class="p">([</span><span class="n">target_coords</span><span class="p">[</span><span class="s2">&quot;lat [deg]&quot;</span><span class="p">],</span> <span class="n">target_coords</span><span class="p">[</span><span class="s2">&quot;lon [deg]&quot;</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">tObs_JDUT1</span><span class="p">)</span>
+
+        <span class="c1"># Spacecraft position, velocity in ECI frame</span>
+        <span class="n">sc_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">sc_orbit_state</span><span class="p">[</span><span class="s2">&quot;x [km]&quot;</span><span class="p">],</span> <span class="n">sc_orbit_state</span><span class="p">[</span><span class="s2">&quot;y [km]&quot;</span><span class="p">],</span> <span class="n">sc_orbit_state</span><span class="p">[</span><span class="s2">&quot;z [km]&quot;</span><span class="p">]])</span>  
+        <span class="n">sc_vel</span> <span class="o">=</span> <span class="p">[</span><span class="n">sc_orbit_state</span><span class="p">[</span><span class="s2">&quot;vx [km/s]&quot;</span><span class="p">],</span> <span class="n">sc_orbit_state</span><span class="p">[</span><span class="s2">&quot;vy [km/s]&quot;</span><span class="p">],</span> <span class="n">sc_orbit_state</span><span class="p">[</span><span class="s2">&quot;vz [km/s]&quot;</span><span class="p">]]</span> 
+        
+        <span class="c1">#  Calculate range vector between spacecraft and POI (Target)</span>
+        <span class="n">range_vector_km</span> <span class="o">=</span> <span class="n">target_pos</span> <span class="o">-</span> <span class="n">sc_pos</span>
+
+        <span class="n">alt_km</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sc_pos</span><span class="p">)</span> <span class="o">-</span> <span class="n">Constants</span><span class="o">.</span><span class="n">radiusOfEarthInKM</span>
+
+        <span class="c1"># below snippet required to prevent invalid &#39;x&#39; due to numerical errors</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">MathUtilityFunctions</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">range_vector_km</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">MathUtilityFunctions</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">sc_pos</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-7</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">=</span><span class="mi">1</span>
+        <span class="n">look_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        
+        <span class="n">incidence_angle_rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">look_angle</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">Constants</span><span class="o">.</span><span class="n">radiusOfEarthInKM</span> <span class="o">+</span> <span class="n">alt_km</span><span class="p">)</span><span class="o">/</span><span class="n">Constants</span><span class="o">.</span><span class="n">radiusOfEarthInKM</span><span class="p">)</span>
+        
+        <span class="n">range_vec_norm_km</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">range_vector_km</span><span class="p">)</span>
+
+        <span class="c1"># Calculate FOV of a single detector, i.e. the IFOV (instantaneous FOV) as referred in texts.</span>
+        <span class="n">iFOV_deg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">detectorWidth</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">focalLength</span><span class="p">)</span>
+        <span class="c1"># Calculate the cross track spatial resolution of the ground-pixel</span>
+        <span class="n">res_CT_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">iFOV_deg</span><span class="p">)</span><span class="o">*</span><span class="n">range_vec_norm_km</span><span class="o">*</span><span class="mf">1.0e3</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">incidence_angle_rad</span><span class="p">)</span>
+        <span class="c1"># Calculate along-track spatial resolution of the ground-pixel</span>
+        <span class="n">res_AT_m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">iFOV_deg</span><span class="p">)</span><span class="o">*</span><span class="n">range_vec_norm_km</span><span class="o">*</span><span class="mf">1.0e3</span>
+        <span class="n">pixel_area_m2</span> <span class="o">=</span> <span class="n">res_AT_m</span> <span class="o">*</span> <span class="n">res_CT_m</span>                    
+        
+        <span class="c1"># Analytical calculation of the access duration from the satellite altitude (accurate as long as the observation is considered to be made at Nadir or in side-looking geometry).</span>
+        <span class="n">nadir_access_duration_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fieldOfView</span><span class="o">.</span><span class="n">sph_geom</span><span class="o">.</span><span class="n">angle_height</span><span class="p">)</span><span class="o">*</span><span class="n">alt_km</span><span class="o">/</span> <span class="p">(</span><span class="n">GeoUtilityFunctions</span><span class="o">.</span><span class="n">compute_satellite_footprint_speed</span><span class="p">(</span><span class="n">sc_pos</span><span class="p">,</span><span class="n">sc_vel</span><span class="p">)</span> <span class="o">*</span><span class="mf">1e-3</span><span class="p">)</span> <span class="c1"># analytical calculation of the access duration</span>
+        
+        <span class="c1"># The analytically calculated access duration is given as input to the integration time calculations</span>
+        <span class="n">Ti_s</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_integration_time</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scanTechnique</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">numberDetectorRows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">numberDetectorCols</span><span class="p">,</span> <span class="n">nadir_access_duration_s</span><span class="p">,</span> <span class="n">iFOV_deg</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxDetectorExposureTime</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fieldOfView</span><span class="o">.</span><span class="n">sph_geom</span><span class="o">.</span><span class="n">angle_width</span><span class="p">)</span>
+        
+        <span class="n">Ne</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_number_of_signal_electrons</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">operatingWavelength</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">targetBlackBodyTemp</span><span class="p">,</span> 
+                                                                       <span class="bp">self</span><span class="o">.</span><span class="n">apertureDia</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opticsSysEff</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantumEff</span><span class="p">,</span>  
+                                                                       <span class="n">tObs_JDUT1</span><span class="p">,</span> <span class="n">sc_pos</span><span class="p">,</span> <span class="n">target_pos</span><span class="p">,</span> <span class="n">pixel_area_m2</span><span class="p">,</span> <span class="n">Ti_s</span><span class="p">,</span>
+                                                                       <span class="bp">self</span><span class="o">.</span><span class="n">atmosLossModel</span><span class="p">)</span>
+   
+        <span class="c1"># number of noise electrons</span>
+        <span class="n">Nn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Ne</span><span class="p">)</span>
+        <span class="c1"># total number of noise electrons</span>
+        <span class="n">Nt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Nn</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">numOfReadOutE</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+       
+        <span class="c1"># signal to noise ratio</span>
+        <span class="k">if</span> <span class="n">Nt</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">SNR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">SNR</span> <span class="o">=</span> <span class="n">Ne</span><span class="o">/</span> <span class="n">Nt</span>
+
+        <span class="c1"># dynamic range of sensor</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">numOfReadOutE</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">DR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">DR</span> <span class="o">=</span> <span class="n">Ne</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">numOfReadOutE</span>
+
+        <span class="c1"># find noise equivalent temperature difference</span>
+        <span class="n">Ne_new</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">calculate_number_of_signal_electrons</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">operatingWavelength</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bandwidth</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">targetBlackBodyTemp</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                                                                           <span class="bp">self</span><span class="o">.</span><span class="n">apertureDia</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opticsSysEff</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantumEff</span><span class="p">,</span> 
+                                                                           <span class="n">tObs_JDUT1</span><span class="p">,</span> <span class="n">sc_pos</span><span class="p">,</span> <span class="n">target_pos</span><span class="p">,</span> <span class="n">pixel_area_m2</span><span class="p">,</span> <span class="n">Ti_s</span><span class="p">,</span>
+                                                                           <span class="bp">self</span><span class="o">.</span><span class="n">atmosLossModel</span><span class="p">)</span>
+
+        <span class="n">deltaN</span> <span class="o">=</span> <span class="n">Ne_new</span> <span class="o">-</span> <span class="n">Ne</span>
+
+        <span class="c1"># noise-equivalent delta temperature</span>
+        <span class="k">if</span> <span class="n">deltaN</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">NEdeltaT</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">else</span><span class="p">:</span>    
+            <span class="n">NEdeltaT</span> <span class="o">=</span> <span class="n">Nn</span><span class="o">/</span> <span class="n">deltaN</span>     
+    
+        <span class="n">obsv_metrics</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">obsv_metrics</span><span class="p">[</span><span class="s2">&quot;ground pixel along-track resolution [m]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">res_AT_m</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">obsv_metrics</span><span class="p">[</span><span class="s2">&quot;ground pixel cross-track resolution [m]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">res_CT_m</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">obsv_metrics</span><span class="p">[</span><span class="s2">&quot;SNR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">SNR</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">obsv_metrics</span><span class="p">[</span><span class="s2">&quot;dynamic range&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">DR</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">obsv_metrics</span><span class="p">[</span><span class="s2">&quot;noise-equivalent delta T [K]&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">NEdeltaT</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">obsv_metrics</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">calculate_integration_time</span><span class="p">(</span><span class="n">scan_tech</span><span class="p">,</span> <span class="n">num_det_rows</span><span class="p">,</span> <span class="n">num_det_cols</span><span class="p">,</span> <span class="n">access_dur_s</span><span class="p">,</span> <span class="n">iFOV_deg</span><span class="p">,</span>  <span class="n">max_det_exp_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">angle_width_deg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Calculate integration time based on the scanning method. </span>
+
+<span class="sd">        :param scan_tech: Scanning technique.</span>
+<span class="sd">        :paramtype scan_tech: :class:`instrupy.passive_optical_scanner_model.ScanTech`</span>
+
+<span class="sd">        :param num_det_rows: Number of detector rows on the focal-plane-array. If the SENSOR_BODY_FIXED frame is aligned to the NADIR_POINTING frame, this direction corresponds to the along-track direction.</span>
+<span class="sd">        :paramtype num_det_rows: int</span>
+
+<span class="sd">        :param num_det_cols: Number of detector columns on the focal-plane-array. If the SENSOR_BODY_FIXED frame is aligned to the NADIR_POINTING frame, this direction corresponds to the cross-track direction.</span>
+<span class="sd">        :paramtype num_det_cols: int</span>
+
+<span class="sd">        :param access_dur_s: Access duration in seconds during which the image is built.</span>
+<span class="sd">        :paramtype access_dur_s: float</span>
+
+<span class="sd">        :param iFOV_deg: Instantaneous (or) the field-of-view per detector element in degrees.</span>
+<span class="sd">        :paramtype iFOV_deg: float</span>
+
+<span class="sd">        :ivar max_det_exp_time: Maximum exposure time of detector in seconds.</span>
+<span class="sd">        :vartype max_det_exp_time: float</span>
+
+<span class="sd">        :param angle_width_deg: Angular width of the field-of-view in degrees (input needed in case *WHISKBROOM* scanning technique is specified).</span>
+<span class="sd">        :paramtype angle_width_deg: float</span>
+
+<span class="sd">        :returns: Integration time in seconds.</span>
+<span class="sd">        :rtype: float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">scan_tech</span> <span class="o">==</span> <span class="n">ScanTech</span><span class="o">.</span><span class="n">PUSHBROOM</span><span class="p">):</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">num_det_rows</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;For pushbroom scanning only one detector-row is allowed.&quot;</span><span class="p">)</span>    
+            <span class="c1"># integration time for pushbroom is same as that of the time taken by the </span>
+            <span class="c1"># satellite to go over one groundpixel in the along-track direction </span>
+            <span class="c1"># For the case of single-row array of detectors, this is same as the access time.            </span>
+            <span class="n">Ti_s</span> <span class="o">=</span> <span class="n">access_dur_s</span>
+
+        <span class="k">elif</span><span class="p">(</span><span class="n">scan_tech</span> <span class="o">==</span> <span class="n">ScanTech</span><span class="o">.</span><span class="n">WHISKBROOM</span><span class="p">):</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">num_det_cols</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;For whiskbroom scanning only one detector-column is allowed.&quot;</span><span class="p">)</span>  
+            <span class="c1"># For whiskbroom scanning, a single detector is used to scan across many cross-track ground-pixels</span>
+            <span class="c1"># hence the integration time is a fraction of the access time over a single ground-pixel.</span>
+            <span class="c1"># Note that the total access time by the column of detectors ( = access_dur_s) corresponds to the total along-track FOV of the instrument.</span>
+            <span class="n">N_pixel_CT</span> <span class="o">=</span> <span class="n">angle_width_deg</span><span class="o">/</span> <span class="n">iFOV_deg</span> 
+            <span class="n">Ti_s</span> <span class="o">=</span> <span class="n">access_dur_s</span><span class="o">/</span> <span class="n">N_pixel_CT</span> 
+
+        <span class="k">elif</span><span class="p">(</span><span class="n">scan_tech</span> <span class="o">==</span> <span class="n">ScanTech</span><span class="o">.</span><span class="n">MATRIX_IMAGER</span><span class="p">):</span>
+            <span class="c1"># For MATRIX_IMAGER scanning the integration time at each detector is the total access time over the entire 2D scene imaged.</span>
+            <span class="c1"># Note that the total access time by the column of detectors ( = access_dur_s) corresponds to the total along-track FOV of the instrument.</span>
+            <span class="n">Ti_s</span> <span class="o">=</span> <span class="n">access_dur_s</span>  
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unknown scanning technique specified.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">max_det_exp_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span> <span class="c1"># if a maximum detector exposure time is specified</span>
+            <span class="k">if</span> <span class="n">Ti_s</span> <span class="o">&gt;</span> <span class="n">max_det_exp_time</span><span class="p">:</span>
+                <span class="n">Ti_s</span> <span class="o">=</span> <span class="n">max_det_exp_time</span>
+
+        <span class="k">return</span> <span class="n">Ti_s</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">calculate_number_of_signal_electrons</span><span class="p">(</span><span class="n">op_wav_m</span><span class="p">,</span> <span class="n">bw_m</span><span class="p">,</span> <span class="n">bb_T_K</span><span class="p">,</span> <span class="n">ap_dia_m</span><span class="p">,</span> <span class="n">op_tx_fac</span><span class="p">,</span> <span class="n">qe</span><span class="p">,</span> <span class="n">tObs_JDUT1</span><span class="p">,</span>
+                                            <span class="n">obs_pos_km</span><span class="p">,</span> <span class="n">tar_pos_km</span><span class="p">,</span> <span class="n">pixel_area_m2</span><span class="p">,</span> <span class="n">Ti_s</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the number of signal electrons at the detector due to incoming light energy from a hypothetical pixel centered at the target position.</span>
+<span class="sd">           The light energy from the observed pixel is due to the following two sources:</span>
+
+<span class="sd">           1. Radiant energy from the target by considering the target as a black-body with the supplied black-body temperature. </span>
+<span class="sd">           2. Reflected solar energy off the target surface. The Sun is considered as a black body at 6000 K, whose energy is reflected</span>
+<span class="sd">              off the observed pixel area which has an unit reflectivity and Lambertian properties.</span>
+<span class="sd">             </span>
+<span class="sd">           See SMAD 3rd edition, Table 9-15 for the forumlation.</span>
+<span class="sd">           </span>
+<span class="sd">           .. note:: The simultaneous assumption of unit reflectance and blackbody to calculate the SNR is contradictory and can be troubling in spectral regions between the thermal and optical. </span>
+<span class="sd">                    If the spectral region is in the IR or optical (where the radiative and reflective characteristics of Earth do not</span>
+<span class="sd">                    intersect), either of the radiated or the reflected energy is dominant, and the contradictory assumption is not troubling.</span>
+
+<span class="sd">           :param op_wav_m: Operating wavelength in meters.</span>
+<span class="sd">           :paramtype op_wav_m: float</span>
+
+<span class="sd">           :param bw_m: Bandwidth in meters.</span>
+<span class="sd">           :paramtype bw_m: float</span>
+
+<span class="sd">           :param bb_T_K: Black-body temperature in Kelvin.</span>
+<span class="sd">           :paramtype bb_T_K: float</span>
+
+<span class="sd">           :param ap_dia_m: Lens aperture diameter in meters.</span>
+<span class="sd">           :paramtype ap_dia_m: float</span>
+
+<span class="sd">           :param op_tx_fac: Optical-transmission factor (:math:`0 &lt; \\tau_0  &lt; 1`)</span>
+<span class="sd">           :paramtype op_tx_fac: float</span>
+
+<span class="sd">           :param qe: Quantum efficiency (:math:`0 &lt; qe  &lt; 1`) of the detector.</span>
+<span class="sd">           :paramtype qe: float</span>
+
+<span class="sd">           :param tObs_JDUT1: Observation time [Julian Day UT1].</span>
+<span class="sd">           :paramtype tObs_JDUT1: float</span>
+
+<span class="sd">           :param obs_pos_km: Observer position vector [km]. Must be referenced to the center of Earth.</span>
+<span class="sd">           :paramtype obs_pos_km: list, float</span>
+
+<span class="sd">           :param tar_pos_km: Target position vector [km]. Must be referenced to the center of Earth.</span>
+<span class="sd">           :paramtype tar_pos_km: list, float</span>
+
+<span class="sd">           :param pixel_area_m2: Area of observed pixel [m2].</span>
+<span class="sd">           :paramtype pixel_area_m2: float</span>
+
+<span class="sd">           :param Ti_s: Integration time in seconds.</span>
+<span class="sd">           :paramtype Ti_s: float</span>
+
+<span class="sd">           :param atmos_loss_model: The atmospheric loss model. &#39;LOWTRAN7&#39; model is supported. If ``None`` the atmospheric losses are not be considered.</span>
+<span class="sd">           :paramtype atmos_loss_model: :class:`instrupy.passive_optical_scanner_model.AtmosphericLossModel` or None</span>
+
+<span class="sd">           :return: Number of signal electrons.</span>
+<span class="sd">           :rtype: float</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">obs2tar_vec_km</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tar_pos_km</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">obs_pos_km</span><span class="p">)</span>
+        <span class="n">distance_km</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">obs2tar_vec_km</span><span class="p">)</span>
+        <span class="n">alt_km</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">obs_pos_km</span><span class="p">)</span> <span class="o">-</span> <span class="n">Constants</span><span class="o">.</span><span class="n">radiusOfEarthInKM</span>
+
+        <span class="c1"># below snippet required to prevent invalid &#39;x&#39; due to numerical errors</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">MathUtilityFunctions</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">obs2tar_vec_km</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">MathUtilityFunctions</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">obs_pos_km</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-7</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">=</span><span class="mi">1</span>
+        <span class="n">look_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">obs_inc_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">look_angle</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">Constants</span><span class="o">.</span><span class="n">radiusOfEarthInKM</span> <span class="o">+</span> <span class="n">alt_km</span><span class="p">)</span><span class="o">/</span><span class="n">Constants</span><span class="o">.</span><span class="n">radiusOfEarthInKM</span><span class="p">)</span>
+ 
+        <span class="c1"># estimate total radiance from the surface [photons/s/m2/sr] to the direction of the observer                     </span>
+        <span class="n">Lint</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_bb_radiator</span><span class="p">(</span><span class="n">op_wav_m</span><span class="p">,</span> <span class="n">bw_m</span><span class="p">,</span> <span class="n">bb_T_K</span><span class="p">,</span> <span class="n">obs_inc_angle</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="p">)</span> <span class="o">+</span> \
+               <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">radiance_with_earth_as_reflector</span><span class="p">(</span><span class="n">op_wav_m</span><span class="p">,</span> <span class="n">bw_m</span><span class="p">,</span> <span class="n">tObs_JDUT1</span><span class="p">,</span> <span class="n">obs_pos_km</span><span class="p">,</span> <span class="n">tar_pos_km</span><span class="p">,</span> <span class="n">pixel_area_m2</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="p">)</span>
+
+        <span class="c1"># total radiated and reflected photon rate</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">Lint</span> <span class="o">*</span> <span class="n">pixel_area_m2</span>
+        
+        <span class="c1"># input photons rate at the sensor         </span>
+        <span class="n">Pin</span> <span class="o">=</span> <span class="p">(</span><span class="n">L</span><span class="o">/</span><span class="p">((</span><span class="n">distance_km</span><span class="o">*</span><span class="mf">1e3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="p">((</span><span class="n">ap_dia_m</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+ 
+        <span class="c1"># input photon rate at the detector</span>
+        <span class="n">PD</span> <span class="o">=</span> <span class="n">Pin</span> <span class="o">*</span> <span class="n">op_tx_fac</span>
+        <span class="c1"># input number of photons at the detector</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="n">PD</span> <span class="o">*</span> <span class="n">Ti_s</span>
+        <span class="n">Np</span> <span class="o">=</span> <span class="n">E</span> <span class="c1"># since the unit of E are number of photons</span>
+
+        <span class="c1"># number of electrons available</span>
+        <span class="n">Ne</span> <span class="o">=</span> <span class="n">Np</span> <span class="o">*</span><span class="n">qe</span>
+        <span class="k">return</span> <span class="n">Ne</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">radiance_with_earth_as_bb_radiator</span><span class="p">(</span><span class="n">wav_m</span><span class="p">,</span> <span class="n">bw_m</span><span class="p">,</span> <span class="n">bb_T_K</span><span class="p">,</span> <span class="n">obs_inc_angle</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Determine radiance from Earth as blackbody radiator in bandwidth of interest.</span>
+<span class="sd">            Assumes the Earth as blackbody with user-input equivalent black-body temperature.</span>
+<span class="sd">            Also assumes Earth as Lambertian surface obeying Lambert&#39;s cosine law.</span>
+
+<span class="sd">        :param wav_m: Wavelength of interest in meters.</span>
+<span class="sd">        :paramtype wav_m: float</span>
+
+<span class="sd">        :param bw_m: Bandwidth in meters.</span>
+<span class="sd">        :paramtype bw_m: float</span>
+
+<span class="sd">        :param bb_T_K: Black-body temperature in Kelvin.</span>
+<span class="sd">        :paramtype bb_T_K: float</span>
+
+<span class="sd">        :param obs_inc_angle: Observation incidence angle in radians.</span>
+<span class="sd">        :paramtype obs_inc_angle: float</span>
+
+<span class="sd">        :param atmos_loss_model: The atmospheric loss model. &#39;LOWTRAN7&#39; model is supported. If ``None`` the atmospheric losses are not be considered.</span>
+<span class="sd">        :paramtype atmos_loss_model: :class:`instrupy.passive_optical_scanner_model.AtmosphericLossModel` or ``None``</span>
+
+<span class="sd">        :return: radiance from Earth [photons/s/m2/sr]</span>
+<span class="sd">        :rtype: float            </span>
+<span class="sd">          </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Ensure that observation incidence angle is input in an positive angular domain</span>
+        <span class="k">while</span><span class="p">(</span><span class="n">obs_inc_angle</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">obs_inc_angle</span> <span class="o">=</span> <span class="n">obs_inc_angle</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="p">)</span>
+        <span class="n">obs_inc_angle</span> <span class="o">=</span> <span class="n">obs_inc_angle</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Observation incidence angle must be in range 270 deg to 90 deg deg, else line-of-sight doesn&#39;t exist.</span>
+        <span class="k">if</span><span class="p">((</span><span class="n">obs_inc_angle</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">obs_inc_angle</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">3</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Observation incidence angle should be in range -90 deg to 90 deg.&quot;</span><span class="p">)</span>
+        
+        <span class="n">Lint_ER</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">planck_photon_integral_with_wavelen_dependent_atmos_loss_1</span><span class="p">((</span><span class="n">wav_m</span> <span class="o">-</span> <span class="n">bw_m</span><span class="o">*</span><span class="mf">0.5</span><span class="p">),</span> <span class="p">(</span><span class="n">wav_m</span> <span class="o">+</span> <span class="n">bw_m</span><span class="o">*</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">bb_T_K</span><span class="p">,</span> <span class="n">obs_inc_angle</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="p">)</span>
+        
+        <span class="c1"># Assume Lambertian surface obeying Lambert&#39;s cosine law.</span>
+        <span class="n">Lint_ER</span> <span class="o">=</span> <span class="n">Lint_ER</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">obs_inc_angle</span><span class="p">)</span>  
+
+        <span class="k">return</span> <span class="n">Lint_ER</span> 
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">radiance_with_earth_as_reflector</span><span class="p">(</span><span class="n">wav_m</span><span class="p">,</span> <span class="n">bw_m</span><span class="p">,</span> <span class="n">tObs_JDUT1</span><span class="p">,</span> <span class="n">obs_pos_km</span><span class="p">,</span> <span class="n">tar_pos_km</span><span class="p">,</span> <span class="n">obs_area_m2</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Determine radiance due to reflection of solar radiation off the Earths surface. Reflectance from the Earth surface is taken to be unity.        </span>
+
+<span class="sd">        :param wav_m: Wavelength of interest in meters.</span>
+<span class="sd">        :paramtype wav_m: float</span>
+
+<span class="sd">        :param bw_m: Bandwidth in meters.</span>
+<span class="sd">        :paramtype bw_m: float</span>
+
+<span class="sd">        :param tObs_JDUT1: observation time [Julian Day UT1]</span>
+<span class="sd">        :paramtype tObs_JDUT1: float</span>
+
+<span class="sd">        :param obs_pos_km: observer (satellite) position vector [km]. Must be referenced to EARTH_CENTERED_INERTIAL frame.</span>
+<span class="sd">        :paramtype obs_pos_km: list, float</span>
+
+<span class="sd">        :param tar_pos_km: target (observed ground pixel) position vector [km]. Must be referenced to EARTH_CENTERED_INERTIAL frame.</span>
+<span class="sd">        :paramtype tar_pos_km: list, float</span>
+
+<span class="sd">        :param obs_area_m2: area of observed target (m2)</span>
+<span class="sd">        :paramtype obs_area_m2: float</span>
+<span class="sd">        </span>
+<span class="sd">        :param atmos_loss_model: The atmospheric loss model. &#39;LOWTRAN7&#39; model is supported. If ``None`` the atmospheric losses are not be considered.</span>
+<span class="sd">        :paramtype atmos_loss_model: :class:`instrupy.passive_optical_scanner_model.AtmosphericLossModel` or None</span>
+
+<span class="sd">        :return: upwelling radiance with Earth as reflector of Solar energy [photons/s/m2/sr]</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">obs2tar_vec_km</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tar_pos_km</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">obs_pos_km</span><span class="p">)</span>
+        <span class="n">alt_km</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">obs_pos_km</span><span class="p">)</span> <span class="o">-</span> <span class="n">Constants</span><span class="o">.</span><span class="n">radiusOfEarthInKM</span>
+        
+        <span class="c1"># below snippet required to prevent invalid &#39;x&#39; due to numerical errors</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">MathUtilityFunctions</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">obs2tar_vec_km</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="n">MathUtilityFunctions</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">obs_pos_km</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-7</span><span class="p">:</span>
+            <span class="n">x</span><span class="o">=</span><span class="mi">1</span>
+        <span class="n">look_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">obs_inc_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arcsin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">look_angle</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">Constants</span><span class="o">.</span><span class="n">radiusOfEarthInKM</span> <span class="o">+</span> <span class="n">alt_km</span><span class="p">)</span><span class="o">/</span><span class="n">Constants</span><span class="o">.</span><span class="n">radiusOfEarthInKM</span><span class="p">)</span>
+
+        <span class="c1"># calculate solar incidence angle</span>
+        <span class="p">[</span><span class="n">solar_inc_angle_rad</span><span class="p">,</span> <span class="n">solar_distance</span><span class="p">]</span> <span class="o">=</span> <span class="n">GeoUtilityFunctions</span><span class="o">.</span><span class="n">compute_sun_zenith</span><span class="p">(</span><span class="n">tObs_JDUT1</span><span class="p">,</span> <span class="n">tar_pos_km</span><span class="p">)</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">solar_inc_angle_rad</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">solar_inc_angle_rad</span> <span class="o">&gt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">):</span> <span class="c1"># check if Sun is below horizon</span>
+            <span class="k">return</span> <span class="mf">1e-19</span> <span class="c1"># return small number</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculate radiance from Sun [photons/s/m2/sr]. Note that here the two-way atmospheric losses (Sun to Ground to Observer) is taken into account, not just one way (Sun to Ground).</span>
+<span class="sd">        Strictly speaking just the Sun to Ground atmospheric loss should be taken into account at this stage and a later stage the Ground to Sun atmos</span>
+<span class="sd">        loss should be taken into account. Mathematically the below implementation is correct, and is favored since it is easier to code. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Lint</span> <span class="o">=</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">planck_photon_integral_with_wavelen_dependent_atmos_loss_2</span><span class="p">((</span><span class="n">wav_m</span> <span class="o">-</span> <span class="n">bw_m</span><span class="o">*</span><span class="mf">0.5</span><span class="p">),</span> <span class="p">(</span><span class="n">wav_m</span> <span class="o">+</span> <span class="n">bw_m</span><span class="o">*</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">Constants</span><span class="o">.</span><span class="n">SunBlackBodyTemperature</span><span class="p">,</span> <span class="n">solar_inc_angle_rad</span><span class="p">,</span> <span class="n">obs_inc_angle</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="p">)</span>
+
+        <span class="c1"># Calculate downwelling radiance assuming Lambertian surface obeying Lambert&#39;s cosine law.</span>
+        <span class="n">Lint_downwell</span> <span class="o">=</span> <span class="n">Lint</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">solar_inc_angle_rad</span><span class="p">)</span>  
+
+        <span class="c1"># calculate downwelling photon rate </span>
+        <span class="n">Pin_downwell</span> <span class="o">=</span> <span class="n">Lint_downwell</span> <span class="o">*</span> <span class="n">obs_area_m2</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">Constants</span><span class="o">.</span><span class="n">SolarRadius</span> <span class="o">/</span><span class="p">(</span><span class="n">solar_distance</span><span class="o">*</span><span class="mf">1e3</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># [photons/s]      </span>
+   
+        <span class="c1"># upwelling photon rate (surface reflectivity = 1) </span>
+        <span class="n">Pin_upwell</span> <span class="o">=</span> <span class="n">Pin_downwell</span>
+
+        <span class="c1"># calculate the (reflected) upwelling radiance assuming Lambertian surface with unit reflectivity</span>
+        <span class="n">Lint_upWell</span> <span class="o">=</span> <span class="n">Pin_upwell</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">obs_inc_angle</span><span class="p">)</span>  <span class="o">*</span> <span class="mi">1</span><span class="o">/</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">obs_area_m2</span><span class="p">)</span> 
+
+        <span class="k">return</span> <span class="n">Lint_upWell</span> <span class="c1"># [photons/s/m2/sr]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">planck_photon_integral_with_wavelen_dependent_atmos_loss_1</span><span class="p">(</span><span class="n">wav_low_m</span><span class="p">,</span> <span class="n">wav_high_m</span><span class="p">,</span> <span class="n">bb_T_K</span><span class="p">,</span> <span class="n">obs_zen_rad</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Blackbody integral of spectral photon radiance in given bandwidth of interest, taking into account</span>
+<span class="sd">            atmospheric losses. </span>
+<span class="sd">        </span>
+<span class="sd">        :param wav_low_m: lower wavelength in bandwidth of interest [m]</span>
+<span class="sd">        :paramtype wav_low_m: float</span>
+
+<span class="sd">        :param wav_high_m: higher wavelength in bandwidth of interest  [m]</span>
+<span class="sd">        :paramtype wav_high_m: float</span>
+
+<span class="sd">        :param bb_T_K: black-body temperature [K]</span>
+<span class="sd">        :paramtype bb_T_K: float</span>
+
+<span class="sd">        :param obs_zen_rad: zenith angle of observer</span>
+<span class="sd">        :paramtype obs_zen_rad: float</span>
+
+<span class="sd">        :param atmos_loss_model: The atmospheric loss model. &#39;LOWTRAN7&#39; model is supported. If ``None`` the atmospheric losses are not be considered.</span>
+<span class="sd">        :paramtype atmos_loss_model: :class:`instrupy.passive_optical_scanner_model.AtmosphericLossModel` or None</span>
+
+<span class="sd">        :return: Radiance [photons/s/m2/sr] after consideration of atmospheric losses.</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>    
+        <span class="n">Lint</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># integrated radiance</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">atmos_loss_model</span> <span class="o">==</span> <span class="n">AtmosphericLossModel</span><span class="o">.</span><span class="n">LOWTRAN7</span><span class="p">):</span>
+            <span class="n">TR</span> <span class="o">=</span> <span class="n">GeoUtilityFunctions</span><span class="o">.</span><span class="n">get_transmission_Obs2Space</span><span class="p">(</span><span class="n">wav_low_m</span><span class="p">,</span> <span class="n">wav_high_m</span><span class="p">,</span> <span class="n">obs_zen_rad</span><span class="p">)</span>
+            <span class="n">tr_eff</span> <span class="o">=</span> <span class="n">TR</span><span class="p">[</span><span class="s1">&#39;transmission&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">wav_m</span> <span class="o">=</span> <span class="n">TR</span><span class="p">[</span><span class="s1">&#39;wavelength_nm&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="mf">1e-9</span>
+            <span class="c1">#print(wav_m)</span>
+            <span class="c1">#print(tr_eff)</span>
+            <span class="c1"># The array of wavelengths are not necessarily bound within [wav_low_m, wav_high_m]. This could lead to errors. Hence make new modified array of wavelengths. </span>
+            <span class="n">wav_m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">wav_high_m</span>
+            <span class="n">wav_m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">wav_low_m</span>
+            <span class="k">for</span> <span class="n">indx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">wav_m</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">Lint</span> <span class="o">=</span> <span class="n">Lint</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">tr_eff</span><span class="p">[</span><span class="n">indx</span><span class="p">]</span><span class="o">+</span><span class="n">tr_eff</span><span class="p">[</span><span class="n">indx</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">planck_photon_integral</span><span class="p">(</span><span class="n">wav_m</span><span class="p">[</span><span class="n">indx</span><span class="p">],</span> <span class="n">bb_T_K</span><span class="p">)</span> <span class="o">-</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">planck_photon_integral</span><span class="p">(</span><span class="n">wav_m</span><span class="p">[</span><span class="n">indx</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">bb_T_K</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Lint</span> <span class="o">=</span> <span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">planck_photon_integral</span><span class="p">(</span><span class="n">wav_high_m</span><span class="p">,</span> <span class="n">bb_T_K</span><span class="p">)</span> <span class="o">-</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">planck_photon_integral</span><span class="p">(</span><span class="n">wav_low_m</span><span class="p">,</span> <span class="n">bb_T_K</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">Lint</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">planck_photon_integral_with_wavelen_dependent_atmos_loss_2</span><span class="p">(</span><span class="n">wav_low_m</span><span class="p">,</span> <span class="n">wav_high_m</span><span class="p">,</span> <span class="n">bb_T_K</span><span class="p">,</span> <span class="n">sun_zen_rad</span><span class="p">,</span> <span class="n">obs_zen_rad</span><span class="p">,</span> <span class="n">atmos_loss_model</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Blackbody integral of reflected spectral photon radiance in given bandwidth of interest, taking into account</span>
+<span class="sd">            atmospheric losses.  The two-way atmospheric losses (Sun to Ground, Ground to Observer) is taken into account, not just one way </span>
+<span class="sd">            (Sun to Ground).  Strictly speaking just the Sun to Ground atmospheric loss should be taken into account at this stage</span>
+<span class="sd">            and at later stage the Ground to Sun atmos loss should be taken into account. </span>
+<span class="sd">            Mathematically the below implementation is correct, and is favored since it is easier to code. </span>
+
+<span class="sd">        :param wav_low_m: lower wavelength in bandwidth of interest in meters.</span>
+<span class="sd">        :paramtype wav_low_m: float</span>
+
+<span class="sd">        :param wav_high_m: higher wavelength in bandwidth of interest in meters.</span>
+<span class="sd">        :paramtype wav_high_m: float</span>
+
+<span class="sd">        :param bb_T_K: Black-body temperature in degrees.</span>
+<span class="sd">        :paramtype bb_T_K: float</span>
+
+<span class="sd">        :param sun_zen_rad: Zenith angle of Sun.</span>
+<span class="sd">        :paramtype sun_zen_rad: float</span>
+
+<span class="sd">        :param obs_zen_rad: Zenith angle of observer.</span>
+<span class="sd">        :paramtype obs_zen_rad: float</span>
+
+<span class="sd">        :param atmos_loss_model: The atmospheric loss model. &#39;LOWTRAN7&#39; model is supported. If ``None`` the atmospheric losses are not be considered.</span>
+<span class="sd">        :paramtype atmos_loss_model: :class:`instrupy.passive_optical_scanner_model.AtmosphericLossModel` or None</span>
+
+<span class="sd">        :return: Radiance [photons/s/m2/sr] after consideration of atmospheric losses.</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>          
+        <span class="n">Lint</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># integrated radiance</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">atmos_loss_model</span> <span class="o">==</span> <span class="n">AtmosphericLossModel</span><span class="o">.</span><span class="n">LOWTRAN7</span><span class="p">):</span>
+            <span class="n">TR_SunPath</span> <span class="o">=</span> <span class="n">GeoUtilityFunctions</span><span class="o">.</span><span class="n">get_transmission_Obs2Space</span><span class="p">(</span><span class="n">wav_low_m</span><span class="p">,</span> <span class="n">wav_high_m</span><span class="p">,</span> <span class="n">sun_zen_rad</span><span class="p">)</span>
+            <span class="n">TR_ObsPath</span> <span class="o">=</span> <span class="n">GeoUtilityFunctions</span><span class="o">.</span><span class="n">get_transmission_Obs2Space</span><span class="p">(</span><span class="n">wav_low_m</span><span class="p">,</span> <span class="n">wav_high_m</span><span class="p">,</span> <span class="n">obs_zen_rad</span><span class="p">)</span>
+            
+            <span class="n">tr_eff_sun_path</span> <span class="o">=</span> <span class="n">TR_SunPath</span><span class="p">[</span><span class="s1">&#39;transmission&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">tr_eff_obs_path</span> <span class="o">=</span> <span class="n">TR_ObsPath</span><span class="p">[</span><span class="s1">&#39;transmission&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">wav_m</span> <span class="o">=</span> <span class="n">TR_SunPath</span><span class="p">[</span><span class="s1">&#39;wavelength_nm&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">*</span> <span class="mf">1e-9</span>
+            <span class="k">for</span> <span class="n">indx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">wav_m</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="n">Lint</span> <span class="o">=</span> <span class="n">Lint</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">tr_eff_sun_path</span><span class="p">[</span><span class="n">indx</span><span class="p">]</span><span class="o">+</span><span class="n">tr_eff_sun_path</span><span class="p">[</span><span class="n">indx</span><span class="o">+</span><span class="mi">1</span><span class="p">]))</span><span class="o">*</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">tr_eff_obs_path</span><span class="p">[</span><span class="n">indx</span><span class="p">]</span><span class="o">+</span><span class="n">tr_eff_obs_path</span><span class="p">[</span><span class="n">indx</span><span class="o">+</span><span class="mi">1</span><span class="p">]))</span><span class="o">*</span><span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">planck_photon_integral</span><span class="p">(</span><span class="n">wav_m</span><span class="p">[</span><span class="n">indx</span><span class="p">],</span> <span class="n">bb_T_K</span><span class="p">)</span> <span class="o">-</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">planck_photon_integral</span><span class="p">(</span><span class="n">wav_m</span><span class="p">[</span><span class="n">indx</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">bb_T_K</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Lint</span> <span class="o">=</span> <span class="p">(</span><span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">planck_photon_integral</span><span class="p">(</span><span class="n">wav_high_m</span><span class="p">,</span> <span class="n">bb_T_K</span><span class="p">)</span> <span class="o">-</span> <span class="n">PassiveOpticalScannerModel</span><span class="o">.</span><span class="n">planck_photon_integral</span><span class="p">(</span><span class="n">wav_low_m</span><span class="p">,</span> <span class="n">bb_T_K</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">Lint</span>
+    
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">planck_photon_integral</span><span class="p">(</span><span class="n">lambda_m</span><span class="p">,</span> <span class="n">T_K</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Blackbody integral of spectral photon radiance from  </span>
+<span class="sd">            Algorithm from `Spectral Calc &lt;http://www.spectralcalc.com/blackbody/CalculatingBlackbodyRadianceV2.pdf&gt;`_</span>
+<span class="sd">            Follows Widger and Woodall, Bulletin of the American Meteorological Society, Vol. 57, No. 10, pp. 1217</span>
+
+<span class="sd">        :param lambda_m: wavelength (m)</span>
+<span class="sd">        :paramtype lambda_m: float</span>
+
+<span class="sd">        :param T_K: Equivalent blackbody absolute temperature of body (Kelvin).</span>
+<span class="sd">        :paramtype T_K: float</span>
+
+<span class="sd">        :returns: integrated radiance from supplied wavelength to zero-wavelegnth (photons/s/m2/sr)</span>
+<span class="sd">                    </span>
+<span class="sd">                    .. warning:: note that integration is **not** from supplied wavelength to infinity wavelength.</span>
+
+<span class="sd">        :rtype: float</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sigma_cm</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">lambda_m</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ZeroDivisionError</span><span class="p">:</span>
+            <span class="n">sigma_cm</span> <span class="o">=</span> <span class="mf">1e25</span> <span class="c1"># very high number</span>
+
+        <span class="n">Planck</span> <span class="o">=</span> <span class="n">Constants</span><span class="o">.</span><span class="n">Planck</span>
+        <span class="n">Boltzmann</span> <span class="o">=</span> <span class="n">Constants</span><span class="o">.</span><span class="n">Boltzmann</span>
+        <span class="n">Speed_of_light</span> <span class="o">=</span> <span class="n">Constants</span><span class="o">.</span><span class="n">speedOfLight</span>
+        <span class="c1"># compute powers of x, the dimensionless spectral coordinate</span>
+        <span class="n">c1</span> <span class="o">=</span> <span class="n">Planck</span><span class="o">*</span><span class="n">Speed_of_light</span><span class="o">/</span><span class="n">Boltzmann</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">c1</span><span class="o">*</span><span class="mi">100</span><span class="o">*</span><span class="n">sigma_cm</span><span class="o">/</span><span class="n">T_K</span> 
+        <span class="n">x2</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span> 
+
+        <span class="c1"># decide how many terms of sum are needed</span>
+        <span class="n">iterations</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">+</span> <span class="mf">20.0</span><span class="o">/</span><span class="n">x</span> 
+        <span class="k">if</span> <span class="p">(</span><span class="n">iterations</span><span class="o">&lt;</span><span class="mi">512</span><span class="p">):</span>
+              <span class="k">pass</span> 
+        <span class="k">else</span><span class="p">:</span>
+             <span class="n">iterations</span> <span class="o">=</span> <span class="mi">512</span>
+        <span class="nb">iter</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">iterations</span><span class="p">)</span> 
+        <span class="c1"># add up terms of sum</span>
+        <span class="nb">sum</span> <span class="o">=</span> <span class="mi">0</span> 
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">iter</span><span class="p">):</span> 
+            <span class="n">dn</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">n</span> 
+            <span class="nb">sum</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">n</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x2</span> <span class="o">+</span> <span class="mf">2.0</span><span class="o">*</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">dn</span><span class="p">)</span><span class="o">*</span><span class="n">dn</span><span class="p">)</span><span class="o">*</span><span class="n">dn</span> 
+       
+        <span class="c1"># return result, in units of photons/s/m2/sr</span>
+        <span class="n">kTohc</span> <span class="o">=</span> <span class="n">Boltzmann</span><span class="o">*</span><span class="n">T_K</span><span class="o">/</span><span class="p">(</span><span class="n">Planck</span><span class="o">*</span><span class="n">Speed_of_light</span><span class="p">)</span> 
+        <span class="n">c2</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span> <span class="nb">pow</span><span class="p">(</span><span class="n">kTohc</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="n">Speed_of_light</span> 
+        <span class="n">radiance</span> <span class="o">=</span> <span class="n">c2</span> <span class="o">*</span><span class="nb">sum</span> 
+
+        <span class="k">return</span> <span class="n">radiance</span>
+    
+    <span class="k">def</span> <span class="nf">get_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Get the instrument identifier.</span>
+
+<span class="sd">        :returns: instrument identifier.</span>
+<span class="sd">        :rtype: str</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span>
+    
+    <span class="k">def</span> <span class="nf">get_field_of_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Get the instrument field-of-view.</span>
+
+<span class="sd">        :returns: Instrument field-of-view. </span>
+<span class="sd">        :rtype: :class:`instrupy.util.ViewGeometry`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fieldOfView</span>
+
+    <span class="k">def</span> <span class="nf">get_scene_field_of_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Get the scene-field-of-view (sceneFOV).</span>
+
+<span class="sd">        :returns: Scene-field-of-view.</span>
+<span class="sd">        :rtype: :class:`instrupy.util.ViewGeometry`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sceneFieldOfView</span>
+
+    <span class="k">def</span> <span class="nf">get_field_of_regard</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Get the instrument field of regard. </span>
+
+<span class="sd">        :returns: Field of regard (list of ``ViewGeometry`` objects). </span>
+<span class="sd">        :rtype: list, :class:`instrupy.util.ViewGeometry`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fieldOfRegard</span>
+
+    <span class="k">def</span> <span class="nf">get_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Get the instrument orientation.</span>
+
+<span class="sd">        :returns: Instrument orientation.</span>
+<span class="sd">        :rtype: :class:`instrupy.util.Orientation`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span>
+    
+    <span class="k">def</span> <span class="nf">get_pointing_option</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Get the list of pointing options.</span>
+
+<span class="sd">        :returns: List of pointing options.</span>
+<span class="sd">        :rtype: list, :class:`instrupy.util.Orientation`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pointingOption</span></div>
+    
+    
+
+    
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, BAERI.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

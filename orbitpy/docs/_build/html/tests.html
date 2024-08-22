@@ -1,0 +1,908 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Tests &mdash; OrbitPy 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Validation" href="validation.html" />
+    <link rel="prev" title="Development" href="development.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> OrbitPy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="development.html">Development</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tests</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-to">How to</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing-strategies">Testing strategies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#test-modules">Test Modules</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-test_constellation"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_constellation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-test_propagator"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_propagator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-test_grid"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_grid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-test_contactfinder"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_contactfinder</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-test_eclipsefinder"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_eclipsefinder</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-test_coveragecalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_coveragecalculator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-test_coveragecalculator_gridcoverage"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_coveragecalculator_gridcoverage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-test_coveragecalculator_pointingoptionscoverage"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_coveragecalculator_pointingoptionscoverage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-test_coveragecalculator_pointingoptionswithgridcoverage"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_coveragecalculator_pointingoptionswithgridcoverage</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-test_datametricscalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_datametricscalculator</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-test_mission"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_mission</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-test_util"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_util</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="software.html">Software</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="miscellaneous.html">Miscellaneous</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">OrbitPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="development.html">Development</a> &raquo;</li>
+        
+      <li>Tests</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/tests.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tests">
+<h1>Tests<a class="headerlink" href="#tests" title="Permalink to this heading">¶</a></h1>
+<div class="section" id="how-to">
+<h2>How to<a class="headerlink" href="#how-to" title="Permalink to this heading">¶</a></h2>
+<p>Testing is done using the <a class="reference external" href="https://docs.python.org/3.8/library/unittest.html#module-unittest" title="(in Python v3.8)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unittest</span></code></a> module. Use the below command to run all the tests:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>make<span class="w"> </span>runtest
+</pre></div>
+</div>
+</div>
+<div class="section" id="testing-strategies">
+<h2>Testing strategies<a class="headerlink" href="#testing-strategies" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic">
+<li><p>Test the expected format of the output files.</p></li>
+<li><p>Use of random input values and calculated output values to validate the test.</p>
+<blockquote>
+<div><ol class="lowerroman simple">
+<li><p>Sometimes special cases are run, and some input values which do not make a difference to the
+output are made random. Eg: In case of a equatorial orbit, the latitude of the location seen by
+a nadir-pointed sensor will always be 0 deg, irrespective of the chosen orbital altitude, raan, ta
+which can be used as random values.</p></li>
+<li><p>In cases where the random input values do influence the output, the expected output is calculated
+(as much as possible) from methods, code other than used by the <code class="code docutils literal notranslate"><span class="pre">OrbitPy</span></code> package. Sometimes
+the chosen validation methods are approximate in which case an <em>approximately equal to</em> assertion tests
+are used.</p></li>
+</ol>
+</div></blockquote>
+</li>
+<li><p>Using known inputs, and outputs from external sources (eg: literature, other orbital simulation softwares such as GMAT, STK).</p></li>
+<li><p>Use results from a previous run (corresponding to an older version of the software) as truth data.</p></li>
+<li><p>Run tests after making any revisions to the code. This helps to check that the revisions do not have unintended effects on the results.</p></li>
+</ol>
+<p>Refer to the page <a class="reference internal" href="validation.html#validation"><span class="std std-ref">Validation</span></a> for description of the validation tests.</p>
+</div>
+<div class="section" id="test-modules">
+<h2>Test Modules<a class="headerlink" href="#test-modules" title="Permalink to this heading">¶</a></h2>
+<div class="section" id="module-test_constellation">
+<span id="test-constellation"></span><h3><a class="reference internal" href="#module-test_constellation" title="test_constellation"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_constellation</span></code></a><a class="headerlink" href="#module-test_constellation" title="Permalink to this heading">¶</a></h3>
+<p>Unit tests for orbitpy.constellation module.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="test_constellation.TestConstellationFactory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_constellation.</span></span><span class="sig-name descname"><span class="pre">TestConstellationFactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_constellation.html#TestConstellationFactory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_constellation.TestConstellationFactory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="test_constellation.TestWalkerDeltaConstellation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_constellation.</span></span><span class="sig-name descname"><span class="pre">TestWalkerDeltaConstellation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_constellation.html#TestWalkerDeltaConstellation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_constellation.TestWalkerDeltaConstellation" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="test_constellation.TestWalkerDeltaConstellation.test_generate_orbits_1">
+<span class="sig-name descname"><span class="pre">test_generate_orbits_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_constellation.html#TestWalkerDeltaConstellation.test_generate_orbits_1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_constellation.TestWalkerDeltaConstellation.test_generate_orbits_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the calculation of Keplerian elements of the orbits given the Walker Delta Constellation constellation
+parameters by comparing to the partial truth data from SMAD 4th ed, pg. 274, Table 10.26.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_constellation.TestWalkerDeltaConstellation.test_generate_orbits_2">
+<span class="sig-name descname"><span class="pre">test_generate_orbits_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_constellation.html#TestWalkerDeltaConstellation.test_generate_orbits_2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_constellation.TestWalkerDeltaConstellation.test_generate_orbits_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the calculation of Keplerian elements of the orbits given the Walker Delta constellation
+parameters using fixed inputs and expected outputs.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="test_constellation.angle_difference">
+<span class="sig-prename descclassname"><span class="pre">test_constellation.</span></span><span class="sig-name descname"><span class="pre">angle_difference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_constellation.html#angle_difference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_constellation.angle_difference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute angle difference (b-a) in the range of -180 deg to 180 deg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> – Angle in degrees.</p></li>
+<li><p><strong>b</strong> (<em>float:</em>) – Angle in degrees.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Paramtype</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(b-a) in range of -180 deg to 180 deg.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+<p>Usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;</span> <span class="n">angle_difference</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="mi">2</span>
+<span class="o">&gt;&gt;</span> <span class="n">angle_difference</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">358</span><span class="p">)</span>
+<span class="o">-</span><span class="mi">3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="module-test_propagator">
+<span id="test-propagator"></span><h3><a class="reference internal" href="#module-test_propagator" title="test_propagator"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_propagator</span></code></a><a class="headerlink" href="#module-test_propagator" title="Permalink to this heading">¶</a></h3>
+<p>Unit tests for orbitpy.propagator module.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="test_propagator.TestJ2AnalyticalPropagator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_propagator.</span></span><span class="sig-name descname"><span class="pre">TestJ2AnalyticalPropagator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_propagator.html#TestJ2AnalyticalPropagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_propagator.TestJ2AnalyticalPropagator" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="test_propagator.TestJ2AnalyticalPropagator.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_propagator.html#TestJ2AnalyticalPropagator.setUp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_propagator.TestJ2AnalyticalPropagator.setUp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_propagator.TestJ2AnalyticalPropagator.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_propagator.html#TestJ2AnalyticalPropagator.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_propagator.TestJ2AnalyticalPropagator.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_propagator.TestJ2AnalyticalPropagator.test_execute_2">
+<span class="sig-name descname"><span class="pre">test_execute_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_propagator.html#TestJ2AnalyticalPropagator.test_execute_2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_propagator.TestJ2AnalyticalPropagator.test_execute_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the satellite altitude, orbital time-period, speed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_propagator.TestJ2AnalyticalPropagator.test_execute_3">
+<span class="sig-name descname"><span class="pre">test_execute_3</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_propagator.html#TestJ2AnalyticalPropagator.test_execute_3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_propagator.TestJ2AnalyticalPropagator.test_execute_3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check prograde and retrograd -icity of the orbits.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="test_propagator.TestPropagatorFactory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_propagator.</span></span><span class="sig-name descname"><span class="pre">TestPropagatorFactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_propagator.html#TestPropagatorFactory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_propagator.TestPropagatorFactory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="test_propagator.TestPropagatorModuleFunction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_propagator.</span></span><span class="sig-name descname"><span class="pre">TestPropagatorModuleFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_propagator.html#TestPropagatorModuleFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_propagator.TestPropagatorModuleFunction" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="test_propagator.TestPropagatorModuleFunction.test_compute_time_step">
+<span class="sig-name descname"><span class="pre">test_compute_time_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_propagator.html#TestPropagatorModuleFunction.test_compute_time_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_propagator.TestPropagatorModuleFunction.test_compute_time_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that the time-step computed with precomputed values for fixed orbit altitude and sensor Along-Track <strong>FOR</strong></p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Include tests with instrument maneuverability.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="test_propagator.TestPropagatorOutputInfo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_propagator.</span></span><span class="sig-name descname"><span class="pre">TestPropagatorOutputInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_propagator.html#TestPropagatorOutputInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_propagator.TestPropagatorOutputInfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-test_grid">
+<span id="test-grid"></span><h3><a class="reference internal" href="#module-test_grid" title="test_grid"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_grid</span></code></a><a class="headerlink" href="#module-test_grid" title="Permalink to this heading">¶</a></h3>
+<p><em>Unit tests for :class:`orbitpy.grid` module.</em></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="test_grid.TestGrid">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_grid.</span></span><span class="sig-name descname"><span class="pre">TestGrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_grid.html#TestGrid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_grid.TestGrid" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="test_grid.TestGrid.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_grid.html#TestGrid.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_grid.TestGrid.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="test_grid.TestGridModuleFunction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_grid.</span></span><span class="sig-name descname"><span class="pre">TestGridModuleFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_grid.html#TestGridModuleFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_grid.TestGridModuleFunction" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="test_grid.TestGridModuleFunction.test_compute_grid_res">
+<span class="sig-name descname"><span class="pre">test_compute_grid_res</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_grid.html#TestGridModuleFunction.test_compute_grid_res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_grid.TestGridModuleFunction.test_compute_grid_res" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that the grid-resolution computed with precomputed for fixed values of orbit altitute and a sensor FOV (not the FOR)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="test_grid.TestGridOutputInfo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_grid.</span></span><span class="sig-name descname"><span class="pre">TestGridOutputInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_grid.html#TestGridOutputInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_grid.TestGridOutputInfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-test_contactfinder">
+<span id="test-contactfinder"></span><h3><a class="reference internal" href="#module-test_contactfinder" title="test_contactfinder"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_contactfinder</span></code></a><a class="headerlink" href="#module-test_contactfinder" title="Permalink to this heading">¶</a></h3>
+<p>Unit tests for orbitpy.contactfinder module.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="test_contactfinder.TestContactFinder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_contactfinder.</span></span><span class="sig-name descname"><span class="pre">TestContactFinder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_contactfinder.html#TestContactFinder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_contactfinder.TestContactFinder" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="test_contactfinder.TestContactFinder.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_contactfinder.html#TestContactFinder.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_contactfinder.TestContactFinder.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_contactfinder.TestContactFinder.test_execute_ground_stn_contact_Sentinel1A_gs1">
+<span class="sig-name descname"><span class="pre">test_execute_ground_stn_contact_Sentinel1A_gs1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_contactfinder.html#TestContactFinder.test_execute_ground_stn_contact_Sentinel1A_gs1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_contactfinder.TestContactFinder.test_execute_ground_stn_contact_Sentinel1A_gs1" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Test against GMAT truth data. This validates both the propgation of the satellite and the </dt><dd><p>ground-station contacts. The results are approximately equal.</p>
+</dd>
+</dl>
+<p>The Sentinel1A satellite was simulated in GMAT with gs1  ground-stations in the <code class="docutils literal notranslate"><span class="pre">setUpClass</span></code>, to yield the following contact data:</p>
+<p>GMAT contact data results:</p>
+<p>Target: Sentinel1A</p>
+<p>Observer: GroundStation1
+Start Time (UTC)            Stop Time (UTC)               Duration (s)         
+28 Jan 2021 13:48:49.557    28 Jan 2021 13:59:14.101      624.54459040    
+28 Jan 2021 15:26:51.299    28 Jan 2021 15:37:16.655      625.35573284    
+28 Jan 2021 17:04:57.038    28 Jan 2021 17:15:18.740      621.70165640    
+28 Jan 2021 18:43:13.645    28 Jan 2021 18:53:25.040      611.39420030    
+28 Jan 2021 20:21:47.313    28 Jan 2021 20:31:38.523      591.21018058    
+28 Jan 2021 22:00:41.185    28 Jan 2021 22:10:01.340      560.15570710    
+28 Jan 2021 23:39:53.219    28 Jan 2021 23:48:35.914      522.69565989    
+29 Jan 2021 01:19:15.119    29 Jan 2021 01:27:25.251      490.13180420    
+29 Jan 2021 02:58:34.334    29 Jan 2021 03:06:31.195      476.86127324    
+29 Jan 2021 04:37:40.269    29 Jan 2021 04:45:50.273      490.00346269    
+29 Jan 2021 06:16:29.476    29 Jan 2021 06:25:11.971      522.49477208    
+29 Jan 2021 07:55:03.904    29 Jan 2021 08:04:23.818      559.91435135    
+29 Jan 2021 09:33:26.610    29 Jan 2021 09:43:17.587      590.97618844    
+29 Jan 2021 11:11:40.052    29 Jan 2021 11:21:51.289      611.23740769    
+29 Jan 2021 12:49:46.417    29 Jan 2021 13:00:08.032      621.61532363</p>
+<p>Number of events : 15</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_contactfinder.TestContactFinder.test_execute_ground_stn_contact_Sentinel1B_gs2">
+<span class="sig-name descname"><span class="pre">test_execute_ground_stn_contact_Sentinel1B_gs2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_contactfinder.html#TestContactFinder.test_execute_ground_stn_contact_Sentinel1B_gs2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_contactfinder.TestContactFinder.test_execute_ground_stn_contact_Sentinel1B_gs2" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Test against GMAT truth data. This validates both the propgation of the satellite and the </dt><dd><p>ground-station contacts. The results are approximately equal.</p>
+</dd>
+</dl>
+<p>The Sentinel1B satellite was simulated in GMAT with gs2 ground-stations in the <code class="docutils literal notranslate"><span class="pre">setUpClass</span></code>, to yield the following contact data:</p>
+<p>GMAT contact data results:</p>
+<p>Target: Sentinel1B</p>
+<p>Observer: GroundStation1
+Start Time (UTC)            Stop Time (UTC)               Duration (s)         
+28 Jan 2021 13:49:41.856    28 Jan 2021 13:56:53.997      432.14128754    
+28 Jan 2021 15:28:16.445    28 Jan 2021 15:35:44.990      448.54498333    
+28 Jan 2021 17:06:45.303    28 Jan 2021 17:14:29.554      464.25133171    
+28 Jan 2021 18:45:09.911    28 Jan 2021 18:53:06.500      476.58959962    
+28 Jan 2021 20:23:32.052    28 Jan 2021 20:31:36.413      484.36139004    
+28 Jan 2021 22:01:53.777    28 Jan 2021 22:10:01.183      487.40635630    
+28 Jan 2021 23:40:17.464    28 Jan 2021 23:48:23.305      485.84091989    
+29 Jan 2021 01:18:45.625    29 Jan 2021 01:26:45.213      479.58849077    
+29 Jan 2021 02:57:20.351    29 Jan 2021 03:05:08.974      468.62302835    
+29 Jan 2021 04:36:02.640    29 Jan 2021 04:43:36.350      453.70949119    
+29 Jan 2021 06:14:51.832    29 Jan 2021 06:22:08.886      437.05351007    
+29 Jan 2021 07:53:45.433    29 Jan 2021 08:00:47.785      422.35252488    
+29 Jan 2021 09:32:39.652    29 Jan 2021 09:39:33.497      413.84478367    
+29 Jan 2021 11:11:30.678    29 Jan 2021 11:18:25.042      414.36446942</p>
+<p>Number of events : 14</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_contactfinder.TestContactFinder.test_execute_intersat_contact_precomputed">
+<span class="sig-name descname"><span class="pre">test_execute_intersat_contact_precomputed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_contactfinder.html#TestContactFinder.test_execute_intersat_contact_precomputed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_contactfinder.TestContactFinder.test_execute_intersat_contact_precomputed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test against precomputed data.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-test_eclipsefinder">
+<span id="test-eclipsefinder"></span><h3><a class="reference internal" href="#module-test_eclipsefinder" title="test_eclipsefinder"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_eclipsefinder</span></code></a><a class="headerlink" href="#module-test_eclipsefinder" title="Permalink to this heading">¶</a></h3>
+<p>Unit tests for orbitpy.contactfinder module.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="test_eclipsefinder.TestEclipseFinder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_eclipsefinder.</span></span><span class="sig-name descname"><span class="pre">TestEclipseFinder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_eclipsefinder.html#TestEclipseFinder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_eclipsefinder.TestEclipseFinder" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="test_eclipsefinder.TestEclipseFinder.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_eclipsefinder.html#TestEclipseFinder.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_eclipsefinder.TestEclipseFinder.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_eclipsefinder.TestEclipseFinder.test_execute_Sentinel1A_dawn_dusk">
+<span class="sig-name descname"><span class="pre">test_execute_Sentinel1A_dawn_dusk</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_eclipsefinder.html#TestEclipseFinder.test_execute_Sentinel1A_dawn_dusk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_eclipsefinder.TestEclipseFinder.test_execute_Sentinel1A_dawn_dusk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dawn-dust orbit shall result in no eclipse periods.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_eclipsefinder.TestEclipseFinder.test_execute_jaxel_precomputed">
+<span class="sig-name descname"><span class="pre">test_execute_jaxel_precomputed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_eclipsefinder.html#TestEclipseFinder.test_execute_jaxel_precomputed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_eclipsefinder.TestEclipseFinder.test_execute_jaxel_precomputed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare with precomputed results. The truth data was produced on 5 May 2021.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-test_coveragecalculator">
+<span id="test-coveragecalculator"></span><h3><a class="reference internal" href="#module-test_coveragecalculator" title="test_coveragecalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_coveragecalculator</span></code></a><a class="headerlink" href="#module-test_coveragecalculator" title="Permalink to this heading">¶</a></h3>
+<p>Unit tests for orbitpy.coveragecalculator module.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="test_coveragecalculator.TestCoverageCalculatorFactory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_coveragecalculator.</span></span><span class="sig-name descname"><span class="pre">TestCoverageCalculatorFactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator.html#TestCoverageCalculatorFactory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator.TestCoverageCalculatorFactory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="test_coveragecalculator.TestCoverageCalculatorFunctions">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_coveragecalculator.</span></span><span class="sig-name descname"><span class="pre">TestCoverageCalculatorFunctions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator.html#TestCoverageCalculatorFunctions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator.TestCoverageCalculatorFunctions" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator.TestCoverageCalculatorFunctions.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator.html#TestCoverageCalculatorFunctions.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator.TestCoverageCalculatorFunctions.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator.TestCoverageCalculatorFunctions.test_filter_mid_interval_access">
+<span class="sig-name descname"><span class="pre">test_filter_mid_interval_access</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator.html#TestCoverageCalculatorFunctions.test_filter_mid_interval_access"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator.TestCoverageCalculatorFunctions.test_filter_mid_interval_access" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the behavior of this function is as expected using pre-run results.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="test_coveragecalculator.TestCoverageOutputInfo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_coveragecalculator.</span></span><span class="sig-name descname"><span class="pre">TestCoverageOutputInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator.html#TestCoverageOutputInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator.TestCoverageOutputInfo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-test_coveragecalculator_gridcoverage">
+<span id="test-coveragecalculator-gridcoverage"></span><h3><a class="reference internal" href="#module-test_coveragecalculator_gridcoverage" title="test_coveragecalculator_gridcoverage"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_coveragecalculator_gridcoverage</span></code></a><a class="headerlink" href="#module-test_coveragecalculator_gridcoverage" title="Permalink to this heading">¶</a></h3>
+<p>Unit tests for orbitpy.coveragecalculator.gridcoverage class.</p>
+<p>In case of rectangular sensors, both the methods to evaluate point in spherical polygon: 
+(1) ‘ProjectedPIP’ and (2) ‘DirectSphericalPIP’ are evaluated.</p>
+<p><code class="docutils literal notranslate"><span class="pre">TestGridCoverage</span></code> class:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_0</span></code>: Test format of output access files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_1</span></code>: Roll Circular sensor tests</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_2</span></code>: Yaw Circular sensor tests</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_3</span></code>: Pitch Circular sensor tests</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_4</span></code>: Roll Rectangular sensor tests</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_5</span></code>: Pitch Rectangular sensor tests</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_6</span></code>: Satellite-bus orientation vs sensor orientation tests</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_7</span></code>: Test spacecraft with multiple sensors.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_8</span></code>: Test FOV vs FOR coverage. Coverage of FOR &gt;= Coverage of FOV.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_9</span></code>:  Test coverage with DOUBLE_ROLL_ONLY maneuver will which result in 2 <code class="docutils literal notranslate"><span class="pre">ViewGeometry</span></code> objects for the field-of-regard.</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="test_coveragecalculator_gridcoverage.TestGridCoverage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_coveragecalculator_gridcoverage.</span></span><span class="sig-name descname"><span class="pre">TestGridCoverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_gridcoverage.html#TestGridCoverage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_gridcoverage.TestGridCoverage" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_gridcoverage.TestGridCoverage.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_gridcoverage.html#TestGridCoverage.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_gridcoverage.TestGridCoverage.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_0">
+<span class="sig-name descname"><span class="pre">test_execute_0</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_gridcoverage.html#TestGridCoverage.test_execute_0"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the produced access file format.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_1">
+<span class="sig-name descname"><span class="pre">test_execute_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_gridcoverage.html#TestGridCoverage.test_execute_1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Orient the sensor with roll, and an equatorial orbit and check that the ground-points captured are on either
+side of hemisphere only. (Conical Sensor)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_2">
+<span class="sig-name descname"><span class="pre">test_execute_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_gridcoverage.html#TestGridCoverage.test_execute_2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Orient the sensor with varying yaw but same pitch and roll, and test that the captured ground-points remain the same
+(Conical Sensor).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_3">
+<span class="sig-name descname"><span class="pre">test_execute_3</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_gridcoverage.html#TestGridCoverage.test_execute_3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Orient the sensor with pitch and test that the times the ground-points are captured lag or lead (depending on direction of pitch)
+as compared to the coverage from a zero pitch sensor. (Conical Sensor) 
+Fixed inputs used.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_4">
+<span class="sig-name descname"><span class="pre">test_execute_4</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_gridcoverage.html#TestGridCoverage.test_execute_4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Orient the sensor with roll, and an equatorial orbit and check that the ground-points captured are on either
+side of hemisphere only. (Rectangular Sensor)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_5">
+<span class="sig-name descname"><span class="pre">test_execute_5</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_gridcoverage.html#TestGridCoverage.test_execute_5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Orient the sensor with pitch and test that the times the ground-points are captured lag or lead (depending on direction of pitch)
+as compared to the coverage from a zero pitch sensor. (Rectangular Sensor) 
+Fixed inputs used.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_6">
+<span class="sig-name descname"><span class="pre">test_execute_6</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_gridcoverage.html#TestGridCoverage.test_execute_6"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that (1) simulation with orienting spacecraft-body (bus) w.r.t NADIR_POINTING frame and sensor aligned to spacecraft-body yields the same results as 
+(2) simulation with orienting sensor w.r.t spacecraft-body and spacecraft-body aligned to NADIR_POINTING frame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_7">
+<span class="sig-name descname"><span class="pre">test_execute_7</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_gridcoverage.html#TestGridCoverage.test_execute_7"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_7" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test spacecraft with multiple sensors. spc4 spacecraft is on equatorial orbit and has 3 instruments with 
+progressively larger CIRCULAR FOVs. The third instrument has 3 modes with roll =0, 25, -25.</p>
+<ul class="simple">
+<li><p>Test the coverage of the smaller FOVs is a subset of the coverage from bigger FOVs.</p></li>
+<li><p>Test mode_id specification works by checking sign of latitudes in coverage data when the instrument with roll is simulated.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_8">
+<span class="sig-name descname"><span class="pre">test_execute_8</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_gridcoverage.html#TestGridCoverage.test_execute_8"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_8" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test FOV vs FOR coverage. Coverage of FOR &gt;= Coverage of FOV. Use spc1 spacecraft (defined by util.spc1_json). 
+Test the coverage of the FOV is a subset of the coverage from FOR.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_9">
+<span class="sig-name descname"><span class="pre">test_execute_9</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_gridcoverage.html#TestGridCoverage.test_execute_9"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_gridcoverage.TestGridCoverage.test_execute_9" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test coverage with DOUBLE_ROLL_ONLY maneuver which will result in 2 <code class="docutils literal notranslate"><span class="pre">ViewGeometry</span></code> objects for the 
+field-of-regard.
+Use Spacecraft spc5. 
+Compare results of 3 simulations (1) SINGLE_ROLL_ONLY manuever (positive) (2) SINGLE_ROLL_ONLY manuever (negative) 
+and (3) DOUBLE_ROLL_ONLY maneuver. The results of (3) should be the union of the results of (1) and (2). Note 
+that the coverage from (1) does not intersect the coverage from (2) due to the way the maneuver is configured in spacecraft spc5.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-test_coveragecalculator_pointingoptionscoverage">
+<span id="test-coveragecalculator-pointingoptionscoverage"></span><h3><a class="reference internal" href="#module-test_coveragecalculator_pointingoptionscoverage" title="test_coveragecalculator_pointingoptionscoverage"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_coveragecalculator_pointingoptionscoverage</span></code></a><a class="headerlink" href="#module-test_coveragecalculator_pointingoptionscoverage" title="Permalink to this heading">¶</a></h3>
+<p>Unit tests for orbitpy.coveragecalculator.pointingoptionscoverage class.</p>
+<p><code class="docutils literal notranslate"><span class="pre">TestPointingOptionsCoverage</span></code> class:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_0</span></code>: Test format of output access files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_1</span></code>: For a circular orbit, test that pointing of the Euler angles, sequence (0,0,x,1,2,3) shall yield access points equal to the satellite position.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_2</span></code>: For a equatorial orbit, test the accessed ground-points against an analytical result.</p></li>
+</ul>
+<p>TODO: tests to check behavior with multiple sensors, modes</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="test_coveragecalculator_pointingoptionscoverage.TestPointingOptionsCoverage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_coveragecalculator_pointingoptionscoverage.</span></span><span class="sig-name descname"><span class="pre">TestPointingOptionsCoverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_pointingoptionscoverage.html#TestPointingOptionsCoverage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_pointingoptionscoverage.TestPointingOptionsCoverage" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_pointingoptionscoverage.TestPointingOptionsCoverage.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_pointingoptionscoverage.html#TestPointingOptionsCoverage.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_pointingoptionscoverage.TestPointingOptionsCoverage.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_pointingoptionscoverage.TestPointingOptionsCoverage.test_execute_0">
+<span class="sig-name descname"><span class="pre">test_execute_0</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_pointingoptionscoverage.html#TestPointingOptionsCoverage.test_execute_0"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_pointingoptionscoverage.TestPointingOptionsCoverage.test_execute_0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the produced access file format.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_pointingoptionscoverage.TestPointingOptionsCoverage.test_execute_1">
+<span class="sig-name descname"><span class="pre">test_execute_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_pointingoptionscoverage.html#TestPointingOptionsCoverage.test_execute_1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_pointingoptionscoverage.TestPointingOptionsCoverage.test_execute_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that the pointing euler-angles, euler-sequence (0,0,x, 1,2,3) (where x is variable). This corresponds to pointing at the 
+nadir position which shall be the same as the satellite position.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_pointingoptionscoverage.TestPointingOptionsCoverage.test_execute_2">
+<span class="sig-name descname"><span class="pre">test_execute_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_pointingoptionscoverage.html#TestPointingOptionsCoverage.test_execute_2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_pointingoptionscoverage.TestPointingOptionsCoverage.test_execute_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that the pointing for the case of equatorial orbit at randomly chosen altitudes. Pointing to the nadir with any random yaw shall result
+in covering latitude 0 deg always (throughout the mission). Pointing with a random roll (only) orientation (at some random altitude) shall result
+in coverage of latitude as defined by the resulting Earth-centric half-angle subtended by twice the roll angle (the same latitude throughout the massion).</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-test_coveragecalculator_pointingoptionswithgridcoverage">
+<span id="test-coveragecalculator-pointingoptionswithgridcoverage"></span><h3><a class="reference internal" href="#module-test_coveragecalculator_pointingoptionswithgridcoverage" title="test_coveragecalculator_pointingoptionswithgridcoverage"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_coveragecalculator_pointingoptionswithgridcoverage</span></code></a><a class="headerlink" href="#module-test_coveragecalculator_pointingoptionswithgridcoverage" title="Permalink to this heading">¶</a></h3>
+<p>Unit tests for orbitpy.coveragecalculator.pointingoptionswithgridcoverage class.</p>
+<p><code class="docutils literal notranslate"><span class="pre">TestPointingOptionsWithGridCoverage</span></code> class:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_0</span></code>: Test format of output access files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_1</span></code>: Test PointingOptionsWithGridCoverage output with separate runs of GridCoverage calculator.</p></li>
+</ul>
+<p>TODO: tests to check behavior with multiple sensors, modes</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="test_coveragecalculator_pointingoptionswithgridcoverage.TestPointingOptionsWithGridCoverage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_coveragecalculator_pointingoptionswithgridcoverage.</span></span><span class="sig-name descname"><span class="pre">TestPointingOptionsWithGridCoverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_pointingoptionswithgridcoverage.html#TestPointingOptionsWithGridCoverage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_pointingoptionswithgridcoverage.TestPointingOptionsWithGridCoverage" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_pointingoptionswithgridcoverage.TestPointingOptionsWithGridCoverage.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_pointingoptionswithgridcoverage.html#TestPointingOptionsWithGridCoverage.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_pointingoptionswithgridcoverage.TestPointingOptionsWithGridCoverage.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_pointingoptionswithgridcoverage.TestPointingOptionsWithGridCoverage.test_execute_0">
+<span class="sig-name descname"><span class="pre">test_execute_0</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_pointingoptionswithgridcoverage.html#TestPointingOptionsWithGridCoverage.test_execute_0"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_pointingoptionswithgridcoverage.TestPointingOptionsWithGridCoverage.test_execute_0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the produced access file format.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_pointingoptionswithgridcoverage.TestPointingOptionsWithGridCoverage.test_execute_1">
+<span class="sig-name descname"><span class="pre">test_execute_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_pointingoptionswithgridcoverage.html#TestPointingOptionsWithGridCoverage.test_execute_1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_pointingoptionswithgridcoverage.TestPointingOptionsWithGridCoverage.test_execute_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the result of PointingOptionsWithGridCoverage with separate runs of GridCoverage.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_coveragecalculator_pointingoptionswithgridcoverage.TestPointingOptionsWithGridCoverage.test_execute_3">
+<span class="sig-name descname"><span class="pre">test_execute_3</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_coveragecalculator_pointingoptionswithgridcoverage.html#TestPointingOptionsWithGridCoverage.test_execute_3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_coveragecalculator_pointingoptionswithgridcoverage.TestPointingOptionsWithGridCoverage.test_execute_3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test with the <cite>mid_access_only</cite> flag set to ‘True’ in PointingOptionsWithGridCoverage.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-test_datametricscalculator">
+<span id="test-datametricscalculator"></span><h3><a class="reference internal" href="#module-test_datametricscalculator" title="test_datametricscalculator"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_datametricscalculator</span></code></a><a class="headerlink" href="#module-test_datametricscalculator" title="Permalink to this heading">¶</a></h3>
+<p><em>Unit tests for :class:`orbitpy.datametricscalculator` module.</em></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_0_1</span></code>: Test format of output datametric files with the GridCoverage access file input.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_0_2</span></code>: Test format of output datametric files with the PointingOptionsCoverage access file input.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_execute_0_3</span></code>: Test format of output datametric files with the PointingOptionsWithGridCoverage access file input.</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="test_datametricscalculator.TestDataMetricCalculator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_datametricscalculator.</span></span><span class="sig-name descname"><span class="pre">TestDataMetricCalculator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_datametricscalculator.html#TestDataMetricCalculator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_datametricscalculator.TestDataMetricCalculator" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="test_datametricscalculator.TestDataMetricCalculator.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_datametricscalculator.html#TestDataMetricCalculator.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_datametricscalculator.TestDataMetricCalculator.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_datametricscalculator.TestDataMetricCalculator.test_execute_0_1">
+<span class="sig-name descname"><span class="pre">test_execute_0_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_datametricscalculator.html#TestDataMetricCalculator.test_execute_0_1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_datametricscalculator.TestDataMetricCalculator.test_execute_0_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the produced datametrics file format with the GridCoverage access file input.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_datametricscalculator.TestDataMetricCalculator.test_execute_0_2">
+<span class="sig-name descname"><span class="pre">test_execute_0_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_datametricscalculator.html#TestDataMetricCalculator.test_execute_0_2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_datametricscalculator.TestDataMetricCalculator.test_execute_0_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the produced datametrics file format with the PointingOptions access file input.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_datametricscalculator.TestDataMetricCalculator.test_execute_0_3">
+<span class="sig-name descname"><span class="pre">test_execute_0_3</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_datametricscalculator.html#TestDataMetricCalculator.test_execute_0_3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_datametricscalculator.TestDataMetricCalculator.test_execute_0_3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check the produced datametrics file format with the PointingOptionsWithGridCoverage access file input.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-test_mission">
+<span id="test-mission"></span><h3><a class="reference internal" href="#module-test_mission" title="test_mission"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_mission</span></code></a><a class="headerlink" href="#module-test_mission" title="Permalink to this heading">¶</a></h3>
+<p>Unit tests for orbitpy.mission module.</p>
+<p>The following tests are framed to test the different possible ways in which the mission can be framed in the JSON string and called to execute.</p>
+<p>TODO: In each test, the output is tested with the results as computed on July 2021 (thus representing the “truth” data). The truth data is to be present in the folder <code class="docutils literal notranslate"><span class="pre">test_data</span></code>.</p>
+<p><strong>Tests:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">test_scenario_1</span></code>: 1 satellite, no instrument ; propagation only, auto/ custom-time-step. The mission epoch is same, different from the satellite orbit-state date.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_scenario_2</span></code>: 1 satellite, 1 instrument ; propagation (custom time-step), grid-coverage (2 (auto) grids, default and custom-grid res), data-metrics calculation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_scenario_3</span></code>: 1 satellite, 1 instrument ; propagation, pointing-options coverage, data-metrics calculation, contact-finder (ground-station only).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_scenario_4</span></code>: 1 satellite, 1 instrument ; propagation, pointing-options with grid-coverage, data-metrics calculation, contact-finder (ground-station only).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_scenario_5</span></code>: 1 satellite, multiple ground-stations ; propagation, contact-finder (ground-station only).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_scenario_6</span></code>: Multiple satellites from constellation; propagation, contact-finder (ground-station, inter-satellite).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">test_scenario_7</span></code>: Multiple satellites from constellation, single-instrument per satellite ; propagation, pointing-options-coverage, data-metrics calculation, contact-finder (inter-satellite only).</p></li>
+<li><p>TODO <code class="docutils literal notranslate"><span class="pre">test_scenario_8</span></code>: Multiple satellites from list, multiple instruments per satellite, multiple ground-stations ; propagation, grid-coverage, data-metrics calculation, contact-finder (ground-station and inter-satellite).</p></li>
+</ul>
+<dl class="py class">
+<dt class="sig sig-object py" id="test_mission.TestMission">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_mission.</span></span><span class="sig-name descname"><span class="pre">TestMission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_mission.html#TestMission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_mission.TestMission" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="test_mission.TestMission.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_mission.html#TestMission.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_mission.TestMission.setUpClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_mission.TestMission.test_scenario_1">
+<span class="sig-name descname"><span class="pre">test_scenario_1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_mission.html#TestMission.test_scenario_1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_mission.TestMission.test_scenario_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>1 satellite, no instrument ; propagation only, auto, custom-time-step. The mission epoch is same, different from the satellite orbit-state date.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_mission.TestMission.test_scenario_2">
+<span class="sig-name descname"><span class="pre">test_scenario_2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_mission.html#TestMission.test_scenario_2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_mission.TestMission.test_scenario_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>1 satellite, 1 instrument ; propagation (custom time-step), (field-of-regard) grid-coverage (2 (auto) grids, default and custom-grid res), basic-sensor data-metrics calculation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_mission.TestMission.test_scenario_3">
+<span class="sig-name descname"><span class="pre">test_scenario_3</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_mission.html#TestMission.test_scenario_3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_mission.TestMission.test_scenario_3" title="Permalink to this definition">¶</a></dt>
+<dd><p>1 satellite, 1 instrument ; propagation, pointing-options coverage, basic-sensor data-metrics calculation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_mission.TestMission.test_scenario_4">
+<span class="sig-name descname"><span class="pre">test_scenario_4</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_mission.html#TestMission.test_scenario_4"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_mission.TestMission.test_scenario_4" title="Permalink to this definition">¶</a></dt>
+<dd><p>1 satellite, 1 SAR instrument ; propagation, pointing-options with grid-coverage and access-file correction (since sidelooking instrument with narrow At-fov), SAR data-metrics calculation.
+Using default propagation step-size and grid-resolution. The scene FOV has angleWidth = instrument FOV angleWidth. The scene FOV angleHeight is larger to allow for coarser propagation step-size and gird-resolution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_mission.TestMission.test_scenario_5">
+<span class="sig-name descname"><span class="pre">test_scenario_5</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_mission.html#TestMission.test_scenario_5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_mission.TestMission.test_scenario_5" title="Permalink to this definition">¶</a></dt>
+<dd><p>1 satellite, multiple ground-stations ; propagation, contact-finder (ground-station only).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_mission.TestMission.test_scenario_6">
+<span class="sig-name descname"><span class="pre">test_scenario_6</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_mission.html#TestMission.test_scenario_6"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_mission.TestMission.test_scenario_6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiple satellites from constellation, common instrument; propagation, contact-finder (ground-station, inter-satellite only).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="test_mission.TestMission.test_scenario_7">
+<span class="sig-name descname"><span class="pre">test_scenario_7</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_mission.html#TestMission.test_scenario_7"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_mission.TestMission.test_scenario_7" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiple satellites from list, multiple instruments per satellite ; propagation, grid-coverage, data-metrics calculation, contact-finder (inter-satellite).</p>
+<p>Spacecraft #1 : No instruments.
+Spacecraft #2 : 1 instrument (Basic Sensor).
+Spacecraft #3 : 2 instruments (Passive Optical Scanner, SAR)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="test_mission.TestSettings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_mission.</span></span><span class="sig-name descname"><span class="pre">TestSettings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_mission.html#TestSettings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_mission.TestSettings" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-test_util">
+<span id="test-util"></span><h3><a class="reference internal" href="#module-test_util" title="test_util"><code class="xref py py-class docutils literal notranslate"><span class="pre">test_util</span></code></a><a class="headerlink" href="#module-test_util" title="Permalink to this heading">¶</a></h3>
+<p>Unit tests for orbitpy.util module.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="test_util.TestGroundStation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_util.</span></span><span class="sig-name descname"><span class="pre">TestGroundStation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_util.html#TestGroundStation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_util.TestGroundStation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="test_util.TestOrbitState">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_util.</span></span><span class="sig-name descname"><span class="pre">TestOrbitState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_util.html#TestOrbitState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_util.TestOrbitState" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="test_util.TestOutputInfoUtility">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_util.</span></span><span class="sig-name descname"><span class="pre">TestOutputInfoUtility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_util.html#TestOutputInfoUtility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_util.TestOutputInfoUtility" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="test_util.TestSpacecraft">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_util.</span></span><span class="sig-name descname"><span class="pre">TestSpacecraft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_util.html#TestSpacecraft"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_util.TestSpacecraft" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="test_util.TestSpacecraftBus">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_util.</span></span><span class="sig-name descname"><span class="pre">TestSpacecraftBus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_util.html#TestSpacecraftBus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_util.TestSpacecraftBus" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="test_util.TestUtilFunctions">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_util.</span></span><span class="sig-name descname"><span class="pre">TestUtilFunctions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_util.html#TestUtilFunctions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_util.TestUtilFunctions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="test_util.TestUtilModuleFunction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">test_util.</span></span><span class="sig-name descname"><span class="pre">TestUtilModuleFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/test_util.html#TestUtilModuleFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#test_util.TestUtilModuleFunction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="validation.html" class="btn btn-neutral float-right" title="Validation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="development.html" class="btn btn-neutral float-left" title="Development" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, BAERI.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

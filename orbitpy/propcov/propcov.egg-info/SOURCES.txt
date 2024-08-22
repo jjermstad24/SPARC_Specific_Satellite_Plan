@@ -1,0 +1,8 @@
+README.md
+pyproject.toml
+setup.py
+propcov.egg-info/PKG-INFO
+propcov.egg-info/SOURCES.txt
+propcov.egg-info/dependency_links.txt
+propcov.egg-info/not-zip-safe
+propcov.egg-info/top_level.txt

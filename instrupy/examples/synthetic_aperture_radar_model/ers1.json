@@ -1,0 +1,23 @@
+
+{
+    "@type": "Synthetic Aperture Radar",
+    "name": "ERS1 C-Band",
+    "orientation": {
+    "referenceFrame": "SC_BODY_FIXED",
+        "convention": "SIDE_LOOK",
+        "sideLookAngle": 20
+    },
+    "pulseWidth": 37.1e-6,
+    "bitsPerPixel": 5,
+    "sceneNoiseTemp": 290, 
+    "antenna":{"shape": "RECTANGULAR", "height": 10, "width": 1, 
+               "apertureEfficiency": 0.26, "apertureExcitationProfile": "UNIFORM"},
+    "operatingFrequency": 5.25e9,
+    "peakTransmitPower": 4800,
+    "chirpBandwidth": 15.5e6,
+    "minimumPRF": 1680,
+    "maximumPRF": 1700,
+    "radarLoss": 3.5,
+    "systemNoiseFigure": 3.4,
+    "_references":  ["Spaceborne SAR Study: LDRD ’92 Final Report"]
+}

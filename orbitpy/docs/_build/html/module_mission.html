@@ -1,0 +1,1242 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>orbit.mission — Mission Module &mdash; OrbitPy 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Settings" href="generated/orbitpy.mission.Settings.html" />
+    <link rel="prev" title="AccessFileInfo" href="generated/orbitpy.datametricscalculator.AccessFileInfo.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> OrbitPy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="module_constellation.html"><code class="docutils literal notranslate"><span class="pre">orbit.constellation</span></code> — Constellation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_propagator.html"><code class="docutils literal notranslate"><span class="pre">orbit.propagator</span></code> — Propagator Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_grid.html"><code class="docutils literal notranslate"><span class="pre">orbit.grid</span></code> — Grid Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_coveragecalculator.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.coveragecalculator</span></code> — Coverage Calculator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_contactfinder.html"><code class="docutils literal notranslate"><span class="pre">orbit.contactfinder</span></code> — Contact Finder Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_eclipsefinder.html"><code class="docutils literal notranslate"><span class="pre">orbit.eclipsefinder</span></code> — Eclipse Finder Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_datametricscalculator.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.datametricscalculator</span></code> — Data Metrics Calculator Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">orbit.mission</span></code> — Mission Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#description">Description</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#date-json-object"><code class="docutils literal notranslate"><span class="pre">date</span></code> json object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#constellation-json-object"><code class="docutils literal notranslate"><span class="pre">constellation</span></code> json object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spacecraft-json-object"><code class="docutils literal notranslate"><span class="pre">spacecraft</span></code> json object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#groundstation-json-object"><code class="docutils literal notranslate"><span class="pre">groundstation</span></code> json object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#grid-json-object"><code class="docutils literal notranslate"><span class="pre">grid</span></code> json object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#propagator-json-object"><code class="docutils literal notranslate"><span class="pre">propagator</span></code> json object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#settings-json-object"><code class="docutils literal notranslate"><span class="pre">settings</span></code> json object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api">API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/orbitpy.mission.Settings.html">Settings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/orbitpy.mission.Mission.html">Mission</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="module_sensorpixelprojection.html"><code class="docutils literal notranslate"><span class="pre">orbit.sensorpixelprojection</span></code> — Sensor Pixel Projection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_util.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.util</span></code> — Util Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="miscellaneous.html">Miscellaneous</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">OrbitPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="api_reference.html">API Reference</a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">orbit.mission</span></code> — Mission Module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/module_mission.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="orbit-mission-mission-module">
+<span id="mission-module"></span><h1><code class="docutils literal notranslate"><span class="pre">orbit.mission</span></code> — Mission Module<a class="headerlink" href="#orbit-mission-mission-module" title="Permalink to this heading">¶</a></h1>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Mission</span></code> object can be used to read in a <em>mission specifications</em> json string/ python dict and run all possible OrbitPy functionalities on it.
+Each of the acceptable json objects in the mission specifications is described below:</p>
+<table class="colwidths-given docutils align-default" id="id10">
+<caption><span class="caption-text">Mission specifications description</span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>epoch</p></td>
+<td><p><a class="reference internal" href="#date-json-object"><span class="std std-ref">date json object</span></a></p></td>
+<td></td>
+<td><p>Mission epoch (date).</p></td>
+</tr>
+<tr class="row-odd"><td><p>duration</p></td>
+<td><p>float</p></td>
+<td><p>days</p></td>
+<td><p>Length of mission in days. Eg: <code class="code docutils literal notranslate"><span class="pre">0.25</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p>constellation</p></td>
+<td><p><a class="reference internal" href="#constellation-json-object"><span class="std std-ref">constellation json object</span></a></p></td>
+<td></td>
+<td><p>Constellation specifications.</p></td>
+</tr>
+<tr class="row-odd"><td><p>instrument</p></td>
+<td><p>list, <em>instrument</em> json object</p></td>
+<td></td>
+<td><p>Instrument specifications (please refer <code class="code docutils literal notranslate"><span class="pre">InstruPy</span></code> documentation). A list of instruments can be specified.</p></td>
+</tr>
+<tr class="row-even"><td><p>spacecraft</p></td>
+<td><p>list, <a class="reference internal" href="#spacecraft-json-object"><span class="std std-ref">spacecraft json object</span></a></p></td>
+<td></td>
+<td><p>Spacecraft specifications. A list of spacecrafts can be specified.</p></td>
+</tr>
+<tr class="row-odd"><td><p>groundStation</p></td>
+<td><p>list, <a class="reference internal" href="#groundstation-json-object"><span class="std std-ref">groundstation json object</span></a></p></td>
+<td></td>
+<td><p>Ground station specifications. A list of ground-stations can be specified.</p></td>
+</tr>
+<tr class="row-even"><td><p>grid</p></td>
+<td><p>list, <a class="reference internal" href="#grid-json-object"><span class="std std-ref">grid json object</span></a></p></td>
+<td></td>
+<td><p>Coverage grid specifications. A list of grids can be specified.</p></td>
+</tr>
+<tr class="row-odd"><td><p>propagator</p></td>
+<td><p><a class="reference internal" href="#propagator-json-object"><span class="std std-ref">propagator json object</span></a></p></td>
+<td></td>
+<td><p>Propagator specifications.</p></td>
+</tr>
+<tr class="row-even"><td><p>settings</p></td>
+<td><p><a class="reference internal" href="#settings-json-object"><span class="std std-ref">settings json object</span></a></p></td>
+<td></td>
+<td><p>General settings.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In case of <em>GRID COVERAGE</em> calculation, the field-of-regard is used (FOR = sceneFOV if unspecified, and sceneFOV = instrument FOV if unspecified).</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><em>Either</em> of the <code class="docutils literal notranslate"><span class="pre">constellation</span></code>, <code class="docutils literal notranslate"><span class="pre">instrument</span></code> json objects or the <code class="docutils literal notranslate"><span class="pre">spacecraft</span></code> json object should be provided in the mission specifications. Both should not be specified.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The valid key/value pairs in building the mission specifications json/ dict is identical to the key/value pairs expected in the obtaining
+the corresponding OrbitPy objects using the <code class="docutils literal notranslate"><span class="pre">from_dict</span></code> or <code class="docutils literal notranslate"><span class="pre">from_json</span></code> function. E.g. the key/value pair expected for the <a class="reference internal" href="#groundstation-json-object"><span class="std std-ref">groundstation json object</span></a> is the same
+as the key/value pairs expected in obtaining a <a class="reference internal" href="generated/orbitpy.util.GroundStation.html#orbitpy.util.GroundStation" title="orbitpy.util.GroundStation"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.util.GroundStation</span></code></a> object using the <a class="reference internal" href="generated/orbitpy.util.GroundStation.html#orbitpy.util.GroundStation.from_dict" title="orbitpy.util.GroundStation.from_dict"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.util.GroundStation.from_dict</span></code></a> function.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In case of coverage calculations for the case of sensor FOVs described by spherical-polygon vertices (including Rectangular FOV) the default <code class="docutils literal notranslate"><span class="pre">DirectSphericalPIP</span></code> method is used.</p>
+</div>
+<div class="section" id="date-json-object">
+<span id="id1"></span><h3><code class="docutils literal notranslate"><span class="pre">date</span></code> json object<a class="headerlink" href="#date-json-object" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">date</span></code> json object is used to specify a date which can be used for the purpose of defining the mission epoch or the <code class="docutils literal notranslate"><span class="pre">date</span></code> field in the orbit-state definitions, etc.
+The date type can be either <code class="docutils literal notranslate"><span class="pre">GREGORIAN_UT1</span></code> or <code class="docutils literal notranslate"><span class="pre">JULIAN_DATE_UT1</span></code>.</p>
+<ol class="arabic">
+<li><p><code class="docutils literal notranslate"><span class="pre">GREGORIAN_UT1</span></code> date-type</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>year</p></td>
+<td><p>int</p></td>
+<td><p>year</p></td>
+<td><p>Year</p></td>
+</tr>
+<tr class="row-odd"><td><p>month</p></td>
+<td><p>int</p></td>
+<td><p>month</p></td>
+<td><p>Month</p></td>
+</tr>
+<tr class="row-even"><td><p>day</p></td>
+<td><p>int</p></td>
+<td><p>day</p></td>
+<td><p>Day</p></td>
+</tr>
+<tr class="row-odd"><td><p>hour</p></td>
+<td><p>int</p></td>
+<td><p>hour</p></td>
+<td><p>Hour</p></td>
+</tr>
+<tr class="row-even"><td><p>minute</p></td>
+<td><p>int</p></td>
+<td><p>minute</p></td>
+<td><p>Minutes</p></td>
+</tr>
+<tr class="row-odd"><td><p>second</p></td>
+<td><p>float</p></td>
+<td><p>second</p></td>
+<td><p>Seconds</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">JULIAN_DATE_UT1</span></code> date-type</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>jd</p></td>
+<td><p>float</p></td>
+<td><p>decimal data</p></td>
+<td><p>Julian date UT1</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ol>
+<p><strong>Example</strong></p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;epoch&quot;</span><span class="o">:</span><span class="p">{</span><span class="s2">&quot;@type&quot;</span><span class="o">:</span><span class="s2">&quot;GREGORIAN_UT1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;year&quot;</span><span class="o">:</span><span class="mf">2021</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;month&quot;</span><span class="o">:</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;day&quot;</span><span class="o">:</span><span class="mf">25</span><span class="p">,</span>
+<span class="w">                                     </span><span class="s2">&quot;hour&quot;</span><span class="o">:</span><span class="mf">6</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;minute&quot;</span><span class="o">:</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;second&quot;</span><span class="o">:</span><span class="mf">0</span><span class="p">}</span>
+
+<span class="s1">&#39;date&#39;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s1">&#39;@type&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;JULIAN_DATE_UT1&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;jd&#39;</span><span class="o">:</span><span class="w"> </span><span class="mf">2459270.75</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="constellation-json-object">
+<span id="id2"></span><h3><code class="docutils literal notranslate"><span class="pre">constellation</span></code> json object<a class="headerlink" href="#constellation-json-object" title="Permalink to this heading">¶</a></h3>
+<p>This json object is used to define constellation parameters. An in-built constellation type is the Walker-Delta constellation (as defined in SMAD 3rd edition, Section 7.6) whose
+accepted key/value pairs are described below:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>date</p></td>
+<td><p><a class="reference internal" href="#date-json-object"><span class="std std-ref">date json object</span></a></p></td>
+<td></td>
+<td><p>Date at which the constellation specifications are defined.</p></td>
+</tr>
+<tr class="row-odd"><td><p>numberSatellites</p></td>
+<td><p>int</p></td>
+<td></td>
+<td><p>Total number of satellites in the constellation.</p></td>
+</tr>
+<tr class="row-even"><td><p>numberPlanes</p></td>
+<td><p>int</p></td>
+<td></td>
+<td><p>Number of orbital planes.</p></td>
+</tr>
+<tr class="row-odd"><td><p>relativeSpacing</p></td>
+<td><p>int</p></td>
+<td></td>
+<td><p>Factor controlling the spacing between the satellites in the different planes (See SMAD 3rd ed Pg 194).</p></td>
+</tr>
+<tr class="row-even"><td><p>alt</p></td>
+<td><p>float</p></td>
+<td><p>kilometers</p></td>
+<td><p>Orbit Altitude.</p></td>
+</tr>
+<tr class="row-odd"><td><p>ecc</p></td>
+<td><p>float</p></td>
+<td></td>
+<td><p>Orbit eccentricity.</p></td>
+</tr>
+<tr class="row-even"><td><p>inc</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Orbit inclination.</p></td>
+</tr>
+<tr class="row-odd"><td><p>aop</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Orbit Argument of Perigee.</p></td>
+</tr>
+<tr class="row-even"><td><p>&#64;id</p></td>
+<td><p>str/int</p></td>
+<td></td>
+<td><p>Unique constellation identifier.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Notes</strong></p>
+<ol class="arabic simple">
+<li><p>The spacecrafts in the constellation are assigned identifiers in the following format: spc_*constellation id*_*xy*
+where <em>constellation id</em> is the constellation identifier, <em>x</em> indicates the plane number and <em>y</em> indicates the satellite number within the orbital plane.</p></li>
+<li><p>If the <code class="docutils literal notranslate"><span class="pre">instrument</span></code> json object is defined in the mission specifications, the instrument(s) shall be attached to each of the spacecraft
+in the constellation. Similarly in the case of the <a class="reference internal" href="#spacecraftbus-json-object"><span class="std std-ref">spacecraftBus json object</span></a>, each spacecraft of the constellation is assigned a common bus.</p></li>
+</ol>
+<p><strong>Example</strong></p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;constellation&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;@type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Walker Delta Constellation&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="s2">&quot;date&quot;</span><span class="o">:</span><span class="p">{</span><span class="s2">&quot;@type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;JULIAN_DATE_UT1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;jd&quot;</span><span class="o">:</span><span class="mf">2459270.75</span><span class="p">},</span>
+<span class="w">   </span><span class="s2">&quot;numberSatellites&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">8</span><span class="p">,</span>
+<span class="w">   </span><span class="s2">&quot;numberPlanes&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span>
+<span class="w">   </span><span class="s2">&quot;relativeSpacing&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span>
+<span class="w">   </span><span class="s2">&quot;alt&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">700</span><span class="p">,</span>
+<span class="w">   </span><span class="s2">&quot;ecc&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.001</span><span class="p">,</span>
+<span class="w">   </span><span class="s2">&quot;inc&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">45</span><span class="p">,</span>
+<span class="w">   </span><span class="s2">&quot;aop&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">135</span><span class="p">,</span>
+<span class="w">   </span><span class="s2">&quot;@id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;abc&quot;</span>
+<span class="w">   </span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="spacecraft-json-object">
+<span id="id3"></span><h3><code class="docutils literal notranslate"><span class="pre">spacecraft</span></code> json object<a class="headerlink" href="#spacecraft-json-object" title="Permalink to this heading">¶</a></h3>
+<p>This json object is used to specify the spacecraft in the mission. The <code class="docutils literal notranslate"><span class="pre">spacecraft</span></code> json object is made up of several json objects as described below:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>name</p></td>
+<td><p>str</p></td>
+<td></td>
+<td><p>Spacecraft name.</p></td>
+</tr>
+<tr class="row-odd"><td><p>&#64;id</p></td>
+<td><p>str/int</p></td>
+<td></td>
+<td><p>Unique identifier. If not specified, a random string is assigned.</p></td>
+</tr>
+<tr class="row-even"><td><p>orbitState</p></td>
+<td><p><a class="reference internal" href="#orbitstate-json-object"><span class="std std-ref">orbitState json object</span></a></p></td>
+<td></td>
+<td><p>Specifications of the orbit-state of the spacecraft.</p></td>
+</tr>
+<tr class="row-odd"><td><p>spacecraftBus</p></td>
+<td><p><a class="reference internal" href="#spacecraftbus-json-object"><span class="std std-ref">spacecraftBus json object</span></a></p></td>
+<td></td>
+<td><p>Specifications of the spacecraft bus. If not specified, a bus with orientation aligned to the nadir-pointing frame is assigned.</p></td>
+</tr>
+<tr class="row-even"><td><p>instrument</p></td>
+<td><p>list, <em>instrument</em> json object</p></td>
+<td></td>
+<td><p>Instrument specifications (please refer <code class="code docutils literal notranslate"><span class="pre">InstruPy</span></code> documentation). A list of instruments can be specified.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="orbitstate-json-object">
+<span id="id4"></span><h4><code class="docutils literal notranslate"><span class="pre">orbitState</span></code> json object<a class="headerlink" href="#orbitstate-json-object" title="Permalink to this heading">¶</a></h4>
+<p>This json object defines the spacecraft orbit-state (at a particular time). It consists of defining the <a class="reference internal" href="#date-json-object"><span class="std std-ref">date json object</span></a> and the <code class="docutils literal notranslate"><span class="pre">state</span></code>
+json object. In case of the <code class="docutils literal notranslate"><span class="pre">state</span></code> json object, there are two acceptable types of state definitions:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">KEPLERIAN_EARTH_CENTERED_INERTIAL</span></code> state type</p>
+<blockquote>
+<div><p>The following key/value pairs apply:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>sma</p></td>
+<td><p>float</p></td>
+<td><p>kilometer</p></td>
+<td><p>Semimajor axis length.</p></td>
+</tr>
+<tr class="row-odd"><td><p>ecc</p></td>
+<td><p>float</p></td>
+<td><p>kilometer</p></td>
+<td><p>Eccentricity.</p></td>
+</tr>
+<tr class="row-even"><td><p>inc</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Inclination.</p></td>
+</tr>
+<tr class="row-odd"><td><p>raan</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Right Ascension of Ascending Nod.</p></td>
+</tr>
+<tr class="row-even"><td><p>aop</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Argument of perigee.</p></td>
+</tr>
+<tr class="row-odd"><td><p>ta</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>True Anomaly.</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CARTESIAN_EARTH_CENTERED_INERTIAL</span></code> state type</p>
+<blockquote>
+<div><p>The following key/value pairs apply:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>x</p></td>
+<td><p>float</p></td>
+<td><p>km</p></td>
+<td><p>satellite x-position.</p></td>
+</tr>
+<tr class="row-odd"><td><p>y</p></td>
+<td><p>float</p></td>
+<td><p>km</p></td>
+<td><p>satellite y-position.</p></td>
+</tr>
+<tr class="row-even"><td><p>z</p></td>
+<td><p>float</p></td>
+<td><p>km</p></td>
+<td><p>satellite z-position.</p></td>
+</tr>
+<tr class="row-odd"><td><p>vx</p></td>
+<td><p>float</p></td>
+<td><p>km/s</p></td>
+<td><p>satellite x-velocity.</p></td>
+</tr>
+<tr class="row-even"><td><p>vy</p></td>
+<td><p>float</p></td>
+<td><p>km/s</p></td>
+<td><p>satellite y-velocity.</p></td>
+</tr>
+<tr class="row-odd"><td><p>vz</p></td>
+<td><p>float</p></td>
+<td><p>km/s</p></td>
+<td><p>satellite z-velocity.</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="section" id="spacecraftbus-json-object">
+<span id="id5"></span><h4><code class="docutils literal notranslate"><span class="pre">spacecraftBus</span></code> json object<a class="headerlink" href="#spacecraftbus-json-object" title="Permalink to this heading">¶</a></h4>
+<p>This json object defines the spacecraft bus. An important attribute is the orientation of the bus, i.e. <code class="docutils literal notranslate"><span class="pre">orientation</span></code> which specifies
+the bus orientation with respect to a reference frame. By default the orientation is alignment to the nadir-pointing frame.</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>name</p></td>
+<td><p>str</p></td>
+<td></td>
+<td><p>Bus name.</p></td>
+</tr>
+<tr class="row-odd"><td><p>mass</p></td>
+<td><p>float</p></td>
+<td><p>kilogram</p></td>
+<td><p>Mass of the bus.</p></td>
+</tr>
+<tr class="row-even"><td><p>volume</p></td>
+<td><p>float</p></td>
+<td><p>meter^3</p></td>
+<td><p>Volume of the bus.</p></td>
+</tr>
+<tr class="row-odd"><td><p>orientation</p></td>
+<td><p><em>orientation</em> json object</p></td>
+<td></td>
+<td><p>Bus orientation (please refer <code class="code docutils literal notranslate"><span class="pre">InstruPy</span></code> documentation).</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="cm">/*spacecraft with 1 instrument, GREGORIAN_UT1 date-type, KEPLERIAN_EARTH_CENTERED_INERTIAL state-type*/</span>
+<span class="s2">&quot;spacecraft&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;@id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;sp1&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Spock&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;spacecraftBus&quot;</span><span class="o">:</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;BlueCanyon&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;mass&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">20</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;volume&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span>
+<span class="w">                     </span><span class="s2">&quot;orientation&quot;</span><span class="o">:</span><span class="p">{</span><span class="s2">&quot;referenceFrame&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;NADIR_POINTING&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;convention&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;REF_FRAME_ALIGNED&quot;</span><span class="p">}</span>
+<span class="w">                     </span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;instrument&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Alpha&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;mass&quot;</span><span class="o">:</span><span class="mf">10</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;volume&quot;</span><span class="o">:</span><span class="mf">12.45</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dataRate&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">40</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bitsPerPixel&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">8</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;power&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">12</span><span class="p">,</span>
+<span class="w">                     </span><span class="s2">&quot;orientation&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;referenceFrame&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SC_BODY_FIXED&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;convention&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;REF_FRAME_ALIGNED&quot;</span><span class="p">},</span>
+<span class="w">                     </span><span class="s2">&quot;fieldOfViewGeometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;shape&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;CIRCULAR&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;diameter&quot;</span><span class="o">:</span><span class="mf">5</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                     </span><span class="s2">&quot;maneuver&quot;</span><span class="o">:</span><span class="p">{</span><span class="s2">&quot;maneuverType&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;CIRCULAR&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;diameter&quot;</span><span class="o">:</span><span class="mf">10</span><span class="p">},</span>
+<span class="w">                     </span><span class="s2">&quot;numberDetectorRows&quot;</span><span class="o">:</span><span class="mf">5</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;numberDetectorCols&quot;</span><span class="o">:</span><span class="mf">10</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;@id&quot;</span><span class="o">:</span><span class="s2">&quot;bs1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;@type&quot;</span><span class="o">:</span><span class="s2">&quot;Basic Sensor&quot;</span><span class="p">},</span>
+<span class="w">      </span><span class="s2">&quot;orbitState&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;date&quot;</span><span class="o">:</span><span class="p">{</span><span class="s2">&quot;@type&quot;</span><span class="o">:</span><span class="s2">&quot;GREGORIAN_UT1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;year&quot;</span><span class="o">:</span><span class="mf">2021</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;month&quot;</span><span class="o">:</span><span class="mf">2</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;day&quot;</span><span class="o">:</span><span class="mf">25</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;hour&quot;</span><span class="o">:</span><span class="mf">6</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;minute&quot;</span><span class="o">:</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;second&quot;</span><span class="o">:</span><span class="mf">0</span><span class="p">},</span>
+<span class="w">                     </span><span class="s2">&quot;state&quot;</span><span class="o">:</span><span class="p">{</span><span class="s2">&quot;@type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;KEPLERIAN_EARTH_CENTERED_INERTIAL&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;sma&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">6878.137</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ecc&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.001</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;inc&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">45</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;raan&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">35</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;aop&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">145</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ta&quot;</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">25</span><span class="p">}</span>
+<span class="w">                     </span><span class="p">}</span><span class="w"> </span><span class="o">\</span>
+
+<span class="w">      </span><span class="p">}</span>
+
+<span class="cm">/*spacecraft with 2 instruments (of different types), JULIAN_DATE_UT1 date-type, CARTESIAN_EARTH_CENTERED_INERTIAL state-type, no identifier specification, no bus specification*/</span>
+<span class="s2">&quot;spacecraft&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Saturn&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="s2">&quot;instrument&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                        </span><span class="p">{</span><span class="w">  </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Alpha&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;mass&quot;</span><span class="o">:</span><span class="mf">10</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;volume&quot;</span><span class="o">:</span><span class="mf">12.45</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dataRate&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">40</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bitsPerPixel&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">8</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;power&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">12</span><span class="p">,</span>
+<span class="w">                           </span><span class="s2">&quot;orientation&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;referenceFrame&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SC_BODY_FIXED&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;convention&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;REF_FRAME_ALIGNED&quot;</span><span class="p">},</span>
+<span class="w">                           </span><span class="s2">&quot;fieldOfViewGeometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;shape&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;CIRCULAR&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;diameter&quot;</span><span class="o">:</span><span class="mf">5</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                           </span><span class="s2">&quot;maneuver&quot;</span><span class="o">:</span><span class="p">{</span><span class="s2">&quot;maneuverType&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;CIRCULAR&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;diameter&quot;</span><span class="o">:</span><span class="mf">10</span><span class="p">},</span>
+<span class="w">                           </span><span class="s2">&quot;numberDetectorRows&quot;</span><span class="o">:</span><span class="mf">5</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;numberDetectorCols&quot;</span><span class="o">:</span><span class="mf">10</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;@id&quot;</span><span class="o">:</span><span class="s2">&quot;bs1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;@type&quot;</span><span class="o">:</span><span class="s2">&quot;Basic Sensor&quot;</span>
+<span class="w">                        </span><span class="p">},</span>
+<span class="w">                        </span><span class="p">{</span><span class="w">  </span><span class="s2">&quot;@type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Passive Optical Scanner&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;FireSat&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;mass&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">28</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;volume&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.12</span><span class="p">,</span><span class="s2">&quot;power&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">32</span><span class="p">,</span>
+<span class="w">                           </span><span class="s2">&quot;fieldOfViewGeometry&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;shape&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;RECTanGULAR&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;angleHeight&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.628</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;angleWidth&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">115.8</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                           </span><span class="s2">&quot;scanTechnique&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;WhiskBROOM&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;orientation&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;referenceFrame&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SC_BODY_FIXED&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;convention&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SIDE_loOK&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;sideLookAngle&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0</span><span class="p">},</span>
+<span class="w">                           </span><span class="s2">&quot;dataRate&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">85</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;numberDetectorRows&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">256</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;numberDetectorCols&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;detectorWidth&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">30e-6</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;focalLength&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.7</span><span class="p">,</span>
+<span class="w">                           </span><span class="s2">&quot;operatingWavelength&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">4.2e-6</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bandwidth&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1.9e-6</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;quantumEff&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;targetBlackBodyTemp&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">290</span><span class="p">,</span>
+<span class="w">                           </span><span class="s2">&quot;bitsPerPixel&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">8</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;opticsSysEff&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.75</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;numOfReadOutE&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">25</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;apertureDia&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.26</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Fnum&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">2.7</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;atmosLossModel&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;LOWTRAN7&quot;</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                     </span><span class="p">],</span>
+<span class="w">      </span><span class="s2">&quot;orbitState&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;date&quot;</span><span class="o">:</span><span class="p">{</span><span class="s2">&quot;@type&quot;</span><span class="o">:</span><span class="s2">&quot;JULIAN_DATE_UT1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;jd&quot;</span><span class="o">:</span><span class="mf">2459270.75</span><span class="p">},</span>
+<span class="w">                     </span><span class="s2">&quot;state&quot;</span><span class="o">:</span><span class="p">{</span><span class="s1">&#39;@type&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;CARTESIAN_EARTH_CENTERED_INERTIAL&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;x&#39;</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">5219.8</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;y&#39;</span><span class="o">:</span><span class="w"> </span><span class="mf">1473.95</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;z&#39;</span><span class="o">:</span><span class="w"> </span><span class="mf">4201.35</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;vx&#39;</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">3.86085</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;vy&#39;</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">5.99712</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;vz&#39;</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">2.69806</span><span class="p">}</span>
+<span class="w">                     </span><span class="p">}</span>
+<span class="w">   </span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="groundstation-json-object">
+<span id="id6"></span><h3><code class="docutils literal notranslate"><span class="pre">groundstation</span></code> json object<a class="headerlink" href="#groundstation-json-object" title="Permalink to this heading">¶</a></h3>
+<p>This json object is used to model ground-station. The accepted key/value pairs are as follows:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>name</p></td>
+<td><p>str</p></td>
+<td></td>
+<td><p>Name of the ground-station.</p></td>
+</tr>
+<tr class="row-odd"><td><p>latitude</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Geocentric latitude coordinates.</p></td>
+</tr>
+<tr class="row-even"><td><p>longitude</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Geocentric longitude coordinates.</p></td>
+</tr>
+<tr class="row-odd"><td><p>altitude</p></td>
+<td><p>float</p></td>
+<td><p>kilometer</p></td>
+<td><p>Altitude. If not defined, value of 0km is assigned.</p></td>
+</tr>
+<tr class="row-even"><td><p>minimumElevation</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Minimum required elevation (angle from ground-plane to satellite in degrees) for communication with satellite.  If not defined, value of 7 deg is assigned.</p></td>
+</tr>
+<tr class="row-odd"><td><p>&#64;id</p></td>
+<td><p>st/int</p></td>
+<td></td>
+<td><p>Unique ground-station identifier. If not defined, a random string is assigned.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;groundStation&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Atl&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;latitude&quot;</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">88</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;longitude&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">25</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;minimumElevation&quot;</span><span class="o">:</span><span class="mf">12</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;@id&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;atl&quot;</span><span class="w"> </span><span class="p">},</span>
+<span class="w">                  </span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;CONAE&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;latitude&quot;</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">31.52</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;longitude&quot;</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">64.46</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;altitude&quot;</span><span class="o">:</span><span class="mf">0</span><span class="p">}</span>
+<span class="w">                 </span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="grid-json-object">
+<span id="id7"></span><h3><code class="docutils literal notranslate"><span class="pre">grid</span></code> json object<a class="headerlink" href="#grid-json-object" title="Permalink to this heading">¶</a></h3>
+<p>This json object is used to define the grid, i.e. the array of grid-points over which coverage, data-metrics calculations shall take place.
+Multiple grids, each with their own unique identifiers can be defined in a list.</p>
+<p>There are two types of grid definitions:</p>
+<div class="section" id="autogrid-grid-type">
+<h4><code class="docutils literal notranslate"><span class="pre">autogrid</span></code> grid-type<a class="headerlink" href="#autogrid-grid-type" title="Permalink to this heading">¶</a></h4>
+<p>In this grid-type the lat/lon bounds of a region are given. An optional grid-resolution can be supplied in which case a grid is generated with points
+spaced at the user-defined grid resolution. If the grid-resolution is not given, an appropriate grid-resolution is set according to the
+value of the <code class="docutils literal notranslate"><span class="pre">gridResFactor</span></code> key in the <code class="docutils literal notranslate"><span class="pre">settings</span></code> json field (described in <a class="reference internal" href="#settings-json-object"><span class="std std-ref">settings json object</span></a>).</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>latUpper</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Upper latitude. Default value is 90 deg.</p></td>
+</tr>
+<tr class="row-odd"><td><p>latLower</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Lower latitude. Default value is -90 deg.</p></td>
+</tr>
+<tr class="row-even"><td><p>lonUpper</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Upper longitude. Default value is 180 deg.</p></td>
+</tr>
+<tr class="row-odd"><td><p>lonLower</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Lower longitude. Default value is -180 deg.</p></td>
+</tr>
+<tr class="row-even"><td><p>gridRes</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Grid resolution (optional).</p></td>
+</tr>
+<tr class="row-odd"><td><p>&#64;id</p></td>
+<td><p>st/int</p></td>
+<td></td>
+<td><p>Unique grid-identifier. If absent a random id is assigned.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Please specify latitude bounds in the range of -90 deg to +90 deg. Specify longitude bounds in the range of -180 deg to +180 deg.</p>
+</div>
+</div>
+<div class="section" id="custom-grid-type">
+<h4><code class="docutils literal notranslate"><span class="pre">custom</span></code> grid-type<a class="headerlink" href="#custom-grid-type" title="Permalink to this heading">¶</a></h4>
+<p>In this grid definition, the user supplies the list of grid-points in a data-file (see <a class="reference internal" href="module_grid.html#input-grid-file-format"><span class="std std-ref">Input grid file format</span></a>).</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>covGridFilePath</p></td>
+<td><p>str</p></td>
+<td></td>
+<td><p>Filepath (with filename) to the file where the grid-points are stored.</p></td>
+</tr>
+<tr class="row-odd"><td><p>&#64;id</p></td>
+<td><p>st/int</p></td>
+<td></td>
+<td><p>Unique grid-identifier. If absent a random id is assigned.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;grid&quot;</span><span class="o">:</span><span class="w">   </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;@type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;autoGrid&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;@id&quot;</span><span class="o">:</span><span class="mf">1</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;latUpper&quot;</span><span class="o">:</span><span class="mf">20</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;latLower&quot;</span><span class="o">:</span><span class="mf">15</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;lonUpper&quot;</span><span class="o">:</span><span class="mf">45</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;lonLower&quot;</span><span class="o">:</span><span class="mf">0</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;gridRes&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.5</span>
+<span class="w">          </span><span class="p">}</span>
+
+<span class="s2">&quot;grid&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;@type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;customGrid&quot;</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;@id&quot;</span><span class="o">:</span><span class="mf">101</span><span class="p">,</span>
+<span class="w">          </span><span class="s2">&quot;covGridFilePath&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;C:\workspace\covGridUSA.csv&quot;</span>
+<span class="w">        </span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="propagator-json-object">
+<span id="id8"></span><h3><code class="docutils literal notranslate"><span class="pre">propagator</span></code> json object<a class="headerlink" href="#propagator-json-object" title="Permalink to this heading">¶</a></h3>
+<p>This json object specifies the propagator to be used for propagation of the satellite states. Currently there is only one in-built propagator, the J2 analytical propagator.
+The time step-size of propagation can be specified by the <code class="docutils literal notranslate"><span class="pre">stepSize</span></code> key/value pair. If the time step-size is not specified, an appropriate step-size is set according to the
+value of the <code class="docutils literal notranslate"><span class="pre">propTimeResFactor</span></code> key in the <code class="docutils literal notranslate"><span class="pre">settings</span></code> json field (described in <a class="reference internal" href="#settings-json-object"><span class="std std-ref">settings json object</span></a>).</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>stepSize</p></td>
+<td><p>float</p></td>
+<td><p>seconds</p></td>
+<td><p>Propagation time step-size.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;propagator&quot;</span><span class="o">:</span><span class="w">   </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;@type&quot;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;J2 ANALYTICAL PROPAGATOR&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stepSize&#39;</span><span class="o">:</span><span class="mf">15</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="settings-json-object">
+<span id="id9"></span><h3><code class="docutils literal notranslate"><span class="pre">settings</span></code> json object<a class="headerlink" href="#settings-json-object" title="Permalink to this heading">¶</a></h3>
+<p>This json object is used to specify some common mission settings. Following key/value pairs can be provided:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 8%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>outDir</p></td>
+<td><p>str</p></td>
+<td></td>
+<td><p>Path to output directory. Default is the directory in which the <code class="docutils literal notranslate"><span class="pre">mission.py</span></code> module is located.</p></td>
+</tr>
+<tr class="row-odd"><td><p>coverageType</p></td>
+<td><p>str</p></td>
+<td></td>
+<td><p>Indicates the coverage calculation type. Accepted values for the in-built coverage calculators are: GRID COVERAGE/ POINTING OPTIONS COVERAGE/ POINTING OPTIONS WITH GRID COVERAGE.</p></td>
+</tr>
+<tr class="row-even"><td><p>propTimeResFactor</p></td>
+<td><p>float</p></td>
+<td></td>
+<td><p>Factor which influences the propagation step-size calculation. See <a class="reference internal" href="generated/orbitpy.propagator.compute_time_step.html#orbitpy.propagator.compute_time_step" title="orbitpy.propagator.compute_time_step"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.propagator.compute_time_step</span></code></a>. Default value is 0.25.</p></td>
+</tr>
+<tr class="row-odd"><td><p>gridResFactor</p></td>
+<td><p>float</p></td>
+<td></td>
+<td><p>Factor which influences the grid-resolution of an auto-generated grid. See <a class="reference internal" href="generated/orbitpy.grid.compute_grid_res.html#orbitpy.grid.compute_grid_res" title="orbitpy.grid.compute_grid_res"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.grid.compute_grid_res</span></code></a>. Default value is 0.9.</p></td>
+</tr>
+<tr class="row-even"><td><p>opaqueAtmosHeight</p></td>
+<td><p>float</p></td>
+<td><p>km</p></td>
+<td><p>Relevant in-case of inter-satellite communications. Height of atmosphere (in kilometers) below which line-of-sight communication between two satellites <strong>cannot</strong> take place. Default value is 0 km.</p></td>
+</tr>
+<tr class="row-odd"><td><p>midAccessOnly</p></td>
+<td><p>bool</p></td>
+<td></td>
+<td><p>Flag to have only the access-times at the middle of access-intervals. The flag is set to <cite>True</cite> when coverage calculations are done for narrow FOV instruments like SAR or pushbroom-optical sensors using a sceneFOV (or FOR defined by a sceneFOV). See <a class="reference internal" href="module_coveragecalculator.html#correction-of-access-files"><span class="std std-ref">Correction of access files for purely side-looking instruments with narrow along-track FOV</span></a>.</p></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;settings&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;outDir&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;temp/&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;coverageType&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GRID COVERAGE&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;gridResFactor&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;midAccessOnly&quot;</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this heading">¶</a></h2>
+<p>After initialization of the mission, it can be executed by calling the <code class="docutils literal notranslate"><span class="pre">Mission.execute</span></code> function. All the results of the various calculations are written in the directory specified in the <code class="docutils literal notranslate"><span class="pre">outDir</span></code> key/value pair of the <a class="reference internal" href="#settings-json-object"><span class="std std-ref">settings json object</span></a>.
+Description of the location, naming-convention and data-format of the results is in the table below:</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 40%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>File/directory</p></th>
+<th class="head"><p>Location</p></th>
+<th class="head"><p>Naming Convention</p></th>
+<th class="head"><p>(File) Data format</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Main output-directory</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">outDir</span></code> key/value pair</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Auto-generated grid files</p></td>
+<td><p>main output-directory</p></td>
+<td><p><em>gridN</em>, where <em>N</em> is the grid index</p></td>
+<td><p><a class="reference internal" href="module_grid.html#input-grid-file-format"><span class="std std-ref">Input grid file format</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>Satellite folder</p></td>
+<td><p>main output-directory</p></td>
+<td><p><em>satN</em>, where <em>N</em> is the index of the satellite</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>State files</p></td>
+<td><p>respective satellite folder</p></td>
+<td><p><em>state_cartesian.csv</em> and <em>state_keplerian.csv</em></p></td>
+<td><p><a class="reference internal" href="module_propagator.html#propagated-state-file-format"><span class="std std-ref">Propagated state file format</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>Access files (results of the coverage calculations)</p></td>
+<td><p>respective satellite folder</p></td>
+<td><p><em>access_instruN_modeM_gridK.csv</em>, where <em>N</em> is the instrument index, <em>M</em> is the mode index and <em>K</em> is the grid index</p></td>
+<td><p><a class="reference internal" href="module_coveragecalculator.html#grid-coverage-output-file-format"><span class="std std-ref">Grid cov o/p file format</span></a> (or) <a class="reference internal" href="module_coveragecalculator.html#pointing-options-coverage-output-file-format"><span class="std std-ref">Pointing options o/p file format</span></a> (or) <a class="reference internal" href="module_coveragecalculator.html#pointing-options-with-grid-coverage-output-file-format"><span class="std std-ref">Pointing options with grid cov o/p file format</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Datametrics files</p></td>
+<td><p>respective satellite folder</p></td>
+<td><p><em>datametrics_instruN_modeM_gridK.csv</em>, where <em>N</em> is the instrument index, <em>M</em> is the mode index and <em>K</em> is the grid index</p></td>
+<td><p><a class="reference internal" href="module_datametricscalculator.html#datametrics-file-format"><span class="std std-ref">Datametrics file format</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>Groundstation communication files</p></td>
+<td><p>respective satellite folder</p></td>
+<td><p><em>gndStnN_contacts.csv</em>, where <em>N</em> is the groundstation index</p></td>
+<td><p><a class="reference internal" href="module_contactfinder.html#contacts-file-format"><span class="std std-ref">Contact data file format</span></a> (<code class="docutils literal notranslate"><span class="pre">INTERVAL</span></code> format)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Intersatellite communication directory</p></td>
+<td><p>main output-directory</p></td>
+<td><p><em>comm</em></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Intersatellite communication files</p></td>
+<td><p>intersatellite communication directory</p></td>
+<td><p><em>satM_to_satN_contacts.csv</em>, where <em>M</em> and <em>N</em> are the indices of the two satellites between which contacts are evaluated</p></td>
+<td><p><a class="reference internal" href="module_contactfinder.html#contacts-file-format"><span class="std std-ref">Contact data file format</span></a> (<code class="docutils literal notranslate"><span class="pre">INTERVAL</span></code> format)</p></td>
+</tr>
+</tbody>
+</table>
+<p>As seen above, the index of a satellite, instrument, etc is used in the folder/file names. The name or the identifier of the entity is <strong>not</strong> used. A mapping between the
+folder/file names to the identifiers is available from the list of <code class="docutils literal notranslate"><span class="pre">...OutputInfo</span></code> objects returned upon running the  <code class="docutils literal notranslate"><span class="pre">execute</span></code> function on the <code class="docutils literal notranslate"><span class="pre">Mission</span></code> object.
+For example if the mission involved propagation of a satellite, a <a class="reference internal" href="generated/orbitpy.propagator.PropagatorOutputInfo.html#orbitpy.propagator.PropagatorOutputInfo" title="orbitpy.propagator.PropagatorOutputInfo"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.propagator.PropagatorOutputInfo</span></code></a> object shall be present in the list of <code class="docutils literal notranslate"><span class="pre">...OutputInfo</span></code> objects.</p>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic">
+<li><p>Example with a single spacecraft. Only propagation and eclipses are found. Note that a random identifier is assigned to the spacecraft.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from<span class="w"> </span>orbitpy.mission<span class="w"> </span>import<span class="w"> </span>Mission
+
+<span class="nv">mission_json_str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;{  &quot;epoch&quot;:{&quot;@type&quot;:&quot;GREGORIAN_UT1&quot;, &quot;year&quot;:2021, &quot;month&quot;:3, &quot;day&quot;:25, &quot;hour&quot;:15, &quot;minute&quot;:6, &quot;second&quot;:8}, \</span>
+<span class="s1">                        &quot;duration&quot;: 0.1, \</span>
+<span class="s1">                        &quot;spacecraft&quot;: { \</span>
+<span class="s1">                           &quot;spacecraftBus&quot;:{&quot;orientation&quot;:{&quot;referenceFrame&quot;: &quot;NADIR_POINTING&quot;, &quot;convention&quot;: &quot;REF_FRAME_ALIGNED&quot;} \</span>
+<span class="s1">                                       }, \</span>
+<span class="s1">                           &quot;orbitState&quot;: {&quot;date&quot;:{&quot;@type&quot;:&quot;GREGORIAN_UT1&quot;, &quot;year&quot;:2021, &quot;month&quot;:2, &quot;day&quot;:25, &quot;hour&quot;:6, &quot;minute&quot;:0, &quot;second&quot;:0}, \</span>
+<span class="s1">                                       &quot;state&quot;:{&quot;@type&quot;: &quot;KEPLERIAN_EARTH_CENTERED_INERTIAL&quot;, &quot;sma&quot;: 6878.137, &quot;ecc&quot;: 0.001, &quot;inc&quot;: 45, &quot;raan&quot;: 35, &quot;aop&quot;: 145, &quot;ta&quot;: -25} \</span>
+<span class="s1">                                       } \</span>
+<span class="s1">                           }, \</span>
+<span class="s1">                        &quot;settings&quot;: {&quot;outDir&quot;: &quot;out1/&quot;} \</span>
+<span class="s1">                        }&#39;</span>
+<span class="nv">mission</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Mission.from_json<span class="o">(</span>mission_json_str<span class="o">)</span>
+<span class="nv">out_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>mission.execute<span class="o">()</span>
+print<span class="o">(</span>out_info<span class="o">)</span>
+
+&gt;&gt;<span class="w"> </span><span class="o">[</span>PropagatorOutputInfo.from_dict<span class="o">({</span><span class="s1">&#39;@type&#39;</span>:<span class="w"> </span><span class="s1">&#39;PROPAGATOR OUTPUT INFO&#39;</span>,<span class="w"> </span><span class="s1">&#39;propagatorType&#39;</span>:<span class="w"> </span><span class="s1">&#39;J2 ANALYTICAL PROPAGATOR&#39;</span>,
+<span class="w">      </span><span class="s1">&#39;spacecraftId&#39;</span>:<span class="w"> </span><span class="s1">&#39;1bfa9331-7013-45bd-8991-de552f4837a2&#39;</span>,<span class="w"> </span><span class="s1">&#39;stateCartFile&#39;</span>:<span class="w"> </span><span class="s1">&#39;out1//sat0/state_cartesian.csv&#39;</span>,
+<span class="w">      </span><span class="s1">&#39;stateKeplerianFile&#39;</span>:<span class="w"> </span><span class="s1">&#39;out1//sat0/state_keplerian.csv&#39;</span>,<span class="w"> </span><span class="s1">&#39;startDate&#39;</span>:<span class="w"> </span><span class="m">2459299</span>.1292592594,<span class="w"> </span><span class="s1">&#39;duration&#39;</span>:<span class="w"> </span><span class="m">0</span>.1,<span class="w"> </span><span class="s1">&#39;@id&#39;</span>:<span class="w"> </span>None<span class="o">})</span>,
+<span class="w">    </span>EclipseFinderOutputInfo.from_dict<span class="o">({</span><span class="s1">&#39;@type&#39;</span>:<span class="w"> </span><span class="s1">&#39;ECLIPSE FINDER OUTPUT INFO&#39;</span>,<span class="w"> </span><span class="s1">&#39;spacecraftId&#39;</span>:<span class="w"> </span><span class="s1">&#39;1bfa9331-7013-45bd-8991-de552f4837a2&#39;</span>,
+<span class="w">      </span><span class="s1">&#39;stateCartFile&#39;</span>:<span class="w"> </span><span class="s1">&#39;out1//sat0/state_cartesian.csv&#39;</span>,<span class="w"> </span><span class="s1">&#39;eclipseFile&#39;</span>:<span class="w"> </span><span class="s1">&#39;out1//sat0/eclipses.csv&#39;</span>,<span class="w"> </span><span class="s1">&#39;outType&#39;</span>:<span class="w"> </span><span class="s1">&#39;INTERVAL&#39;</span>,
+<span class="w">      </span><span class="s1">&#39;startDate&#39;</span>:<span class="w"> </span><span class="m">2459299</span>.1292592594,<span class="w"> </span><span class="s1">&#39;duration&#39;</span>:<span class="w"> </span><span class="m">0</span>.1,<span class="w"> </span><span class="s1">&#39;@id&#39;</span>:<span class="w"> </span>None<span class="o">})]</span>
+
+
+Output<span class="w"> </span>directory<span class="w"> </span>structure
+---------------------------
+out1
+<span class="w">   </span>├───comm
+<span class="w">   </span>└───sat0
+<span class="w">         </span>state_cartesian.csv
+<span class="w">         </span>state_keplerian.csv
+<span class="w">         </span>eclipses.csv
+</pre></div>
+</div>
+</li>
+<li><p>Example with a constellation and ground-station. All the 8 spacecrafts are propagated, eclipses calculated, inter-satellite contact periods calculated and the ground-station
+contacts calculated.</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from<span class="w"> </span>orbitpy.mission<span class="w"> </span>import<span class="w"> </span>Mission
+
+<span class="nv">mission_json_str</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;{  &quot;epoch&quot;:{&quot;@type&quot;:&quot;JULIAN_DATE_UT1&quot;, &quot;jd&quot;:2459270.75}, \</span>
+<span class="s1">                              &quot;duration&quot;: 0.25, \</span>
+<span class="s1">                              &quot;constellation&quot;: { &quot;@type&quot;: &quot;Walker Delta Constellation&quot;, \</span>
+<span class="s1">                                       &quot;date&quot;:{&quot;@type&quot;: &quot;JULIAN_DATE_UT1&quot;, &quot;jd&quot;:2459270.75}, \</span>
+<span class="s1">                                       &quot;numberSatellites&quot;: 8, \</span>
+<span class="s1">                                       &quot;numberPlanes&quot;: 1, \</span>
+<span class="s1">                                       &quot;relativeSpacing&quot;: 1, \</span>
+<span class="s1">                                       &quot;alt&quot;: 700, \</span>
+<span class="s1">                                       &quot;ecc&quot;: 0.001, \</span>
+<span class="s1">                                       &quot;inc&quot;: 45, \</span>
+<span class="s1">                                       &quot;aop&quot;: 135, \</span>
+<span class="s1">                                       &quot;@id&quot;: &quot;abc&quot; \</span>
+<span class="s1">                                    }, \</span>
+<span class="s1">                              &quot;groundStation&quot;:{&quot;name&quot;: &quot;CONAE&quot;, &quot;latitude&quot;: -31.52, &quot;longitude&quot;: -64.46, &quot;altitude&quot;:0}, \</span>
+<span class="s1">                              &quot;settings&quot;: {&quot;outDir&quot;: &quot;out2/&quot;} \</span>
+<span class="s1">                           }&#39;</span>
+
+<span class="nv">mission</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Mission.from_json<span class="o">(</span>mission_json_str<span class="o">)</span>
+<span class="nv">out_info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>mission.execute<span class="o">()</span>
+
+Output<span class="w"> </span>directory<span class="w"> </span>structure
+---------------------------
+out2/
+<span class="w">   </span>├───comm
+<span class="w">   </span>│<span class="w">       </span>sat0_to_sat1.csv
+<span class="w">   </span>│<span class="w">       </span>sat0_to_sat2.csv
+<span class="w">   </span>│<span class="w">       </span>sat0_to_sat3.csv
+<span class="w">   </span>│<span class="w">       </span>sat0_to_sat4.csv
+<span class="w">   </span>│<span class="w">       </span>sat0_to_sat5.csv
+<span class="w">   </span>│<span class="w">       </span>sat0_to_sat6.csv
+<span class="w">   </span>│<span class="w">       </span>sat0_to_sat7.csv
+<span class="w">   </span>│<span class="w">       </span>sat1_to_sat2.csv
+<span class="w">   </span>│<span class="w">       </span>sat1_to_sat3.csv
+<span class="w">   </span>│<span class="w">       </span>sat1_to_sat4.csv
+<span class="w">   </span>│<span class="w">       </span>sat1_to_sat5.csv
+<span class="w">   </span>│<span class="w">       </span>sat1_to_sat6.csv
+<span class="w">   </span>│<span class="w">       </span>sat1_to_sat7.csv
+<span class="w">   </span>│<span class="w">       </span>sat2_to_sat3.csv
+<span class="w">   </span>│<span class="w">       </span>sat2_to_sat4.csv
+<span class="w">   </span>│<span class="w">       </span>sat2_to_sat5.csv
+<span class="w">   </span>│<span class="w">       </span>sat2_to_sat6.csv
+<span class="w">   </span>│<span class="w">       </span>sat2_to_sat7.csv
+<span class="w">   </span>│<span class="w">       </span>sat3_to_sat4.csv
+<span class="w">   </span>│<span class="w">       </span>sat3_to_sat5.csv
+<span class="w">   </span>│<span class="w">       </span>sat3_to_sat6.csv
+<span class="w">   </span>│<span class="w">       </span>sat3_to_sat7.csv
+<span class="w">   </span>│<span class="w">       </span>sat4_to_sat5.csv
+<span class="w">   </span>│<span class="w">       </span>sat4_to_sat6.csv
+<span class="w">   </span>│<span class="w">       </span>sat4_to_sat7.csv
+<span class="w">   </span>│<span class="w">       </span>sat5_to_sat6.csv
+<span class="w">   </span>│<span class="w">       </span>sat5_to_sat7.csv
+<span class="w">   </span>│<span class="w">       </span>sat6_to_sat7.csv
+<span class="w">   </span>│
+<span class="w">   </span>├───sat0
+<span class="w">   </span>│<span class="w">       </span>eclipses.csv
+<span class="w">   </span>│<span class="w">       </span>gndStn0_contacts.csv
+<span class="w">   </span>│<span class="w">       </span>state_cartesian.csv
+<span class="w">   </span>│<span class="w">       </span>state_keplerian.csv
+<span class="w">   </span>│
+<span class="w">   </span>├───sat1
+<span class="w">   </span>│<span class="w">       </span>eclipses.csv
+<span class="w">   </span>│<span class="w">       </span>gndStn0_contacts.csv
+<span class="w">   </span>│<span class="w">       </span>state_cartesian.csv
+<span class="w">   </span>│<span class="w">       </span>state_keplerian.csv
+<span class="w">   </span>│
+<span class="w">   </span>├───sat2
+<span class="w">   </span>│<span class="w">       </span>eclipses.csv
+<span class="w">   </span>│<span class="w">       </span>gndStn0_contacts.csv
+<span class="w">   </span>│<span class="w">       </span>state_cartesian.csv
+<span class="w">   </span>│<span class="w">       </span>state_keplerian.csv
+<span class="w">   </span>│
+<span class="w">   </span>├───sat3
+<span class="w">   </span>│<span class="w">       </span>eclipses.csv
+<span class="w">   </span>│<span class="w">       </span>gndStn0_contacts.csv
+<span class="w">   </span>│<span class="w">       </span>state_cartesian.csv
+<span class="w">   </span>│<span class="w">       </span>state_keplerian.csv
+<span class="w">   </span>│
+<span class="w">   </span>├───sat4
+<span class="w">   </span>│<span class="w">       </span>eclipses.csv
+<span class="w">   </span>│<span class="w">       </span>gndStn0_contacts.csv
+<span class="w">   </span>│<span class="w">       </span>state_cartesian.csv
+<span class="w">   </span>│<span class="w">       </span>state_keplerian.csv
+<span class="w">   </span>│
+<span class="w">   </span>├───sat5
+<span class="w">   </span>│<span class="w">       </span>eclipses.csv
+<span class="w">   </span>│<span class="w">       </span>gndStn0_contacts.csv
+<span class="w">   </span>│<span class="w">       </span>state_cartesian.csv
+<span class="w">   </span>│<span class="w">       </span>state_keplerian.csv
+<span class="w">   </span>│
+<span class="w">   </span>├───sat6
+<span class="w">   </span>│<span class="w">       </span>eclipses.csv
+<span class="w">   </span>│<span class="w">       </span>gndStn0_contacts.csv
+<span class="w">   </span>│<span class="w">       </span>state_cartesian.csv
+<span class="w">   </span>│<span class="w">       </span>state_keplerian.csv
+<span class="w">   </span>│
+<span class="w">   </span>└───sat7
+<span class="w">            </span>eclipses.csv
+<span class="w">            </span>gndStn0_contacts.csv
+<span class="w">            </span>state_cartesian.csv
+<span class="w">            </span>state_keplerian.csv
+</pre></div>
+</div>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this heading">¶</a></h2>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/orbitpy.mission.Settings.html#orbitpy.mission.Settings" title="orbitpy.mission.Settings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orbitpy.mission.Settings</span></code></a></p></td>
+<td><p>Data container of the mission settings.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/orbitpy.mission.Mission.html#orbitpy.mission.Mission" title="orbitpy.mission.Mission"><code class="xref py py-obj docutils literal notranslate"><span class="pre">orbitpy.mission.Mission</span></code></a></p></td>
+<td><p>Class to handle mission initialization and execution.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="generated/orbitpy.mission.Settings.html" class="btn btn-neutral float-right" title="Settings" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="generated/orbitpy.datametricscalculator.AccessFileInfo.html" class="btn btn-neutral float-left" title="AccessFileInfo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, BAERI.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

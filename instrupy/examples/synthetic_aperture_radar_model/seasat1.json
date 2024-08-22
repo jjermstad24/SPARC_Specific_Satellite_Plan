@@ -1,0 +1,24 @@
+
+{
+    "@type": "Synthetic Aperture Radar",
+    "orientation": {
+       "referenceFrame": "SC_BODY_FIXED",
+        "convention": "SIDE_LOOK",
+        "sideLookAngle": 20.5
+    },
+    "pulseWidth": 33.4e-6,
+    "antenna":{"shape": "RECTANGULAR", "height": 10.7, "width": 2.16, "apertureEfficiency": 0.6, "apertureExcitationProfile": "UNIFORM"},
+    "operatingFrequency": 1.2757e9,
+    "peakTransmitPower": 1000,
+    "chirpBandwidth": 19e6,
+    "minimumPRF": 1463,
+    "maximumPRF": 1686,
+    "radarLoss": 3.5,
+    "systemNoiseFigure": 5.11,
+    "sceneNoiseTemp": 290, 
+    "bitsPerPixel": 5, 
+    "_references":  ["The Seasat-A Synthetic Aperture Radar System, Rolando L.Jordan 1980",
+                     "Spaceborne SAR Study: LDRD ’92 Final Report",
+                     "https://directory.eoportal.org/web/eoportal/satellite-missions/s/seasat"
+                    ]      
+}

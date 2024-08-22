@@ -1,0 +1,615 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>SpecularCoverage &mdash; OrbitPy 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="helper_extract_coverage_parameters_of_spacecraft" href="orbitpy.coveragecalculator.helper_extract_coverage_parameters_of_spacecraft.html" />
+    <link rel="prev" title="PointingOptionsWithGridCoverage" href="orbitpy.coveragecalculator.PointingOptionsWithGridCoverage.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> OrbitPy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../module_constellation.html"><code class="docutils literal notranslate"><span class="pre">orbit.constellation</span></code> — Constellation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_propagator.html"><code class="docutils literal notranslate"><span class="pre">orbit.propagator</span></code> — Propagator Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_grid.html"><code class="docutils literal notranslate"><span class="pre">orbit.grid</span></code> — Grid Module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../module_coveragecalculator.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.coveragecalculator</span></code> — Coverage Calculator</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../module_coveragecalculator.html#description">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../module_coveragecalculator.html#examples">Examples</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../module_coveragecalculator.html#api">API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.coveragecalculator.CoverageCalculatorFactory.html">CoverageCalculatorFactory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.coveragecalculator.GridCoverage.html">GridCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.coveragecalculator.PointingOptionsCoverage.html">PointingOptionsCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.coveragecalculator.PointingOptionsWithGridCoverage.html">PointingOptionsWithGridCoverage</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">SpecularCoverage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.coveragecalculator.helper_extract_coverage_parameters_of_spacecraft.html">helper_extract_coverage_parameters_of_spacecraft</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.coveragecalculator.find_in_cov_params_list.html">find_in_cov_params_list</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.coveragecalculator.filter_mid_interval_access.html">filter_mid_interval_access</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../module_contactfinder.html"><code class="docutils literal notranslate"><span class="pre">orbit.contactfinder</span></code> — Contact Finder Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_eclipsefinder.html"><code class="docutils literal notranslate"><span class="pre">orbit.eclipsefinder</span></code> — Eclipse Finder Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_datametricscalculator.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.datametricscalculator</span></code> — Data Metrics Calculator Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_mission.html"><code class="docutils literal notranslate"><span class="pre">orbit.mission</span></code> — Mission Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_sensorpixelprojection.html"><code class="docutils literal notranslate"><span class="pre">orbit.sensorpixelprojection</span></code> — Sensor Pixel Projection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_util.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.util</span></code> — Util Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../miscellaneous.html">Miscellaneous</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OrbitPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api_reference.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="../module_coveragecalculator.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.coveragecalculator</span></code> — Coverage Calculator</a> &raquo;</li>
+        
+      <li>SpecularCoverage</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/generated/orbitpy.coveragecalculator.SpecularCoverage.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="specularcoverage">
+<h1>SpecularCoverage<a class="headerlink" href="#specularcoverage" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="orbitpy.coveragecalculator.SpecularCoverage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">orbitpy.coveragecalculator.</span></span><span class="sig-name descname"><span class="pre">SpecularCoverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rx_spc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rx_state_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tx_spc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tx_state_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/orbitpy/coveragecalculator.html#SpecularCoverage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.coveragecalculator.SpecularCoverage" title="Permalink to this definition">¶</a></dt>
+<dd><dl>
+<dt>A coverage calculator which handles coverage calculation for a spacecraft with a reflectometer instrument. </dt><dd><p>Coverage calculation involves calculation of specular point locations at each propagation time step. A grid can also be specified, and the 
+coverage results shall include the set of grid-points within a predefined circular region about each specular point.</p>
+<p>The specifications and the state files of the receiver spacecraft and source spacecrafts (&gt;=1) are to be provided during the object instantiation.
+In the state files, the epoch, propagation time resolution, must be the same across all the spacecrafts (receiver and source).</p>
+<p>The specular locations within the sensor FOV is calculated at each time step.
+If a grid is specified, the set of grid-points within a specified circular region about each of the specular locations are also calculated.</p>
+<p>The transmitter spacecraft is assumed to transmit the RF signal over it’s entire visible horizon.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rx_spc</strong> (<a class="reference internal" href="orbitpy.util.Spacecraft.html#orbitpy.util.Spacecraft" title="orbitpy.util.Spacecraft"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.util.Spacecraft</span></code></a>) – Spacecraft for which the coverage calculation is performed. An instrument may or may not be present on the spacecraft.
+This spacecraft is also the receiver which processes the reflected RF signal.</p></li>
+<li><p><strong>rx_state_file</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – File name with path of the (input) file in which the orbit states of the receiving spacecraft in <code class="docutils literal notranslate"><span class="pre">CARTESIAN_EARTH_CENTERED_INERTIAL</span></code> frame are available.
+Refer to <a class="reference internal" href="orbitpy.propagator.J2AnalyticalPropagator.html#orbitpy.propagator.J2AnalyticalPropagator.execute" title="orbitpy.propagator.J2AnalyticalPropagator.execute"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.propagator.J2AnalyticalPropagator.execute</span></code></a> for description of the file data format.</p></li>
+<li><p><strong>tx_spc</strong> (list, <a class="reference internal" href="orbitpy.util.Spacecraft.html#orbitpy.util.Spacecraft" title="orbitpy.util.Spacecraft"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.util.Spacecraft</span></code></a>) – (List) Spacecrafts from which the RF signal originates (e.g. GNSS satellites).</p></li>
+<li><p><strong>tx_state_file</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – List of state files corresponding to the source spacecrafts. The order of entries <em>must</em> match with the order of entries of the <code class="docutils literal notranslate"><span class="pre">src</span></code> argument.
+Each list entry is the file name with path of the (input) file in which the states in CARTESIAN_EARTH_CENTERED_INERTIAL frame are available.
+Refer to <a class="reference internal" href="orbitpy.propagator.J2AnalyticalPropagator.html#orbitpy.propagator.J2AnalyticalPropagator.execute" title="orbitpy.propagator.J2AnalyticalPropagator.execute"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.propagator.J2AnalyticalPropagator.execute</span></code></a> for description of the file data format.</p></li>
+<li><p><strong>grid</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.util.grid</span></code>) – Locations (longitudes, latitudes) (represented by a <code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.util.grid</span></code> object) over which coverage calculation is to be performed.
+Required only if grid-based coverage is needed.</p></li>
+<li><p><strong>cov_params</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><em>namedtuple</em>) – List of coverage parameters corresponding to all the instruments, modes per instrument in the spacecraft.
+Refer to the <a class="reference internal" href="orbitpy.coveragecalculator.helper_extract_coverage_parameters_of_spacecraft.html#orbitpy.coveragecalculator.helper_extract_coverage_parameters_of_spacecraft" title="orbitpy.coveragecalculator.helper_extract_coverage_parameters_of_spacecraft"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.coveragecalculator.helper_extract_coverage_parameters_of_spacecraft</span></code></a> function.</p></li>
+<li><p><strong>_id</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Unique identifier.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Methods Summary</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#orbitpy.coveragecalculator.SpecularCoverage.__init__" title="orbitpy.coveragecalculator.SpecularCoverage.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([rx_spc, rx_state_file, tx_spc, ...])</p></td>
+<td><p>Initialize an entity.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#orbitpy.coveragecalculator.SpecularCoverage.check_point_in_circle" title="orbitpy.coveragecalculator.SpecularCoverage.check_point_in_circle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_point_in_circle</span></code></a>(point, center, diameter)</p></td>
+<td><p>Check if the input point belong inside a circle (on the Earth's surface) of the specified center, diameter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#orbitpy.coveragecalculator.SpecularCoverage.execute" title="orbitpy.coveragecalculator.SpecularCoverage.execute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">execute</span></code></a>([instru_id, mode_id, ...])</p></td>
+<td><p>Perform coverage calculation involving calculation of specular point locations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#orbitpy.coveragecalculator.SpecularCoverage.from_dict" title="orbitpy.coveragecalculator.SpecularCoverage.from_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_dict</span></code></a>(d)</p></td>
+<td><p>Parses an <code class="docutils literal notranslate"><span class="pre">SpecularCoverage</span></code> object from a normalized JSON dictionary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#orbitpy.coveragecalculator.SpecularCoverage.from_json" title="orbitpy.coveragecalculator.SpecularCoverage.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(json_doc)</p></td>
+<td><p>Parses an entity from a JSON-formatted string, dictionary, or file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#orbitpy.coveragecalculator.SpecularCoverage.specular_location" title="orbitpy.coveragecalculator.SpecularCoverage.specular_location"><code class="xref py py-obj docutils literal notranslate"><span class="pre">specular_location</span></code></a>(S, L)</p></td>
+<td><p>Find the location of the specular point given the position vectors of the source and receiving satellites.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#orbitpy.coveragecalculator.SpecularCoverage.to_dict" title="orbitpy.coveragecalculator.SpecularCoverage.to_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dict</span></code></a>()</p></td>
+<td><p>Translate the SpecularCoverage object to a Python dictionary such that it can be uniquely reconstructed back from the dictionary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#orbitpy.coveragecalculator.SpecularCoverage.to_json" title="orbitpy.coveragecalculator.SpecularCoverage.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>([file])</p></td>
+<td><p>Serializes this entity to a JSON-formatted string or file.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.coveragecalculator.SpecularCoverage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rx_spc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rx_state_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tx_spc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tx_state_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/orbitpy/coveragecalculator.html#SpecularCoverage.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.coveragecalculator.SpecularCoverage.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize an entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>_id</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – (default: None)</p></li>
+<li><p><strong>_type</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – (default: “Entity”)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.coveragecalculator.SpecularCoverage.check_point_in_circle">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_point_in_circle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">point</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diameter</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/orbitpy/coveragecalculator.html#SpecularCoverage.check_point_in_circle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.coveragecalculator.SpecularCoverage.check_point_in_circle" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Check if the input point belong inside a circle (on the Earth’s surface) of the specified center, diameter.</dt><dd><p>The diameter is the distance measured along a great circle on the Earth’s surface.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><em>(</em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>)</em>) – Geo coordinates of the points which need to be evaluated (lat [deg], lon [deg]).</p></li>
+<li><p><strong>center</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><em>(</em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>)</em>) – Geo coordinates of the center of the circle (lat [deg], lon [deg]).</p></li>
+<li><p><strong>diameter</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Diameter of the circle [km].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the point belongs inside the circle, else <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.coveragecalculator.SpecularCoverage.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instru_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_file_specular</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">specular_region_dia</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_file_grid_access</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'DirectSphericalPIP'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/orbitpy/coveragecalculator.html#SpecularCoverage.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.coveragecalculator.SpecularCoverage.execute" title="Permalink to this definition">¶</a></dt>
+<dd><dl>
+<dt>Perform coverage calculation involving calculation of specular point locations. </dt><dd><p>The calculation is performed for a specific instrument and mode (in the receiver spacecraft).
+Note that the sceneFOV of an instrument (which may be the same as the instrument FOV) is used for coverage calculations.
+If no instrument present in spacecraft the entire horizon as seen by the receiving satellite is considered for the coverage calculations (however this does not work when grid based calculations are required, see the TODO below).</p>
+<p>The transmitter spacecraft is assumed to transmit the RF signal over it’s entire visible horizon.</p>
+<p>Coverage is calculated for the period over which the receiver, source spacecraft propagated states are available. 
+The time-resolution of the coverage calculation is the same as the time resolution at which the spacecraft states are available.</p>
+<p>If a grid has been specified (during the instantiation of the <code class="docutils literal notranslate"><span class="pre">grid</span></code> instance variable), and the diameter of the specular region has been specified (through the <code class="docutils literal notranslate"><span class="pre">specular_region_dia</span></code> input parameter),
+then the grid points which are present within the specular region are found and written in the file specified by the <code class="docutils literal notranslate"><span class="pre">out_file_grid_access</span></code> parameter. The specular region is 
+approximated to be circular in shape with the calculated specular point as the center, and the diameter specified by the <code class="docutils literal notranslate"><span class="pre">specular_region_dia</span></code> input parameter.</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>When grid is specified, the sensor <strong>must</strong> be present, else a <cite>NotImplementedError</cite> is thrown. Modify this behaviour so 
+that the coverage calculations with grid can be carried out considering the entire horizon to be within the satellite FOV.</p>
+</div>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instru_id</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> (</em><em>or</em><em>) </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Sensor identifier (corresponding to the receiver spacecraft). If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the first sensor in the spacecraft list of sensors (if available) is considered.</p></li>
+<li><p><strong>mode_id</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> (</em><em>or</em><em>) </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Mode identifier (corresponding to the receiver sensor (id) and spacecraft). If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the first mode of the corresponding input sensor of the spacecraft is considered.</p></li>
+<li><p><strong>out_file_specular</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – <p>File name with path of the file in which the specular locaion data is to be written.</p>
+<p>The format of the output data file is as follows:</p>
+<ul>
+<li><p>The first row contains the coverage calculation type.</p></li>
+<li><p>The second row containing the mission epoch in Julian Day UT1. The time (index) in the state data is referenced to this epoch.</p></li>
+<li><p>The third row contains the time-step size in seconds.</p></li>
+<li><p>The fourth row contains the duration (in days) for which coverage calculation is executed.</p></li>
+<li><p>The fifth row contains the columns headers and the sixth row onwards contains the corresponding data.</p></li>
+</ul>
+<p>Note that time associated with a row is: <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">=</span> <span class="pre">epoch</span> <span class="pre">(in</span> <span class="pre">JDUT1)</span> <span class="pre">+</span> <span class="pre">time-index</span> <span class="pre">*</span> <span class="pre">time-step-size</span> <span class="pre">(in</span> <span class="pre">secs)</span> <span class="pre">*</span> <span class="pre">(1/86400)</span></code></p>
+<p>Description of the coverage data is given below:</p>
+<table class="colwidths-given docutils align-default" id="id2">
+<caption><span class="caption-text">Coverage data description</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>time index</p></td>
+<td><p>int</p></td>
+<td></td>
+<td><p>Access time-index.</p></td>
+</tr>
+<tr class="row-odd"><td><p>source id</p></td>
+<td><p>int/str</p></td>
+<td></td>
+<td><p>Source spacecraft identifier.</p></td>
+</tr>
+<tr class="row-even"><td><p>lat [deg]</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Latitude of specular point.</p></td>
+</tr>
+<tr class="row-odd"><td><p>lon [deg]</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Longitude of specular point.</p></td>
+</tr>
+</tbody>
+</table>
+</p></li>
+<li><p><strong>specular_region_dia</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Diameter of the circular region with the specular point as the center, which shall be imaged. 
+Note that this is an approximation since the the specular region shape and dimensions 
+shall depend on the source, receiver positions, topography, etc. Units in kilometers.</p></li>
+<li><p><strong>out_file_grid_access</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – <dl class="simple">
+<dt>File name with path of the file in which the grid access data is written. This parameter should be input in the case when</dt><dd><p><code class="docutils literal notranslate"><span class="pre">grid</span></code> instance variable and the <code class="docutils literal notranslate"><span class="pre">specular_region_dia</span></code> input parameter are specified.</p>
+</dd>
+</dl>
+<p>The file format is as follows:</p>
+<ul>
+<li><p>The first row contains the coverage calculation type.</p></li>
+<li><p>The second row containing the mission epoch in Julian Day UT1. The time (index) in the state data is referenced to this epoch.</p></li>
+<li><p>The third row contains the time-step size in seconds.</p></li>
+<li><p>The fourth row contains the duration (in days) for which coverage calculation is executed.</p></li>
+<li><p>The fifth row contains the columns headers and the sixth row onwards contains the corresponding data.</p></li>
+</ul>
+<p>Note that time associated with a row is:  <code class="docutils literal notranslate"><span class="pre">time</span> <span class="pre">=</span> <span class="pre">epoch</span> <span class="pre">(in</span> <span class="pre">JDUT1)</span> <span class="pre">+</span> <span class="pre">time-index</span> <span class="pre">*</span> <span class="pre">time-step-size</span> <span class="pre">(in</span> <span class="pre">secs)</span> <span class="pre">*</span> <span class="pre">(1/86400)</span></code></p>
+<p>Description of the coverage data is given below:</p>
+<table class="colwidths-given docutils align-default" id="id3">
+<caption><span class="caption-text">Coverage data description</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 17%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Column</p></th>
+<th class="head"><p>Data type</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>time index</p></td>
+<td><p>int</p></td>
+<td></td>
+<td><p>Access time-index.</p></td>
+</tr>
+<tr class="row-odd"><td><p>source id</p></td>
+<td><p>int/str</p></td>
+<td></td>
+<td><p>Source spacecraft identifier.</p></td>
+</tr>
+<tr class="row-even"><td><p>GP index</p></td>
+<td><p>int</p></td>
+<td></td>
+<td><p>Grid-point index.</p></td>
+</tr>
+<tr class="row-odd"><td><p>lat [deg]</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Latitude corresponding to the GP index.</p></td>
+</tr>
+<tr class="row-even"><td><p>lon [deg]</p></td>
+<td><p>float</p></td>
+<td><p>degrees</p></td>
+<td><p>Longitude corresponding to the GP index.</p></td>
+</tr>
+</tbody>
+</table>
+</p></li>
+<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – <p>Indicate the coverage method to be used to evaluate if a specular location is within the sensor FOV or not. Additionally the same method is used to evaluate grid-based coverage.
+This is only relevant for the case of sensor FOVs described by spherical-polygon vertices and including Rectangular FOV.
+Only entries <cite>DirectSphericalPIP</cite> or <cite>ProjectedPIP</cite> or <cite>RectangularPIP</cite> are allowed. 
+Default method is <cite>DirectSphericalPIP</cite>.</p>
+<p>The <cite>DirectSphericalPIP</cite> method corresponds to implementation of the <cite>propcov.DSPIPCustomSensor</cite> class, while
+the <cite>ProjectedPIP</cite> corresponds to the implementation of the <cite>propcov.GMATCustomSensor</cite> class.</p>
+<p>For details on the <cite>DirectSphericalPIP</cite> method please refer to the article: R. Ketzner, V. Ravindra and M. Bramble, 
+‘A Robust, Fast, and Accurate Algorithm for Point in Spherical Polygon Classification with Applications in Geoscience and Remote Sensing’, Computers and Geosciences, acccepted.</p>
+<p>In the above article, the algorithm is described and compared to the ‘GMAT CustomSensor’ algorithm which is the same as the 
+point-in-polygon algorithm implemented in the <cite>propcov.GMATCustomSensor</cite> class. 
+Compared to the <cite>propcov.GMATCustomSensor</cite> class, the <cite>propcov.DSPIPCustomSensor</cite> has been shown to yield improvement in runtime 
+and also to be more accurate.</p>
+<p><cite>RectangularPIP</cite> method is applicable only for RECTANGULAR spherical geometry shapes. It is based on the
+<cite>propcov.RectangularSensor</cite> class. The class evaluates the dot product between the target point and the normal of the hemispherical-planes
+formed by the 4 edges of the rectangle shape (on spherical surface). The corners of the rectangle are arranged in anti-clockwise manner about the center on the spherical surface,
+if the target point is in the Northern hemisphere corresponding to 4 hemispherical planes formed by the edges of the rectangle, then the target falls
+within the sensor FOV.</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Coverage output info.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.coveragecalculator.CoverageOutputInfo</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.coveragecalculator.SpecularCoverage.from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/orbitpy/coveragecalculator.html#SpecularCoverage.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.coveragecalculator.SpecularCoverage.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses an <code class="docutils literal notranslate"><span class="pre">SpecularCoverage</span></code> object from a normalized JSON dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – <p>Dictionary with the SpecularCoverage specifications.</p>
+<p>Following keys are to be specified.</p>
+<ul>
+<li><p>”receiver”:                       (dict) Consists of two keys:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>”spacecraft”: (dict) Receiver spacecraft specifications. Refer to <a class="reference internal" href="orbitpy.util.Spacecraft.html#orbitpy.util.Spacecraft.from_dict" title="orbitpy.util.Spacecraft.from_dict"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.util.Spacecraft.from_dict</span></code></a></p></li>
+<li><p>”cartesianStateFilePath”: (str) File path (with file name) to the file with the propagated (receiver) spacecraft states.</p></li>
+</ol>
+</div></blockquote>
+</li>
+</ul>
+<blockquote>
+<div><ul>
+<li><p>”source”:                        (list, dict) List of sources. Each dictionary entry in the list consists of the following two keys:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>”spacecraft”: (dict) Source spacecraft specifications. Refer to <a class="reference internal" href="orbitpy.util.Spacecraft.html#orbitpy.util.Spacecraft.from_dict" title="orbitpy.util.Spacecraft.from_dict"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.util.Spacecraft.from_dict</span></code></a></p></li>
+<li><p>”cartesianStateFilePath”: (str) File path (with file name) to the file with the propagated (source) spacecraft states.</p></li>
+</ol>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p>”grid”:                           (dict) Required only if grid-based coverage is needed. Refer to <a class="reference internal" href="orbitpy.grid.Grid.html#orbitpy.grid.Grid.from_dict" title="orbitpy.grid.Grid.from_dict"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.grid.Grid.from_dict</span></code></a></p></li>
+<li><p>”&#64;id”:                            (str or int) Unique identifier of the coverage calculator object.</p></li>
+</ul>
+<p>In the provided state files, the epoch, propagation time resolution, must be the same across all the spacecrafts (receiver and source).</p>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">SpecularCoverage</span></code> object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#orbitpy.coveragecalculator.SpecularCoverage" title="orbitpy.coveragecalculator.SpecularCoverage"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.coveragecalculator.SpecularCoverage</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.coveragecalculator.SpecularCoverage.from_json">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#orbitpy.coveragecalculator.SpecularCoverage.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses an entity from a JSON-formatted string, dictionary, or file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.coveragecalculator.SpecularCoverage.specular_location">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">specular_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/orbitpy/coveragecalculator.html#SpecularCoverage.specular_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.coveragecalculator.SpecularCoverage.specular_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the location of the specular point given the position vectors of the source and receiving satellites.</p>
+<blockquote>
+<div><p>Reference: David Eberly, “Computing a Point of Reflection on a Sphere”, Geometric Tools, 2008. 
+<a class="reference external" href="https://www.geometrictools.com/Documentation/SphereReflections.pdf">https://www.geometrictools.com/Documentation/SphereReflections.pdf</a></p>
+<p>Note that a unit sphere is considered in the reference. Hence the input position vectors of the satellites need to be scaled by 1/(radius of earth)</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>S</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Position vector of source (transmit) satellite.</p></li>
+<li><p><strong>L</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Position vector of receiving satellite.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Normalized Cartesian coordinates of the specular point if available, else <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#list" title="(in Python v3.8)">list</a>, <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#float" title="(in Python v3.8)">float</a> (or) <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.coveragecalculator.SpecularCoverage.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/orbitpy/coveragecalculator.html#SpecularCoverage.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.coveragecalculator.SpecularCoverage.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate the SpecularCoverage object to a Python dictionary such that it can be uniquely reconstructed back from the dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">SpecularCoverage</span></code> object as python dictionary</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.coveragecalculator.SpecularCoverage.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#orbitpy.coveragecalculator.SpecularCoverage.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serializes this entity to a JSON-formatted string or file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<div style='clear:both'></div></div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="orbitpy.coveragecalculator.helper_extract_coverage_parameters_of_spacecraft.html" class="btn btn-neutral float-right" title="helper_extract_coverage_parameters_of_spacecraft" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="orbitpy.coveragecalculator.PointingOptionsWithGridCoverage.html" class="btn btn-neutral float-left" title="PointingOptionsWithGridCoverage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, BAERI.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

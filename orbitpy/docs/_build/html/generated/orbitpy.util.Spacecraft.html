@@ -1,0 +1,418 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Spacecraft &mdash; OrbitPy 0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/theme_overrides.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="GroundStation" href="orbitpy.util.GroundStation.html" />
+    <link rel="prev" title="SpacecraftBus" href="orbitpy.util.SpacecraftBus.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> OrbitPy
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user_guide.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api_reference.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../module_constellation.html"><code class="docutils literal notranslate"><span class="pre">orbit.constellation</span></code> — Constellation Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_propagator.html"><code class="docutils literal notranslate"><span class="pre">orbit.propagator</span></code> — Propagator Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_grid.html"><code class="docutils literal notranslate"><span class="pre">orbit.grid</span></code> — Grid Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_coveragecalculator.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.coveragecalculator</span></code> — Coverage Calculator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_contactfinder.html"><code class="docutils literal notranslate"><span class="pre">orbit.contactfinder</span></code> — Contact Finder Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_eclipsefinder.html"><code class="docutils literal notranslate"><span class="pre">orbit.eclipsefinder</span></code> — Eclipse Finder Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_datametricscalculator.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.datametricscalculator</span></code> — Data Metrics Calculator Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_mission.html"><code class="docutils literal notranslate"><span class="pre">orbit.mission</span></code> — Mission Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../module_sensorpixelprojection.html"><code class="docutils literal notranslate"><span class="pre">orbit.sensorpixelprojection</span></code> — Sensor Pixel Projection</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../module_util.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.util</span></code> — Util Module</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../module_util.html#description">Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../module_util.html#statetype"><code class="docutils literal notranslate"><span class="pre">StateType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../module_util.html#datetype"><code class="docutils literal notranslate"><span class="pre">DateType</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../module_util.html#orbitstate"><code class="docutils literal notranslate"><span class="pre">OrbitState</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../module_util.html#orientation"><code class="docutils literal notranslate"><span class="pre">Orientation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../module_util.html#spacecraftbus"><code class="docutils literal notranslate"><span class="pre">SpacecraftBus</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../module_util.html#spacecraft"><code class="docutils literal notranslate"><span class="pre">Spacecraft</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../module_util.html#groundstation"><code class="docutils literal notranslate"><span class="pre">GroundStation</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../module_util.html#api">API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.StateType.html">StateType</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.DateType.html">DateType</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.OutputInfoUtility.html">OutputInfoUtility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.OrbitState.html">OrbitState</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.SpacecraftBus.html">SpacecraftBus</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Spacecraft</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.GroundStation.html">GroundStation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.helper_extract_spacecraft_params.html">helper_extract_spacecraft_params</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.extract_auxillary_info_from_state_file.html">extract_auxillary_info_from_state_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.dictionary_list_to_object_list.html">dictionary_list_to_object_list</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.object_list_to_dictionary_list.html">object_list_to_dictionary_list</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.initialize_object_list.html">initialize_object_list</a></li>
+<li class="toctree-l4"><a class="reference internal" href="orbitpy.util.add_to_list.html">add_to_list</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../miscellaneous.html">Miscellaneous</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OrbitPy</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api_reference.html">API Reference</a> &raquo;</li>
+        
+          <li><a href="../module_util.html"><code class="docutils literal notranslate"><span class="pre">orbitpy.util</span></code> — Util Module</a> &raquo;</li>
+        
+      <li>Spacecraft</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/generated/orbitpy.util.Spacecraft.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="spacecraft">
+<h1>Spacecraft<a class="headerlink" href="#spacecraft" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="orbitpy.util.Spacecraft">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">orbitpy.util.</span></span><span class="sig-name descname"><span class="pre">Spacecraft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orbitState</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacecraftBus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instrument</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/orbitpy/util.html#Spacecraft"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.util.Spacecraft" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to store and handle the spacecraft attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the spacecraft.</p></li>
+<li><p><strong>orbitState</strong> (<a class="reference internal" href="orbitpy.util.OrbitState.html#orbitpy.util.OrbitState" title="orbitpy.util.OrbitState"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.util.OrbitState</span></code></a>) – Orbit specifications of the spacecraft (defined at a specific time).</p></li>
+<li><p><strong>spacecraftBus</strong> (<a class="reference internal" href="orbitpy.util.SpacecraftBus.html#orbitpy.util.SpacecraftBus" title="orbitpy.util.SpacecraftBus"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.util.SpacecraftBus</span></code></a>) – Spacecraft bus.</p></li>
+<li><p><strong>instrument</strong> (list, <code class="xref py py-class docutils literal notranslate"><span class="pre">instrupy.Instrument</span></code>) – List of instrument(s) belonging to the spacecraft.</p></li>
+<li><p><strong>_id</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Unique identifier.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Methods Summary</p>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#orbitpy.util.Spacecraft.__init__" title="orbitpy.util.Spacecraft.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([name, orbitState, spacecraftBus, ...])</p></td>
+<td><p>Initialize an entity.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#orbitpy.util.Spacecraft.add_instrument" title="orbitpy.util.Spacecraft.add_instrument"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_instrument</span></code></a>(new_instru)</p></td>
+<td><p>Add input instrument to the spacecraft's list of instruments.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#orbitpy.util.Spacecraft.from_dict" title="orbitpy.util.Spacecraft.from_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_dict</span></code></a>(d)</p></td>
+<td><p>Parses <code class="docutils literal notranslate"><span class="pre">Spacecraft</span></code> object from a dictionary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#orbitpy.util.Spacecraft.from_json" title="orbitpy.util.Spacecraft.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(json_doc)</p></td>
+<td><p>Parses an entity from a JSON-formatted string, dictionary, or file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#orbitpy.util.Spacecraft.get_id" title="orbitpy.util.Spacecraft.get_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_id</span></code></a>()</p></td>
+<td><p>Get spacecraft identifier.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#orbitpy.util.Spacecraft.get_instrument" title="orbitpy.util.Spacecraft.get_instrument"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_instrument</span></code></a>([sensor_id])</p></td>
+<td><p>Get <code class="docutils literal notranslate"><span class="pre">Instrument</span></code> object (from a list of instruments present in the <code class="docutils literal notranslate"><span class="pre">Spacecraft</span></code> object.) corresponding to the specified sensor id.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#orbitpy.util.Spacecraft.to_dict" title="orbitpy.util.Spacecraft.to_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dict</span></code></a>()</p></td>
+<td><p>Translate the Spacecraft object to a Python dictionary such that it can be uniquely reconstructed back from the dictionary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#orbitpy.util.Spacecraft.to_json" title="orbitpy.util.Spacecraft.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>([file])</p></td>
+<td><p>Serializes this entity to a JSON-formatted string or file.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.util.Spacecraft.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orbitState</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacecraftBus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instrument</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/orbitpy/util.html#Spacecraft.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.util.Spacecraft.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize an entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>_id</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – (default: None)</p></li>
+<li><p><strong>_type</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – (default: “Entity”)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.util.Spacecraft.add_instrument">
+<span class="sig-name descname"><span class="pre">add_instrument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_instru</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/orbitpy/util.html#Spacecraft.add_instrument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.util.Spacecraft.add_instrument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add input instrument to the spacecraft’s list of instruments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>new_instru</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">instrupy.base.Instrument</span></code> or list, <code class="xref py py-class docutils literal notranslate"><span class="pre">instrupy.base.Instrument</span></code>) – New instrument(s) to be added to the spacecraft.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.util.Spacecraft.from_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/orbitpy/util.html#Spacecraft.from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.util.Spacecraft.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses <code class="docutils literal notranslate"><span class="pre">Spacecraft</span></code> object from a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – <p>Dictionary with the spacecraft properties.</p>
+<p>The following key/value pairs are expected:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>* &quot;name&quot; : (str) Name of the spacecraft.
+* &quot;orbitState&quot; : (dict) Spacecraft orbit-state specification (see :class:`orbitpy.util.OrbitState.from_dict`).
+* &quot;spacecraftBus&quot; : (dict) Spacecraft bus specification (see :class:`orbitpy.util.SpacecraftBus.from_dict`). 
+                     If missing or :class:`None`, a bus with the orientation in the ``NADIR_POINTING`` frame and convention ``REF_FRAME_ALIGNED`` is assigned. 
+* &quot;instrument&quot;: (list, dict) Instrument(s) specification (see :class:`instrupy.base.Instrument.from_dict`).
+* &quot;@id&quot;: (str/int) Spacecraft unique identifier. If missing, a random string is assigned.
+</pre></div>
+</div>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Parsed python object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#orbitpy.util.Spacecraft" title="orbitpy.util.Spacecraft"><code class="xref py py-class docutils literal notranslate"><span class="pre">orbitpy.util.Spacecraft</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.util.Spacecraft.from_json">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_doc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#orbitpy.util.Spacecraft.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses an entity from a JSON-formatted string, dictionary, or file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.util.Spacecraft.get_id">
+<span class="sig-name descname"><span class="pre">get_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/orbitpy/util.html#Spacecraft.get_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.util.Spacecraft.get_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get spacecraft identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>spacecraft identifier.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)">str</a> or <a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.util.Spacecraft.get_instrument">
+<span class="sig-name descname"><span class="pre">get_instrument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/orbitpy/util.html#Spacecraft.get_instrument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.util.Spacecraft.get_instrument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get <code class="docutils literal notranslate"><span class="pre">Instrument</span></code> object (from a list of instruments present in the <code class="docutils literal notranslate"><span class="pre">Spacecraft</span></code> object.) corresponding to the specified sensor id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sensor_id</strong> (<a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3.8/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Instrument identifier. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, the first instrument in the list of instruments is returned.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Instrument corresponding to the input sensor id. If not match not found, return <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">instrupy.Instrument</span></code> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.util.Spacecraft.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/orbitpy/util.html#Spacecraft.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#orbitpy.util.Spacecraft.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate the Spacecraft object to a Python dictionary such that it can be uniquely reconstructed back from the dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">Spacecraft</span></code> object as python dictionary.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.8/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="orbitpy.util.Spacecraft.to_json">
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#orbitpy.util.Spacecraft.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serializes this entity to a JSON-formatted string or file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<div style='clear:both'></div></div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="orbitpy.util.GroundStation.html" class="btn btn-neutral float-right" title="GroundStation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="orbitpy.util.SpacecraftBus.html" class="btn btn-neutral float-left" title="SpacecraftBus" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, BAERI.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

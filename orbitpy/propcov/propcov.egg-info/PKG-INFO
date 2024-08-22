@@ -1,0 +1,6 @@
+Metadata-Version: 2.1
+Name: propcov
+Version: 0.0.1
+Summary: Bindings on the C++ classes providing orbit calculations related utilities.
+Author: Vinay Ravindra
+Author-email: vinay.ravindra@nasa.gov
