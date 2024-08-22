@@ -21,3 +21,5 @@ trmm_download/
 *.pyc
 *.xlsx
 tmp/
+instrupy/*
+orbitpy/*
