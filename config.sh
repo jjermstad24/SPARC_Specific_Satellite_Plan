@@ -2,7 +2,8 @@ cd instrupy
 make
 cd ..
 cd orbitpy
-make cd ..
+make
+cd ..
 # pip install tqdm
 # pip install pyscipopt
 # pip install opencv-python 
