@@ -8,9 +8,9 @@ def execute_mission(settings):
     
     scenario_dir = settings["directory"]
     data_dir = settings["directory"] + 'orbit_data/'
-    if os.path.exists(data_dir+'comm/'):
-        print("Skipping mission execution")
-        return
+    # if os.path.exists(data_dir+'comm/'):
+    #     print("Skipping mission execution")
+    #     return
     with open(scenario_dir +'MissionSpecs.json', 'r') as scenario_specs:
         # load json file as dictionary
         mission_dict = json.load(scenario_specs)
@@ -28,7 +28,7 @@ def execute_mission(settings):
         # propagate data and save to orbit data directory
         print("Executing mission in OrbitPy...")
         mission = Mission.from_json(mission_dict)  
-        mission.execute()                
+        mission.execute()
         print("Mission executed!")
 
 if __name__ == "__main__":

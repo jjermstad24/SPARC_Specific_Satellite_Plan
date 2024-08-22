@@ -2,8 +2,8 @@ import datetime
 import os
 import sys
 sys.path.append(".")
-sys.path.append("/home/AERO_402/satellite_plan/orbitpy")
-sys.path.append("/home/AERO_402/satellite_plan/instrupy")
+sys.path.append("orbitpy")
+sys.path.append("instrupy")
 
 from src.create_mission import create_mission
 from src.execute_mission import execute_mission
@@ -16,7 +16,7 @@ from src.utils.compute_experiment_statistics_het import compute_experiment_stati
 from src.utils.process_coobs import process_coobs
 
 def main(homhet_flag):
-    name = "full_mission_test_10"
+    name = "SPARC_Mission"
     settings = {
         "name": name,
         "instrument": {
