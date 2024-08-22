@@ -1,8 +1,7 @@
 cd instrupy
 make
 cd ..
-cd
-orbitpy
+cd orbitpy
 make cd ..
 # pip install tqdm
 # pip install pyscipopt
