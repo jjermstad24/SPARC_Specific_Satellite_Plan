@@ -1,7 +1,3 @@
-git submodule init
-git submodule update
-conda create --name satplan_test python=3.8
-conda activate satplan_test
 cd instrupy
 make cd ..
 cd orbitpy
