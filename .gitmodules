@@ -1,6 +1,0 @@
-[submodule "orbitpy"]
-	path = orbitpy
-	url = https://github.com/EarthObservationSimulator/orbitpy/tree/0657971d7b04dcfe77f79696925c24f5d62fb35a
-[submodule "instrupy"]
-	path = instrupy
-	url = https://github.com/EarthObservationSimulator/instrupy/tree/d7bda8f7ae3a50812d9f380a61a74f2eccbd4d6a
