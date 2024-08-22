@@ -74,7 +74,7 @@ def main(homhet_flag):
         "planning_horizon": 1000,
         "directory": "./missions/"+name+"/",
         "grid_type": "custom", # can be "uniform" or "custom"
-        "point_grid": "./coverage_grids/targets.csv",
+        "point_grid": "./coverage_grids/sparc_targets.csv",
         "preplanned_observations": None,
         "process_obs_only": False,
         "conops": "onboard_processing"
